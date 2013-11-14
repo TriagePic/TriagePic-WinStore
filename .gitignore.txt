@@ -1,0 +1,12 @@
+obj/
+bin/
+packages/
+*.user
+*.suo
+*.[Cc]ache
+*.bak
+*.ncb
+*.log 
+*.DS_Store
+[Tt]humbs.db
+# OK to make *_TemporaryKey.pfx public 

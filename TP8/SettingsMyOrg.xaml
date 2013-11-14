@@ -1,0 +1,35 @@
+﻿<UserControl
+    x:Name="controlSettingsMyOrg"
+    x:Class="TP8.SettingsMyOrg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="400">
+    
+    <Grid Style="{StaticResource LayoutRootStyle}" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="500" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Name="OrgChoice" HorizontalAlignment="Left" Margin="0,20,0,10" TextWrapping="Wrap" Text="Organization, Hospital, or Facility:" VerticalAlignment="Top" Width="275" FontSize="18" Foreground="#FFEC1414"/>
+            <ComboBox x:Name="OrgComboBox" BorderBrush="#FFEC1414" ItemsSource="{Binding}" HorizontalAlignment="Left" Margin="0,0,4,0" VerticalAlignment="Top" Width="270" MaxHeight="40" SelectionChanged="OrgComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock Text="{Binding Path=OrgName}" Margin="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock HorizontalAlignment="Left" Margin="0,20,0,0" TextWrapping="Wrap" Text="Associated Contact Information" VerticalAlignment="Top" Width="275" FontSize="18" Foreground="#FFEC1414"/>
+            <TextBlock x:Name="SomeTextOrgInfo" Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap" Margin="0,10,0,0" MinHeight="100" />
+       </StackPanel>
+        <TextBlock Grid.Row="1" Style="{StaticResource BodyTextStyle}" Foreground="Black" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap"
+            Text="For the selected organization, the contact information above is read-only here.  It is set by an administrator of the central web site to which TriagePic reports." />
+    </Grid>
+</UserControl>

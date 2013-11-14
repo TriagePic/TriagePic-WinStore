@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="b56191b4-c587-4cef-bec1-222c0ed2775c" Publisher="CN=NLM" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>TriagePic</DisplayName>
+    <PublisherDisplayName>NLM</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2.1</OSMinVersion>
+    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TP8.App">
+      <VisualElements DisplayName="TriagePic" Logo="Assets\SquareCameraLogo.png" SmallLogo="Assets\SmallCameraLogo.png" Description="TriagePic for Win8 Store, Modern UI.  National Library of Medicine.  Glenn Pearson, software developer" ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="allLogos" ShortName="TriagePic" />
+        <SplashScreen Image="Assets\SplashCameraLogo.png" />
+      </VisualElements>
+      <Extensions>
+        <Extension Category="windows.search" />
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="picturesLibrary" />
+    <Capability Name="internetClient" />
+    <DeviceCapability Name="webcam" />
+  </Capabilities>
+</Package>

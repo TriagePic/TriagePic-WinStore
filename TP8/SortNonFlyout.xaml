@@ -1,0 +1,79 @@
+﻿<common:LayoutAwarePage
+    x:Name="pageSortNonFlyout"
+    x:Class="TP8.SortNonFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:common="using:TP8.Common"
+    xmlns:mytool="using:MyToolkit.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+	VerticalAlignment="Stretch"
+	HorizontalAlignment="Right"
+	Width="320"
+    d:DesignHeight="768" 
+    d:DesignWidth="320">
+    <!-- width was 346, but might be problem in Snapped View with its 320 width-->
+    <!-- 768 height is minimum rez needs to be supported -->
+
+    <Grid Background="Beige">
+        <StackPanel Margin="10">
+            <Grid Background="#FF5971A4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageSortNonFlyout}" Style="{StaticResource BackButtonStyle}" Margin="0,0,0,0"/>
+                <Canvas Grid.Column="2" Height="37" Background="#FF5971A4">
+                    <TextBlock Canvas.Top="10" Canvas.Left="10" Text="Sort By" Foreground="White" FontSize="20"/>
+                    <Rectangle Fill="#FF4A4AE0" Height="100"/>
+                </Canvas>
+            </Grid>
+            <TextBlock Text="Item" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+
+            <ComboBox x:Name="SortByCarouselContainer" Background="Transparent" Height="50" ScrollViewer.VerticalScrollBarVisibility="Hidden" Style="{StaticResource ComboBoxStyleCarouselForTP}" SelectionChanged="SortByCarouselContainer_SelectionChanged">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <CarouselPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <x:String>Arrival Time</x:String>
+                <x:String>Patient/Mass Casualty ID</x:String>
+                <x:String>First Name</x:String>
+                <x:String>Last Name</x:String>
+                <x:String>Gender</x:String>
+                <x:String>Age Group</x:String>
+                <x:String>Triage Zone</x:String>
+                <x:String>People Locator Status</x:String>
+                <x:String>Disaster Event</x:String>
+                <x:String>Reporting Station</x:String>
+            </ComboBox>
+            <!-- Another idea is to add in image with text; don't know if can do with carousel, but general approach is:
+            <ComboBox><ComboBox.ItemTemplate><DataTemplate><StackPanel Orientation="Horizontal" VertcialAlignment="Center"><Image/><TextBlock/>[close all]
+            -->
+
+            <TextBlock Text="Direction" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <!-- Don't specify ToggleSwitch IsOn here in XAML, instead let default value of App.SortByAscending do its will -->
+            <ToggleSwitch x:Name="Direction" Header="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" OnContent="Ascending &#x25B2;" OffContent="Descending &#x25BC;" HorizontalContentAlignment="Left" Toggled="DirectionToggleSwitch_Toggled" Foreground="Black" Background="#FFECC196"/>
+            <!-- TO DO:
+            <Canvas Height="10"/>
+            <Canvas Height="37" Background="#FF5971A4">
+                <TextBlock Canvas.Top="10" Canvas.Left="10" Text="Show As [to do]" Foreground="White" FontSize="20"/>
+                <Rectangle Fill="#FF4A4AE0" Height="100"/>
+            </Canvas>
+            <TextBlock Text="Title" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <RadioButton x:Name="ShowTitleAsName" Content="First + Last Name" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="showAsTitle" IsChecked="True" Checked="ShowTitleAsRadioButton_Checked"/>
+            <RadioButton x:Name="ShowTitleAsID" Content="ID" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="showAsTitle" IsChecked="False" Checked="ShowTitleAsRadioButton_Checked"/>
+            <TextBlock Text="SubTitle" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <RadioButton x:Name="ShowSubtitleAsName" Content="First + Last Name" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="showAsSubtitle" IsChecked="False" Checked="ShowSubtitleAsRadioButton_Checked"/>
+            <RadioButton x:Name="ShowSubtitleAsID" Content="ID" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="showAsSubtitle" IsChecked="True" Checked="ShowSubtitleAsRadioButton_Checked"/>
+            <RadioButton x:Name="ShowSubtitleAsNone" Content="None" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="showAsSubtitle" IsChecked="False" Checked="ShowSubtitleAsRadioButton_Checked"/>
+            <TextBlock Text="Short Content [to do]" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            -->
+
+
+        </StackPanel>
+
+    </Grid>
+</common:LayoutAwarePage>

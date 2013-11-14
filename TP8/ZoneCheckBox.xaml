@@ -1,0 +1,25 @@
+﻿<UserControl
+    x:Class="TP8.ZoneCheckBox"
+    x:Name="root"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:TP8.Data"
+    mc:Ignorable="d"
+    d:DesignHeight="37"
+    d:DesignWidth="130">
+
+    <UserControl.Resources>
+        <local:ForegroundFromBackgroundColorConverter x:Key="foregroundFromBackground" />
+    </UserControl.Resources>
+
+    <!-- <Canvas> -->
+        <!--<Button x:Name="button" Content="Zone Label" Height="50" Width="130" Background="#FFB820C7" HorizontalAlignment="Stretch"/> -->
+    <CheckBox x:Name="checkbox" VerticalAlignment="Stretch" BorderBrush="Black" MinWidth="100" Margin="0,5" 
+                Foreground="{Binding Background, ElementName=checkbox, Converter={StaticResource foregroundFromBackground}}" Height="27" />
+        <!-- <TextBlock x:Name="checkMark" Canvas.Top="5" Canvas.Left="100" FontFamily="Segoe UI Symbol" FontSize="15" Height="20" Width="20" Text="&#xE001;" HorizontalAlignment="Right"
+                Foreground="{Binding Background, ElementName=button, Converter={StaticResource foregroundFromBackground}}" /> -->
+    <!-- </Canvas> -->
+</UserControl>

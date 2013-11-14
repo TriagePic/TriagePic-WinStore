@@ -1,0 +1,171 @@
+﻿    <common:LayoutAwarePage
+    x:Name="pageFilterNonFlyout"
+    x:Class="TP8.FilterNonFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:common="using:TP8.Common"
+    xmlns:mytool="using:MyToolkit.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+	VerticalAlignment="Stretch"
+	HorizontalAlignment="Right"
+	Width="320"
+    d:DesignHeight="768" 
+    d:DesignWidth="320"> <!-- width was 346, but might be problem in Snapped View with its 320 width-->
+    <!-- 768 height is minimum rez needs to be supported -->
+        
+    <!-- This page is designed for SNAPPED mode only.  For other modes, use the flyout version.  -->
+
+	<Grid Background="Beige">
+		<StackPanel Margin="10">
+            <Grid Background="#FF5971A4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageFilterNonFlyout}" Style="{StaticResource BackButtonStyle}" Margin="0,0,0,0"/>
+                <Canvas Grid.Column="2" Height="37" Background="#FF5971A4">
+                    <TextBlock Canvas.Top="10" Canvas.Left="10" Text="Filters" Foreground="White" FontSize="20"/>
+                    <Rectangle Fill="#FF4A4AE0" Height="100"/>
+                </Canvas>
+            </Grid>
+<!-- TO DO to support user saving of named filter profile, then retrieving choice of same.
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="50*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Text="Filter Profile" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Save As..." Foreground="Black" BorderBrush="Black"/>
+                </StackPanel>
+            </Grid>
+            <ComboBox x:Name="filterProfileNF" Loaded="filterProfile_Loaded">
+                <x:String>Default (fixed)</x:String>
+                <x:String>My Profile 1</x:String>
+            </ComboBox>
+-->
+            <TextBlock Text="Search Against" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+               <!-- <CheckBox x:Name="searchAgainstName" Content="Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" 
+                          IsChecked="{Binding CurrentFilterProfile.SearchAgainstName, Mode=TwoWay}" Checked="SearchAgainstNameCheckBox_Changed" Unchecked="SearchAgainstNameCheckBox_Changed"/> -->
+                <CheckBox x:Name="searchAgainstNameNF" Content="Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" 
+                          Checked="SearchAgainstNameNFCheckBox_Changed" Unchecked="SearchAgainstNameNFCheckBox_Changed"/>
+                <CheckBox x:Name ="searchAgainstIDNF" Content="ID" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="30,0,0,0"
+                           Checked="SearchAgainstIDNFCheckBox_Changed" Unchecked="SearchAgainstIDNFCheckBox_Changed"/>
+            </StackPanel>
+
+            <TextBlock Text="Disaster Event" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="eventTestDemoExerciseNF" Content="Test/Demo/Exercise" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="210"
+                           Checked="EventTestDemoExerciseNFCheckBox_Changed" Unchecked="EventTestDemoExerciseNFCheckBox_Changed"/>
+                <CheckBox x:Name="eventRealNF" Content="Real" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,0,0,0"
+                           Checked="EventRealNFCheckBox_Changed" Unchecked="EventRealNFCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="eventPrivateNF" Content="Private (hospital-based)" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="210" Margin="0,10,0,10"
+                           Checked="EventPrivateNFCheckBox_Changed" Unchecked="EventPrivateNFCheckBox_Changed"/>
+                <CheckBox x:Name="eventPublicNF" Content="Public" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,10,0,10"
+                           Checked="EventPublicNFCheckBox_Changed" Unchecked="EventPublicNFCheckBox_Changed"/>
+            </StackPanel>
+            <ComboBox x:Name="eventComboBoxNF" ItemsSource="{Binding}" VerticalAlignment="Stretch" MaxHeight="40" SelectionChanged="eventComboBoxNF_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Image Source="{Binding Path=TypeIconUri}" />
+                            <TextBlock Text="{Binding Path=EventName}" Margin="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <!-- Hard to support with current state of PL:
+            <TextBlock Text="Hospital/Organization" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <RadioButton Content="Current (if known, otherwise Default)" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="orgFilter" IsChecked="True"/>
+            <RadioButton Content="All Sharing These Reports" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="orgFilter" IsChecked="False"/>
+            <RadioButton Content="Specified:" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="orgFilter" IsChecked="False"/>
+            <ComboBox/>  -->
+
+            <TextBlock Text="Reported Attributes" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="attributesSelectAllButtonNF" Content="Select All" Foreground="Black" BorderBrush="Black" Tapped="attributesSelectAllButton_Tapped"/>
+                <Button x:Name="attributesClearAllButtonNF" Content="Clear All" Margin="20,0,0,0" Foreground="Black" BorderBrush="Black" Tapped="attributesClearAllButton_Tapped"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="genderMaleNF" Content="Male" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="67" Margin="0,5"
+                           Checked="GenderMaleNFCheckBox_Changed" Unchecked="GenderMaleNFCheckBox_Changed"/>
+                <CheckBox x:Name="genderFemaleNF" Content="Female" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="75" Margin="0,5"
+                           Checked="GenderFemaleNFCheckBox_Changed" Unchecked="GenderFemaleNFCheckBox_Changed"/>
+                <CheckBox x:Name="genderUnknownOrComplexNF" Content="Unknown/Complex" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="GenderUnknownOrComplexNFCheckBox_Changed" Unchecked="GenderUnknownOrComplexNFCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="ageGroupAdultNF" Content="Adult" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="67" Margin="0,5"
+                           Checked="AgeGroupAdultNFCheckBox_Changed" Unchecked="AgeGroupAdultNFCheckBox_Changed"/>
+                <CheckBox x:Name="ageGroupPedsNF" Content="Peds" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="75" Margin="0,5"
+                           Checked="AgeGroupPedsNFCheckBox_Changed" Unchecked="AgeGroupPedsNFCheckBox_Changed"/>
+                <CheckBox x:Name="ageGroupUnknownNF" Content="Unknown" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="AgeGroupUnknownNFCheckBox_Changed" Unchecked="AgeGroupUnknownNFCheckBox_Changed"/>
+            </StackPanel>
+            <!-- WAS:
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="zoneGreenNF" Content="Green" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5" Background="#FF55C720"
+                           Checked="ZoneGreenNFCheckBox_Changed" Unchecked="ZoneGreenNFCheckBox_Changed"/>
+                <CheckBox x:Name="zoneBHGreenNF" Content="BH Green" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5" Background="#FF0B6417"
+                           Checked="ZoneBHGreenNFCheckBox_Changed" Unchecked="ZoneBHGreenNFCheckBox_Changed"/>
+                <CheckBox x:Name="zoneYellowNF" Content="Yellow" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="100" Margin="0,5"  Background="Yellow"
+                           Checked="ZoneYellowNFCheckBox_Changed" Unchecked="ZoneYellowNFCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="zoneRedNF" Content="Red" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5"  Background="#FFF03316"
+                           Checked="ZoneRedNFCheckBox_Changed" Unchecked="ZoneRedNFCheckBox_Changed"/>
+                <CheckBox x:Name="zoneGrayNF" Content="Gray" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5"  Background="#FF858585"
+                           Checked="ZoneGrayNFCheckBox_Changed" Unchecked="ZoneGrayNFCheckBox_Changed"/>
+                <CheckBox x:Name="zoneBlackNF" Content="Black" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5"  Background="Black"
+                           Checked="ZoneBlackNFCheckBox_Changed" Unchecked="ZoneBlackNFCheckBox_Changed"/>
+            </StackPanel> -->
+            <ItemsControl x:Name="ZoneCheckBoxes" MinHeight="37">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapGrid ItemHeight="37" ItemWidth="{Binding ElementName=pageFilterNonFlyout,Path=MyZoneCheckBoxesItemWidth}" MaximumRowsOrColumns="3" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.Items />
+                <!-- Buttons dynamically intalled in code-behind -->
+            </ItemsControl>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="hasNameNF" Content="Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black"  MinWidth="90" Margin="0,5"
+                           Checked="HasNameNFCheckBox_Changed" Unchecked="HasNameNFCheckBox_Changed"/>
+                <CheckBox x:Name="hasNoNameNF" Content="No Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="HasNoNameNFCheckBox_Changed" Unchecked="HasNoNameNFCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="hasPhotosNF" Content="Photo(s)" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black"  MinWidth="90" Margin="0,5"
+                           Checked="HasPhotosNFCheckBox_Changed" Unchecked="HasPhotosNFCheckBox_Changed"/>
+                <CheckBox x:Name="hasNoPhotoNF" Content="No Photo" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="HasNoPhotoNFCheckBox_Changed" Unchecked="HasNoPhotoNFCheckBox_Changed"/>
+            </StackPanel>
+            <!-- TO DO:
+            <TextBlock Text="When Reported" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="datesAllNF" Content="All Dates" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="dateFilter"
+                              Checked="DatesAllNFRadioButton_Changed" Unchecked="DatesAllNFRadioButton_Changed"/>
+                <RadioButton x:Name="datesSpecifiedNF" Content="Specified (DD/MM/YYYY):" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="dateFilter" Margin="10,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="From:  "  Foreground="Black" FontSize="15" VerticalAlignment="Center" Width="40"></TextBlock>
+                <mytool:DatePicker x:Name="fromDateNF" Height="40" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="To:  "  Foreground="Black" FontSize="15" VerticalAlignment="Center" Width="40"/>
+                <mytool:DatePicker x:Name="toDateNF" Height="40" />
+            </StackPanel>
+            -->
+        </StackPanel>
+
+    </Grid>
+</common:LayoutAwarePage>

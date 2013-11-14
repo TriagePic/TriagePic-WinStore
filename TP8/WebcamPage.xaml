@@ -1,0 +1,54 @@
+﻿<!--adapted from ImageHelper2 example in Jeremy Likness book.  Was x:Class="ImageHelper2.MainPage"-->
+<!--Glenn changed inheritence, from Page to common:LayoutAwarePage -->
+<common:LayoutAwarePage 
+    x:Class="TP8.WebcamPage"
+    IsTabStop="false"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:common="using:TP8.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!-- Loaded/Unloaded calls are needed to get auto-resizing (and suppression of text) to work in snapped view. Lets app buttons know about state changes -->
+    <!-- but doesn't do design view right -->
+    <!-- Note that 5 buttons is max in snapped view (or 10 if using 2 rows) -->
+    <!-- Supposely MS App Labs says put the home button in the bottom bar -->
+    <Page.TopAppBar>
+        <AppBar x:Name="TopAppBarHomeItemsPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Top App Bar New Report Page">
+            <Grid>
+                <!-- Don't need New here, since bottom controls do that.  Instead, substitute Home -->
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Style="{StaticResource ChecklistAppBarButtonStyle}" Tag="Checklist" Click="Checklist_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                    <Button Style="{StaticResource HomeAppBarButtonStyle}" Tag="New" Click="Home_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                    <Button Style="{StaticResource AllStationsAppBarButtonStyle}" Tag="AllStations" Click="AllStations_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                    <Button Style="{StaticResource OutboxAppBarButtonStyle}" Tag="Outbox" Click="Outbox_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                    <Button Style="{StaticResource StatisticsAppBarButtonStyle}" Tag="Statistics" Click="Statistics_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.TopAppBar>
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Image x:Name="ImageTarget" Grid.Row="0" HorizontalAlignment="Center"
+            VerticalAlignment="Center" Stretch="Uniform"/>
+        <TextBlock TextWrapping="Wrap" x:Name="Events" Margin="10"/>
+        <!-- Add Background="Gray" below to make the StackPanel touchable -->
+        <StackPanel Grid.Row="1" Margin="10"                        
+                    HorizontalAlignment="Center" Orientation="Horizontal">
+            <!-- E0BA is go back button, E0AC is go forward -->
+            <Button x:Name="CancelButton" Content="&#xE0BA;   Cancel" FontFamily="Segoe UI Symbol"
+              Click="CancelButton_Click"/>
+            <Button x:Name="SaveButton" Content="&#xE0BA;   Save Image"  FontFamily="Segoe UI Symbol"
+              Click="SaveButton_Click" Margin="20 0 0 0"/>
+            <!-- was: Capture New Image.  Note retake icon not available with circle around it, so use go forward instead-->
+            <Button x:Name="CaptureButton" Content="Retake   &#xE0AC;"  FontFamily="Segoe UI Symbol"
+              Click="CaptureButton_Click"  Margin="20 0 0 0"/>
+        </StackPanel>
+    </Grid>
+</common:LayoutAwarePage>

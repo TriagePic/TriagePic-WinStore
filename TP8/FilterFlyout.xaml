@@ -1,0 +1,162 @@
+﻿<!-- Adapted from minimal flyout example of PopupHelpers.Demo.SimpleFlyout.
+    See http://socialeboladev.wordpress.com/2012/10/14/turn-any-usercontrol-into-a-pleasing-dialogflyout-in-windows-8/ -->
+    <UserControl
+    x:Class="TP8.FilterFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:mytool="using:MyToolkit.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+	VerticalAlignment="Stretch"
+	HorizontalAlignment="Right"
+	Width="320"
+    d:DesignHeight="768" 
+    d:DesignWidth="320"> <!-- width was 346, but might be problem in Snapped View with its 320 width-->
+    <!-- 768 height is minimum rez needs to be supported -->
+
+	<Grid Background="Beige">
+		<StackPanel Margin="10">
+            <Canvas Height="37" Background="#FF5971A4">
+                <TextBlock Canvas.Top="10" Canvas.Left="10" Text="Filters" Foreground="White" FontSize="20"/>
+                <Rectangle Fill="#FF4A4AE0" Height="100"/>
+            </Canvas>
+            <!-- TO DO: Let user save named filter profiles, then select from them:
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="50*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Text="Filter Profile" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Save As..." Foreground="Black" BorderBrush="Black"/>
+                </StackPanel>
+            </Grid>
+            <ComboBox x:Name="filterProfile" Loaded="filterProfile_Loaded">
+                <x:String>Default (fixed)</x:String>
+                <x:String>My Profile 1</x:String>
+            </ComboBox>
+            -->
+            <TextBlock Text="Search Against" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+               <!-- <CheckBox x:Name="searchAgainstName" Content="Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" 
+                          IsChecked="{Binding CurrentFilterProfile.SearchAgainstName, Mode=TwoWay}" Checked="SearchAgainstNameCheckBox_Changed" Unchecked="SearchAgainstNameCheckBox_Changed"/> -->
+                <CheckBox x:Name="searchAgainstName" Content="Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" 
+                          Checked="SearchAgainstNameCheckBox_Changed" Unchecked="SearchAgainstNameCheckBox_Changed"/>
+                <CheckBox x:Name ="searchAgainstID" Content="ID" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="30,0,0,0"
+                           Checked="SearchAgainstIDCheckBox_Changed" Unchecked="SearchAgainstIDCheckBox_Changed"/>
+            </StackPanel>
+
+            <TextBlock Text="Disaster Event" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="eventTestDemoExercise" Content="Test/Demo/Exercise" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="210"
+                           Checked="EventTestDemoExerciseCheckBox_Changed" Unchecked="EventTestDemoExerciseCheckBox_Changed"/>
+                <CheckBox x:Name="eventReal" Content="Real" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,0,0,0"
+                           Checked="EventRealCheckBox_Changed" Unchecked="EventRealCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="eventPrivate" Content="Private (hospital-based)" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="210" Margin="0,10,0,10"
+                           Checked="EventPrivateCheckBox_Changed" Unchecked="EventPrivateCheckBox_Changed"/>
+                <CheckBox x:Name="eventPublic" Content="Public" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,10,0,10"
+                           Checked="EventPublicCheckBox_Changed" Unchecked="EventPublicCheckBox_Changed"/>
+            </StackPanel>
+            <ComboBox x:Name="FlyoutEventComboBox" ItemsSource="{Binding}" VerticalAlignment="Stretch" MaxHeight="40" SelectionChanged="FlyoutEventComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Image Source="{Binding Path=TypeIconUri}" />
+                            <TextBlock Text="{Binding Path=EventName}" Margin="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <!-- Hard to support with current state of PL:
+            <TextBlock Text="Hospital/Organization" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <RadioButton Content="Current (if known, otherwise Default)" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="orgFilter" IsChecked="True"/>
+            <RadioButton Content="All Sharing These Reports" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="orgFilter" IsChecked="False"/>
+            <RadioButton Content="Specified:" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="orgFilter" IsChecked="False"/>
+            <ComboBox/>  -->
+
+            <TextBlock Text="Reported Attributes" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="attributesSelectAllButton" Content="Select All" Foreground="Black" BorderBrush="Black" Tapped="attributesSelectAllButton_Tapped"/>
+                <Button x:Name="attributesClearAllButton" Content="Clear All" Margin="20,0,0,0" Foreground="Black" BorderBrush="Black" Tapped="attributesClearAllButton_Tapped"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="genderMale" Content="Male" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="67" Margin="0,5"
+                           Checked="GenderMaleCheckBox_Changed" Unchecked="GenderMaleCheckBox_Changed"/>
+                <CheckBox x:Name="genderFemale" Content="Female" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="75" Margin="0,5"
+                           Checked="GenderFemaleCheckBox_Changed" Unchecked="GenderFemaleCheckBox_Changed"/>
+                <CheckBox x:Name="genderUnknownOrComplex" Content="Unknown/Complex" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="GenderUnknownOrComplexCheckBox_Changed" Unchecked="GenderUnknownOrComplexCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="ageGroupAdult" Content="Adult" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="67" Margin="0,5"
+                           Checked="AgeGroupAdultCheckBox_Changed" Unchecked="AgeGroupAdultCheckBox_Changed"/>
+                <CheckBox x:Name="ageGroupPeds" Content="Peds" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="75" Margin="0,5"
+                           Checked="AgeGroupPedsCheckBox_Changed" Unchecked="AgeGroupPedsCheckBox_Changed"/>
+                <CheckBox x:Name="ageGroupUnknown" Content="Unknown" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="AgeGroupUnknownCheckBox_Changed" Unchecked="AgeGroupUnknownCheckBox_Changed"/>
+            </StackPanel>
+            <!-- WAS:
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="zoneGreen" Content="Green" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5" Background="#FF55C720"
+                           Checked="ZoneGreenCheckBox_Changed" Unchecked="ZoneGreenCheckBox_Changed"/>
+                <CheckBox x:Name="zoneBHGreen" Content="BH Green" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5" Background="#FF0B6417"
+                           Checked="ZoneBHGreenCheckBox_Changed" Unchecked="ZoneBHGreenCheckBox_Changed"/>
+                <CheckBox x:Name="zoneYellow" Content="Yellow" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="100" Margin="0,5"  Background="Yellow"
+                           Checked="ZoneYellowCheckBox_Changed" Unchecked="ZoneYellowCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="zoneRed" Content="Red" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5"  Background="#FFF03316"
+                           Checked="ZoneRedCheckBox_Changed" Unchecked="ZoneRedCheckBox_Changed"/>
+                <CheckBox x:Name="zoneGray" Content="Gray" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5"  Background="#FF858585"
+                           Checked="ZoneGrayCheckBox_Changed" Unchecked="ZoneGrayCheckBox_Changed"/>
+                <CheckBox x:Name="zoneBlack" Content="Black" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="White" MinWidth="100" Margin="0,5"  Background="Black"
+                           Checked="ZoneBlackCheckBox_Changed" Unchecked="ZoneBlackCheckBox_Changed"/>
+            </StackPanel>  -->
+            <ItemsControl x:Name="ZoneCheckBoxes" MinHeight="37">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapGrid ItemHeight="37" ItemWidth="{Binding ElementName=pageFilterFlyout,Path=MyZoneCheckBoxesItemWidth}" MaximumRowsOrColumns="3" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.Items />
+                <!-- Buttons dynamically intalled in code-behind -->
+            </ItemsControl>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="hasName" Content="Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black"  MinWidth="90" Margin="0,5"
+                           Checked="HasNameCheckBox_Changed" Unchecked="HasNameCheckBox_Changed"/>
+                <CheckBox x:Name="hasNoName" Content="No Name" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="HasNoNameCheckBox_Changed" Unchecked="HasNoNameCheckBox_Changed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="hasPhotos" Content="Photo(s)" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black"  MinWidth="90" Margin="0,5"
+                           Checked="HasPhotosCheckBox_Changed" Unchecked="HasPhotosCheckBox_Changed"/>
+                <CheckBox x:Name="hasNoPhoto" Content="No Photo" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="0,5"
+                           Checked="HasNoPhotoCheckBox_Changed" Unchecked="HasNoPhotoCheckBox_Changed"/>
+            </StackPanel>
+            <!-- TO DO:
+            <TextBlock Text="When Reported" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="datesAll" Content="All Dates" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="dateFilter"
+                              Checked="DatesAllRadioButton_Changed" Unchecked="DatesAllRadioButton_Changed"/>
+                <RadioButton x:Name="datesSpecified" Content="Specified (DD/MM/YYYY):" VerticalAlignment="Stretch" Foreground="Black" BorderBrush="Black" GroupName="dateFilter" Margin="10,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="From:  "  Foreground="Black" FontSize="15" VerticalAlignment="Center" Width="40"></TextBlock>
+                <mytool:DatePicker x:Name="fromDate" Height="40" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="To:  "  Foreground="Black" FontSize="15" VerticalAlignment="Center" Width="40"/>
+                <mytool:DatePicker x:Name="toDate" Height="40" />
+            </StackPanel>
+            -->
+        </StackPanel>
+
+    </Grid>
+</UserControl>
