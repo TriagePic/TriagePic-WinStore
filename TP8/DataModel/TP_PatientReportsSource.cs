@@ -1,5 +1,4 @@
-﻿#define EXPERIMENTAL
-using System;
+﻿using System;
 //using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -248,6 +247,8 @@ namespace TP8.Data
 
         public async Task Init()
         {
+            await _outbox.ReadXML(); // Try this earlier in the process, so user can see list sooner (than waiting to Init2)
+/* WAS:
             await _outbox.ReadXML();
             if(_outbox.Count() == 0)
             {
@@ -258,6 +259,7 @@ namespace TP8.Data
                 await _outbox.WriteXML();
             }
             // Init of all stations list moved to Init2()
+ */
         }
 
         /// <summary>
@@ -265,9 +267,10 @@ namespace TP8.Data
         /// </summary>
         public async void Init2()
         {
-#if EXPERIMENTAL
+            if(_outbox.Count() == 0)
+                await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword);
             await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword);
-#else
+/* WAS:
             await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             if(_allstations.Count() == 0)
             {
@@ -278,7 +281,7 @@ namespace TP8.Data
                     p.CompleteGeneratedRecord(); // Add boilerplate values not done above
                 await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             }
-#endif
+*/
             Scrub(); // Remove bad data
             //ReFilter();
             ReSortAndFilter();
@@ -286,7 +289,7 @@ namespace TP8.Data
             SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
         }
 
-#if EXPERIMENTAL
+
         public async Task ProcessAllStationsList(string plname, string plpass) //, bool clearFirst)
         {
             // Compare Win 7 FormTriagePic.ProcessEventList(...)
@@ -318,11 +321,12 @@ namespace TP8.Data
 //                    useCachedAllStationsCurrentEventList = true;
 //                }
 //            }
+/* TO DO IN NEXT VERSION:
             if (useCachedAllStationsCurrentEventList)
             {
                 await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME); // These results were previously filtered, so don't have to do that again.
             }
-            else
+            else */
             {
                 responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
                 // Hopefully don't have to add more filtering here... we'll see.
@@ -330,16 +334,101 @@ namespace TP8.Data
                 {
                     foreach (var item in responseRows)
                     {
-                        // Similar to event/incident list handling:
-                        TP_PatientReport rp = new TP_PatientReport();
-                        rp.LoadFromJsonSearchResponse(item);
-
-                        _allstations.Add(rp);
+                        // TO DO:  In future version, support Practice.  For now, skip any records so labeled
+                        if (item.edxl != null && item.edxl.Count() > 0 && item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
+                            continue;
+#if ONLY_OK
+                        _allstations.Add(await LoadNewPatientReportTextAndImage(item, new TP_PatientReport()));
+                        //No, causes loop artifacts: SampleDataSource.RefreshOutboxAndAllStationsItems();
                     }
+#else
+                        TP_PatientReport pr = new TP_PatientReport();
+                        pr.LoadFromJsonSearchResponse(item);
+                        _allstations.Add(pr);
+
+                    }
+                    // separate loop to load photos:
+                    foreach (var p in _allstations)
+                    {
+                        if (p.ImageEncoded.Contains("plus_cache")) // sanity check
+                            await LoadNewPatientReportImage(p);
+                    }
+#endif
                 }
             }
+            // TO DO IN NEXT VERSION WHEN DESIGN IS CLEARER:                  await _allstations.WriteXML();
         }
-#endif
+
+        public async Task ProcessOutboxList(string plname, string plpass) //, bool clearFirst)
+        {
+            App.MyAssert(_outbox.Count() == 0);
+            // When we got here, we've ALREADY tried reading cache file, so don't try again.
+            List<Search_Response_Toplevel_Row> responseRows = null; // likewise
+            string s;
+            s = await App.service.GetReportsForOutbox(plname, plpass);
+            if (s.StartsWith("ERROR:"))
+            {
+                // For the user, this is not an error
+                App.DelayedMessageToUserOnStartup += "  - Outbox list\n";
+                //MessageDialog dlg = new MessageDialog("Could not connect to web service to get disaster event list.  Using local cached version instead.");
+                //await dlg.ShowAsync();
+            }
+            else
+            {
+                //BitmapImage bmi = null;
+                responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
+                // Hopefully don't have to add more filtering here... we'll see.
+                if (responseRows != null)
+                {
+                    foreach (var item in responseRows)
+                    {
+                        if (item.reporter_username != plname)
+                            continue; // someone other than me sent it.  Note that Outbox in TP8 is per-user, not per-device
+                        if (item.edxl == null || item.edxl.Count() == 0)
+                            continue; // not originated by mobile device
+                        if (item.edxl[0].login_account != App.UserWin8Account || item.edxl[0].login_machine != App.DeviceName)
+                            continue;
+                        // TO DO:  In future version, support Practice.  For now, skip any records so labeled
+                        if (item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
+                            continue;
+                        _outbox.Add(await LoadNewPatientReportTextAndImage(item, new TP_PatientReport()));
+                        // No, causes loop artifacts: SampleDataSource.RefreshOutboxItems();
+                    }
+                }
+                await _outbox.WriteXML();
+            }
+        }
+
+        private async Task<TP_PatientReport> LoadNewPatientReportTextAndImage(Search_Response_Toplevel_Row item, TP_PatientReport pr)
+        {
+            // Similar to event/incident list handling:
+            pr.LoadFromJsonSearchResponse(item);
+            // TO DO: make mapping in TP_PatientReport smarter, retain & use sha1 hashes
+            if (item.images != null && item.images.Count() > 0)
+            {
+                string path = pr.ImageEncoded;
+                App.MyAssert(path.Contains("plus_cache")); // sanity check
+                //bmi = new BitmapImage(new Uri(path));
+
+                pr.ImageWriteableBitmap = await pr.LoadImageWriteableBitmapFromWeb(new Uri(path));
+                pr.ImageEncoded = await pr.GetImageAsBase64Encoded(); // overwrite ImageEncoded
+            }
+            return pr;
+        }
+
+        private async Task<TP_PatientReport> LoadNewPatientReportImage(TP_PatientReport pr)
+        {
+            // TO DO: make mapping in TP_PatientReport smarter, retain & use sha1 hashes
+            string path = pr.ImageEncoded;
+            App.MyAssert(path.Contains("plus_cache")); // sanity check
+            //bmi = new BitmapImage(new Uri(path));
+
+            pr.ImageWriteableBitmap = await pr.LoadImageWriteableBitmapFromWeb(new Uri(path));
+            pr.ImageEncoded = await pr.GetImageAsBase64Encoded(); // overwrite ImageEncoded
+            return pr;
+        }
+
+
 
         /*
         public void ReFilter()
@@ -418,7 +507,9 @@ namespace TP8.Data
                         sort = orig.OrderBy(o => o.LastName).ToList(); break;
                     case App.SortByItem.AgeGroup:
                         sort = orig.OrderBy(o => o.AgeGroup).ToList(); break;
-                    case App.SortByItem.PatientID:
+                    case App.SortByItem.PatientIdSkipPrefixNumeric:
+                        sort = orig.OrderBy(o => o.PatientID, new PatientIdComparer()).ToList(); break;
+                    case App.SortByItem.PatientIdWithPrefixAlphabetic:
                         sort = orig.OrderBy(o => o.PatientID).ToList(); break;
                     case App.SortByItem.TriageZone:
                         sort = orig.OrderBy(o => o.Zone).ToList(); break;
@@ -450,7 +541,9 @@ namespace TP8.Data
                         sort = orig.OrderByDescending(o => o.LastName).ToList(); break;
                     case App.SortByItem.AgeGroup:
                         sort = orig.OrderByDescending(o => o.AgeGroup).ToList(); break;
-                    case App.SortByItem.PatientID:
+                    case App.SortByItem.PatientIdSkipPrefixNumeric:
+                        sort = orig.OrderByDescending(o => o.PatientID, new PatientIdComparer()).ToList(); break;
+                    case App.SortByItem.PatientIdWithPrefixAlphabetic:
                         sort = orig.OrderByDescending(o => o.PatientID).ToList(); break;
                     case App.SortByItem.TriageZone:
                         sort = orig.OrderByDescending(o => o.Zone).ToList(); break;
@@ -483,6 +576,37 @@ namespace TP8.Data
             else
             {
                 // Use limited filtering of Outbox, All Stations splitview.
+                // For fastest speed, do some of the logic outside of loops
+                if (!App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
+                {
+                    foreach (TP_PatientReport i in sort)
+                        sortfilt.Add(i);
+                }
+                else if (App.OutboxCheckBoxCurrentEventOnly && App.OutboxCheckBoxMyOrgOnly)
+                {
+                    foreach (TP_PatientReport i in sort)
+                    {
+                        if (i.EventName == App.CurrentDisaster.EventName && i.OrgName == App.CurrentOrgContactInfo.OrgName)
+                            sortfilt.Add(i);
+                    }
+                }
+                else if (App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
+                {
+                    foreach (TP_PatientReport i in sort)
+                    {
+                        if (i.EventName == App.CurrentDisaster.EventName)
+                            sortfilt.Add(i);
+                    }
+                }
+                else if (!App.OutboxCheckBoxCurrentEventOnly && App.OutboxCheckBoxMyOrgOnly)
+                {
+                    foreach (TP_PatientReport i in sort)
+                    {
+                        if (i.OrgName == App.CurrentOrgContactInfo.OrgName)
+                            sortfilt.Add(i);
+                    }
+                }
+/* WAS, AND LOGIC NOT QUITE RIGHT:
                 foreach (TP_PatientReport i in sort)
                 {
                     if (!App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
@@ -492,13 +616,84 @@ namespace TP8.Data
                     else if (App.OutboxCheckBoxMyOrgOnly && i.OrgName == App.CurrentOrgContactInfo.OrgName)
                         sortfilt.Add(i);
                     // else continue
-                }
+                } */
             }
 
-            origL.ReplaceWithList(orig);
+            // DON'T NEED, because orig not altered: origL.ReplaceWithList(orig);
+/* DIDN'T HELP
+            sortL.Clear(); // might help stop flashing
+            sortfiltL.Clear(); // ditto
+            SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here.  ditto */
             sortL.ReplaceWithList(sort);
             sortfiltL.ReplaceWithList(sortfilt);
 
+        }
+
+        public class PatientIdComparer : IComparer<string>
+        {
+            // Adapted from Jeff Paulsen, stackoverflow.com/questions/6396378/c-sharp-linq-orderby-numbers-that-are-string-and-you-cannot-convert-them-to-int
+            public int Compare(string s1, string s2)
+            {
+                int i1 = RemovePrefix(s1);
+                int i2 = RemovePrefix(s2);
+                if (i1 > i2) return 1;
+                if (i1 < i2) return -1;
+                return 0; // equal
+            }
+
+            public static int RemovePrefix(string s)
+            {
+                if (String.IsNullOrEmpty(s) || !Char.IsDigit(s, s.Length-1))
+                    return 0; // something wrong
+                if (s.Length == 1 && Char.IsDigit(s[0]))
+                    return Convert.ToInt32(s); // special case
+
+                int i;
+                for (i = s.Length - 1; i > 0; i--)
+                {
+                    if (!Char.IsDigit(s, i))
+                    {
+                        i++; // point to leftmost digit after prefix
+                        break;
+                    }
+                }
+                App.MyAssert(i >= 0);
+                s = s.Substring(i);
+                return Convert.ToInt32(s);
+            }
+#if ORIG
+            public int Compare(string s1, string s2)
+            {
+                if (IsNumeric(s1) && IsNumeric(s2))
+                {
+                    int i1 = Convert.ToInt32(s1);
+                    int i2 = Convert.ToInt32(s2);
+                    if (i1 > i2) return 1;
+                    if (i1 < i2) return -1;
+                    return 0; // equal
+                }
+                if (IsNumeric(s1) && !IsNumeric(s2))
+                    return -1;
+                if (!IsNumeric(s1) && !IsNumeric(s2))
+                    return 1;
+
+                return String.Compare(s1, s2);
+
+            }
+
+            public static bool IsNumeric(string s)
+            {
+                try
+                {
+                    int i = Convert.ToInt32(s);
+                    return true;
+                }
+                catch (FormatException)
+                {
+                    return false;
+                }
+            }
+#endif
         }
 
         public string GetShortSortDescription()
@@ -515,8 +710,10 @@ namespace TP8.Data
                     desc += "last name"; break;
                 case App.SortByItem.AgeGroup:
                     desc += "age group"; break;
-                case App.SortByItem.PatientID:
-                    desc += "patient ID"; break;
+                case App.SortByItem.PatientIdSkipPrefixNumeric:
+                    desc += "patient ID (numeric)"; break;
+                case App.SortByItem.PatientIdWithPrefixAlphabetic:
+                    desc += "patient ID (alphabetic)"; break;
                 case App.SortByItem.TriageZone:
                     desc += "triage zone (alphabetic)"; break;
                 case App.SortByItem.ArrivalTime:
@@ -548,8 +745,10 @@ namespace TP8.Data
                     desc += "last name"; break;
                 case App.SortByItem.AgeGroup:
                     desc += "age group"; break;
-                case App.SortByItem.PatientID:
-                    desc += "ID"; break;
+                case App.SortByItem.PatientIdSkipPrefixNumeric:
+                    desc += "ID number"; break;
+                case App.SortByItem.PatientIdWithPrefixAlphabetic:
+                    desc += "full ID"; break;
                 case App.SortByItem.TriageZone:
                     desc += "zone name"; break;
                 case App.SortByItem.ArrivalTime:

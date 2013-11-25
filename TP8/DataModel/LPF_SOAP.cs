@@ -1328,6 +1328,48 @@ INSTEAD: */
 
             return ChangeToErrorIfNull(sarout.resultSet);
         }
+
+
+        // NEW WITH Win 8 - Calls to PL Search functions:
+        /// <summary>
+        /// Returns the incident list for a given user
+        /// </summary>
+        public async Task<string> GetReportsForOutbox(string userPL, string passwordPL)
+        {
+            searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
+            searchWithAuthResponse sarout = new searchWithAuthResponse();
+            sarin.username = userPL;
+            sarin.password = passwordPL;
+            sarin.eventShortname = App.CurrentDisaster.EventShortName;
+            sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
+            sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
+#if v32_OR_LATER
+            sarin.filterOrganizations = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
+#else
+            sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
+#endif
+            sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
+            sarin.pageStart = "0";
+            sarin.perPage = "1000";
+            sarin.sortBy = ""; // = updated desc, score desc
+            sarin.searchTerm = "";
+            try
+            {
+                SetPLEndpointAddress(App.pl); //read the configured endpoint address
+
+                if(App.BlockWebServices)
+                    throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
+
+                // Win 7: responseData = App.pl.getEventListUser(userPL, passwordPL, out errorCode, out errorMessage);
+                sarout = await App.pl.searchWithAuthAsync(sarin);
+            }
+            catch (Exception e)
+            {
+                sarout.resultSet = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;
+            }
+
+            return ChangeToErrorIfNull(sarout.resultSet);
+        }
     }
 
 
@@ -1382,113 +1424,118 @@ INSTEAD: */
 
     public class Search_Response_Tag
     {
-        // TO DO - Verify names & order
-        public string value { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-        public int w { get; set; }
-        public int h { get; set; }
+        public string tag_id { get; set; } // int in string, e.g. "44"
+        public string tag_x { get; set; } // all are int in string, e.g., "0"
+        public string tag_y { get; set; }
+        public string tag_w { get; set; }
+        public string tag_h { get; set; }
+        public string tag_text { get; set; } // e.g., "this is a caption"
     }
 
     public class Search_Response_Image
     {
-        public int color_channels { get; set; } // e.g., 3
+        public string note_record_id { get; set; } // can be null // Int or string? assume string
+        public string image_id { get; set; }  // int in string, e.g., "86464"
+        public string image_type { get; set; }  // e.g., "jpeg"
+        public string image_height { get; set; } // int in string, e.g., "540"
+        public string image_width { get; set; } // int in string, e.g., "960"
         public string created { get; set; } // e.g., "2013-08-12 18:31:53"
-        public int image_height { get; set; } // e.g., 540
-        public int image_id { get; set; }  // e.g., 86464
-        public string image_type { get; set; }  // e.g., png  // TO DO: ImageType enum
-        public int image_width { get; set; } // e.g., 960
-        // note_id of 0 and note_record_id of <null> means the photo is part of the main record, not a ReUnite comment.
-        public int note_id { get; set; } // e.g., 0
-        public int note_record_id { get; set; } // can be <null>
-        // original_filename is a temporary name, not a valid URL
-        public string original_filename { get; set; } // e.g., "content://media/external/images/media/12144", "/data/data/com.pl.triagepic/app_Pictures/1376346499708.png"
-        public int principal { get; set; } // e.g., 1
-        public string sha1original { get; set; } // e.g., a2615ab024edac8675a908b383d5822f2ac824c7 // TO DO make up for lack of quotes
-        public List<Search_Response_Tag> tags { get; set; }
         public string url { get; set; } // e.g., "tmp/plus_cache/triagetrak.nlm.nih.govSLASHperson.3099294__86464_full.png"
         // TriageTrak-generated thumbnails are fixed-width:
         public string url_thumb { get; set; } // e.g., "tmp/plus_cache/triagetrak.nlm.nih.govSLASHperson.3099294__86464_thumb.png"
+        // original_filename is a temporary name, not a valid URL
+        public string original_filename { get; set; } // e.g., "4000 Green.jpg", "content://media/external/images/media/12144", "/data/data/com.pl.triagepic/app_Pictures/1376346499708.png"
+        public string principal { get; set; } // int in string, e.g., "1"
+        public string sha1original { get; set; } // e.g., "a2615ab024edac8675a908b383d5822f2ac824c7"
+        public string color_channels { get; set; } // int in string, e.g., 3
+        // note_id of 0 and note_record_id of <null> means the photo is part of the main record, not a ReUnite comment.
+        public int note_id { get; set; } // e.g., 0
+        public List<Search_Response_Tag> tags { get; set; }
     }
 
 
     public class Search_Response_Location
     {
-        public string city { get; set; } // can be <null>
-        public string country { get; set; } // can be <null>
-        public Search_Response_LatLong location { get; set; }
-        public string neighborhood { get; set; }  // can be <null>
-        public string postal_code { get; set; }
-        public string region { get; set; } // can be <null>
-        public string street1 { get; set; }  // can be <null>
-        public string street2 { get; set; }  // can be <null>
+        public string street1 { get; set; }  // can be null
+        public string street2 { get; set; }  // can be null
+        public string neighborhood { get; set; }  // can be null
+        public string city { get; set; } // can be null
+        public string region { get; set; } // can be null
+        public string postal_code { get; set; } // can be null
+        public string country { get; set; } // can be null
+        public Search_Response_GPS gps { get; set; }
     }
 
-    public class Search_Response_LatLong
+    public class Search_Response_GPS
     {
-        public string latitude { get; set; }  // both can be <null>
+        public string latitude { get; set; }  // both can be null
         public string longitude { get; set; }
     }
 
 
     public class Search_Response_Person_Notes
     {
+        public string note_id { get; set; } // int in string, e.g., "1"
+        public string note_about_p_uuid { get; set; } // e.g., "10.0.0.29/ceb-vesuvius/vesuvius/www/person.4189"
+        public string note_written_by_p_uuid { get; set; } // int in string, e.g., "1"
+        public string note_written_by_name { get; set; } // can be null
+        public string note { get; set; } // e.g. "a"
+        public string when { get; set; } // e.g., "2013-11-14T23:06:09-06:00
+        public string suggested_status { get; set; } // e.g., "dec"
+        public Search_Response_Location suggested_location { get; set; }
+        public string pfif_note_id { get; set; } // can be null
     }
-/* Not used with TriageTrak, only ReUnite/PL
+// In theory, not used with TriageTrak, only ReUnite/PL
     public class Search_Response_Voice_Notes
     {
     }
- */
-#if SOON
+
     public class Search_Response_EDXL
     {
         // Next 4 only available in TriageTrak response, not PL
         // Next 2 have security implications, so not desired with ReUnite (e.g., response from PL)
+        public string last_posted { get; set; }  // time reported by client on either report or re-report.  e.g. "2013-11-14 21:20:16"
+        // If reported from web site, next 2 might be "NIH\miernickig" and "n/a"
         public string login_account { get; set; } // From EDXL.login_account.  Also available as users.user_name
         public string login_machine { get; set; } // From EDXL.login_machine.
-        public string triagetrak_account { get; set; } // MAYBE NAME
         public string mass_casualty_id { get; set; }
-        public string triage_category { get; set; }
+        public string triage_category { get; set; } // e.g., "Green"
         public string sender_id { get; set; }
-        public string distribution_id { get; set; }
+        public string distr_id { get; set; } // Full name: distribution_id.  e.g., "NPI 1234567890 2011-08-08T16:20:00z
     }
-#endif
 
     public class Search_Response_Toplevel_Row
     {
-        public string alternate_names { get; set; } // can be <null>
-        public string birth_date { get; set; } // can be <null>
-        public string creation_time { get; set; } // "2013-08-12T18:29:54-04:00"
-        public string expiry_date { get; set; }  // can be <null>
-        public string family_name { get; set; }  // can be <null>
-        public string full_name { get; set; } //can be <null>
-        public string given_name { get; set; } // can be <null>
-        public int hospital_uuid { get; set; } // SOON: contained in response from TriageTrak only, not PL
-        public List<Search_Response_Image> images { get; set; }
-        public int incident_id { get; set; }
-        public string last_clothing { get; set; } // can be <null>
-        public string last_seen { get; set; } // e.g., "NLM (testing)";
-        public string last_updated { get; set; } // "2013-08-12T18:31:50-04:00"
-#if SOON
-        public Search_Response_EDXL { get; set; }
-        public string last_posted { get; set: }  // time reported by client on either report or re-report
-#endif
-        public Search_Response_Location location { get; set; }  // can be <null>
-        public int max_age { get; set; }  // e.g., 150
-        public int min_age { get; set; } // e.g., 18
-        public string opt_gender { get; set; } // Sahana code, e.g., "mal"
-        public string opt_race { get; set; } // can be <null>
-        public string opt_religion { get; set; } // Sahana code, can be <null>
-        public string opt_status { get; set; } // Sahana code, e.g., "ali"
-        public string other_comments { get; set; } // e.g., "LPF notification - disaster victim arrves at hospital triage station"
+        // In order as generated by TriageTrak
         public string p_uuid { get; set; } // e.g., "triagetrak.nlm.nih.gov/person.3099294"
+        public string full_name { get; set; } //can be null
+        public string family_name { get; set; }  // can be null
+        public string given_name { get; set; } // can be null
+        public string alternate_names { get; set; } // can be null
+        public string profile_urls { get; set; } // can be null
+        public string incident_id { get; set; } // positive integer in string
+        public string hospital_uuid { get; set; } // positive integer in string.  SOON: contained in response from TriageTrak only, not PL
+        public string expiry_date { get; set; }  // can be null
+        public string opt_status { get; set; } // Sahana code, e.g., "ali"
+        public string last_updated { get; set; } // "2013-08-12T18:31:50-04:00"
+        public string creation_time { get; set; } // "2013-08-12T18:29:54-04:00"
+        public Search_Response_Location location { get; set; }  // can be null
+        public string birth_date { get; set; } // can be null
+        public string opt_race { get; set; } // can be null
+        public string opt_religion { get; set; } // Sahana code, can be null
+        public string opt_gender { get; set; } // Sahana code, e.g., "mal"
+        public string years_old { get; set; } // can be null.  Assume int in string
+        public string min_age { get; set; } // e.g., "18"
+        public string max_age { get; set; }  // e.g., "150"
+        public string last_seen { get; set; } // e.g., "NLM (testing)";
+        public string last_clothing { get; set; } // can be null
+        public string other_comments { get; set; } // e.g., "LPF notification - disaster victim arrves at hospital triage station"
+        public string rep_uuid { get; set; } // positive int in string, e.g., "1"
+        public string reporter_username { get; set; } // e.g., "hs"
+        public List<Search_Response_Image> images { get; set; }
+        public List<Search_Response_Voice_Notes> voice_notes { get; set; } // empty array
         public List<Search_Response_Person_Notes> person_notes { get; set; }
-        public string profile_urls { get; set; } // can be <null>
-        public string rep_uuid { get; set; } // e.g., "triagetrak.nlm.nih.gov/person.10480
-        public string years_old { get; set; } // can be <null>.  Is this string or int?
-#if SOON
-        public string reporter_username { get; set; } // like "hs"
-#endif
+        public List<Search_Response_EDXL> edxl { get; set; }
     }
 
 }

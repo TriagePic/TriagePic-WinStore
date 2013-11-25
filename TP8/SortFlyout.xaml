@@ -31,7 +31,8 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <x:String>Arrival Time</x:String>
-                <x:String>Patient/Mass Casualty ID</x:String>
+                <x:String>Mass Casualty ID, Full (alphabetic)</x:String>
+                <x:String>Mass Casualty ID w/o Prefix (numeric)</x:String>
                 <x:String>First Name</x:String>
                 <x:String>Last Name</x:String>
                 <x:String>Gender</x:String>

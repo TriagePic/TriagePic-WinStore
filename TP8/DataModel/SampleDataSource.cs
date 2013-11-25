@@ -86,10 +86,12 @@ namespace TP8.Data
             {
                if (this._image != null || this._imagePath == null)
                    return _image;
-               if(_imagePath.StartsWith("Assets/")) // kludge transition for fixed-color tiles
-                    this._image = new BitmapImage(new Uri(SampleDataCommon._baseUri, this._imagePath));
+               if (_imagePath.StartsWith("Assets/")) // kludge transition for fixed-color tiles
+                   this._image = new BitmapImage(new Uri(SampleDataCommon._baseUri, this._imagePath));
+               else if (_imagePath.Contains("/plus_cache/") || String.IsNullOrEmpty(_imagePath))
+                   this._image = new BitmapImage(new Uri(SampleDataCommon._baseUri, "Assets/SmallCameraLogo.png")); // TEMP KLUDGE... In ideal world wouldn't get here
                else
-                    GetImageFromEncoding();
+                   GetImageFromEncoding();
                return this._image;
             }
 
@@ -100,7 +102,7 @@ namespace TP8.Data
             }
         }
 
-        public async void GetImageFromEncoding()  // See also similar function in TP_PatientDataSource
+        public async void GetImageFromEncoding()  // See also similar function in TP_PatientReportsSource
         {
  
             var buffer = Convert.FromBase64String(_imagePath);

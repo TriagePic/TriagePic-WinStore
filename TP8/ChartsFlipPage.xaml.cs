@@ -35,6 +35,8 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
     {
         public ChartsFlipPage()
         {
+            Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since layout for snapped view hasn't been developed
+
             this.InitializeComponent();
 
             UpdateCharts();

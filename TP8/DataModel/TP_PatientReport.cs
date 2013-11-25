@@ -777,6 +777,41 @@ namespace TP8.Data
             }
         }
 
+        /// <summary>
+        /// Await loading an image from an external web site
+        /// </summary>
+        /// <param name="uri"></param>
+        public async Task<WriteableBitmap> LoadImageWriteableBitmapFromWeb(Uri uri)
+        {
+            // From Petzold, Programming Windows, 6th edition pg. 692-3
+            /* This simple method will return before the file read is complete.  As expected, this is a problem:  
+                RandomAccessStreamReference streamRef = RandomAccessStreamReference.CreateFromUri(uri);
+                IRandomAccessStreamWithContentType fileStream = await streamRef.OpenReadAsync();
+                WriteableBitmap wb = new WriteableBitmap(1, 1); // dummy values
+                wb.SetSource(fileStream);
+                return wb; */
+            RandomAccessStreamReference streamRef = RandomAccessStreamReference.CreateFromUri(uri);
+
+            // Create a buffer for reading the stream:
+            Windows.Storage.Streams.Buffer buffer = null;
+            // Read the entire file:
+            using (IRandomAccessStreamWithContentType fileStream = await streamRef.OpenReadAsync())
+            {
+                buffer = new Windows.Storage.Streams.Buffer((uint)fileStream.Size);
+                await fileStream.ReadAsync(buffer, (uint)fileStream.Size, InputStreamOptions.None);
+            }
+            WriteableBitmap wb = new WriteableBitmap(1, 1); // dummy values
+            // Create a memory stream for transferring the data
+            using (InMemoryRandomAccessStream memoryStream = new InMemoryRandomAccessStream())
+            {
+                await memoryStream.WriteAsync(buffer);
+                memoryStream.Seek(0);
+                // Use the memory stream as the Bitmap Source
+                wb.SetSource(memoryStream);
+            }
+            return wb;
+        }
+
         // Name to store image under when decoded
         public string FormatImageName()
         {
@@ -1460,11 +1495,11 @@ namespace TP8.Data
         private string MapWhenLocalTime(Search_Response_Toplevel_Row item)
         {
             // Maybe need to chew off -04:00:
-#if SOON
-            return item.last_posted; // Assume same format and timezone as last_updated
-#else
-            return item.last_updated;// last_updated "2013-08-12T18:31:50-04:00" or creation_time "2013-08-12T18:29:54-04:00"
-#endif
+            if(item.edxl != null && item.edxl.Count() > 0 && !String.IsNullOrEmpty(item.edxl[0].last_posted))
+                return item.edxl[0].last_posted; // Assume same format and timezone as last_updated
+            if (!String.IsNullOrEmpty(item.last_updated))
+                return item.last_updated;
+            return item.creation_time;
         }
 
         private string MapTimeZone(Search_Response_Toplevel_Row item)   // TO DO
@@ -1478,65 +1513,76 @@ namespace TP8.Data
 
         private string MapDateEDXL(Search_Response_Toplevel_Row item)
         {
+            if (item.edxl == null || item.edxl.Count() == 0 || String.IsNullOrEmpty(item.edxl[0].distr_id))
+                return MapWhenLocalTime(item);
+            string s = item.edxl[0].distr_id;
+            int i = s.LastIndexOf(" ");
+            if (i < 0)
+                return MapWhenLocalTime(item);
+            if (s.Length == i + 1)
+            {
+                // There's a trailing space... could be benign, or indicates a missing datetime
+                // For now, bail...
+                return MapWhenLocalTime(item);
+            }
+            string t = s.Substring(i + 1);
             // Maybe need to chew off -04:00:
-#if SOON
-            return item.last_posted; // Assume same format and timezone as last_updated
-#else
-            return item.last_updated;// last_updated "2013-08-12T18:31:50-04:00" or creation_time "2013-08-12T18:29:54-04:00"
-#endif
+            return t; // TO DO: Actual parse this to confirm its in time format
         }
 
         private string MapDistributionID_EDXL(Search_Response_Toplevel_Row item)
         {
-            // TO DO: Use GetDistributionID(TP_OrgContactInfo oci), but getting oci for all search results may involve lots of web service calls
-            return "TODO";
+            if(item.edxl == null || item.edxl.Count() == 0 || String.IsNullOrEmpty(item.edxl[0].distr_id))
+                return "";
+
+            return item.edxl[0].distr_id;
         }
 
         private string MapSenderID_EDXL(Search_Response_Toplevel_Row item)
         {
-            // TO DO: Use GetSenderID(TP_OrgContactInfo oci), but getting oci for all search results may involve lots of web service calls
-            return "TODO";
+            if (item.edxl == null || item.edxl.Count() == 0 || String.IsNullOrEmpty(item.edxl[0].sender_id))
+                return "";
+
+            return item.edxl[0].sender_id;
         }
 
         private string MapDeviceName(Search_Response_Toplevel_Row item)
         {
-#if SOON
-            return.item.login_machine;
-#else
-            return "TODO";
-#endif
+            if (item.edxl == null || item.edxl.Count() == 0 || String.IsNullOrEmpty(item.edxl[0].login_machine))
+                return "";
+
+            return item.edxl[0].login_machine;
         }
 
         private string MapUserNameForDevice(Search_Response_Toplevel_Row item) 
         {
-#if SOON
-            return.item.login_account; // aka users.user_name
-#else
-            return "TODO";
-#endif
+            if (item.edxl == null || item.edxl.Count() == 0 || String.IsNullOrEmpty(item.edxl[0].login_account))
+                return "";
+
+            return item.edxl[0].login_account; // aka users.user_name
         }
 
         private string MapUserNameForWebService(Search_Response_Toplevel_Row item)
         {
-#if SOON
-            return.item.reporter_username;
-#else
-            return "TODO";
-#endif
+            return item.reporter_username;
         }
 
         private string MapOrgName(Search_Response_Toplevel_Row item)
         {
+            if (item.hospital_uuid == null)
+                return "Public/Other";
             TP_OrgData od = App.OrgDataList.GetOrgDataFromOrgUuid(item.hospital_uuid.ToString());
             if (od != null && !String.IsNullOrEmpty(od.OrgName))
                 return od.OrgName;
-            if (!IsNullFromPLUS(item.last_seen)) // has organization long name if reported by TriagePic
+            if (!String.IsNullOrEmpty(item.last_seen)) // has organization long name if reported by TriagePic
                 return item.last_seen;
             return "TODO"; // Could try search by OrgName too...
         }
 
         private string MapOrgID(Search_Response_Toplevel_Row item)
         {
+            if (item.hospital_uuid == null)
+                return "0"; // Public/Other
             TP_OrgData od = App.OrgDataList.GetOrgDataFromOrgUuid(item.hospital_uuid.ToString());
             if(od == null || String.IsNullOrEmpty(od.OrgNPI))
                 return "TODO";
@@ -1550,20 +1596,19 @@ namespace TP8.Data
          private string MapPatientID(Search_Response_Toplevel_Row item)
          {
              // includes prefix.  If from Win 7, or we implement practice mode in Win 8, may begin with "Prac"
-#if SOON
-             return item.mass_casualty_id;
-#else
-             return "TODO";
-#endif
+             if (item.edxl == null || item.edxl.Count() == 0 || String.IsNullOrEmpty(item.edxl[0].mass_casualty_id))
+                 return "";
+
+             return item.edxl[0].mass_casualty_id;
          } 
 
          private string MapZone(Search_Response_Toplevel_Row item)
          {
-#if SOON
-             return item.triage_category
-#else
+             if (item.edxl != null && item.edxl.Count() > 0 && !String.IsNullOrEmpty(item.edxl[0].triage_category))
+                 return item.edxl[0].triage_category;
+
              // Estimate from Sahana status
-             if(IsNullFromPLUS(item.opt_status))
+             if(String.IsNullOrEmpty(item.opt_status))
                  return "Green"; // TO DO: Org psecific
              switch (item.opt_status)
              {
@@ -1573,11 +1618,10 @@ namespace TP8.Data
                  default: break;
              }
              return "Green"; // can't really express unknown for this.  Probably should change that.
-#endif
          }
 
-        /// <summary>
-        /// Based on opt_gender, returns "M","F","U","C" for male, female, unknown, complex.  Unknown if any problem.
+         /// <summary>
+        /// Based on opt_gender, returns "Male","Female","Unknown", or "Complex Gender".  Unknown if any problem.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -1586,47 +1630,61 @@ namespace TP8.Data
              switch (item.opt_gender)
              {
                  case "mal":
-                     return "M";
+                     return "Male";  // reported as M
                  case "fml":
-                     return "F";
+                     return "Female";  // reported as F
                  case "cpx":
-                     return "C";
-                 case "null":
-                 default:
+                     return "Complex Gender";  // reported as C
+                 default:  // include unk, null    // reported as U
                      break;
              }
-             return "U";
+             return "Unknown";
          }
 
+
         /// <summary>
-         /// Returns "Y" = pediatics ("peds") or youth or 0-17, "N" = adult or 18+, "" if unknown or problem
+         /// Returns "Youth" = pediatics ("peds") = Y or youth or 0-17, "Adult" = adult or 18+, "Unknown Age Group" if unknown or problem.
+         /// Special case: "Other Age Group (e.g., Expectant)", which may or may not be handled right here & at TriageTrak
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
          private string MapAgeGroup(Search_Response_Toplevel_Row item)
          {
-             if(!IsNullFromPLUS(item.years_old))
+             if(!String.IsNullOrEmpty(item.years_old))
              {
                  try
                  {
                      UInt32 age = Convert.ToUInt32(item.years_old);
                      if(age >= 0 && age <= 17)
-                         return "Y";
+                         return "Youth";  // reported as Y for Peds
                      if (age >= 18 && age <= 150)
-                         return "N";
+                         return "Adult";  // reported as N for Peds
                      // If problem, ignore age, look at just min and max
                  }
                  catch(Exception) {}// If problem, ignore age, look at just min and max
              }
-             if (item.min_age < 0 || item.max_age < 0 || item.min_age > 150 || item.max_age > 150 || item.min_age > item.max_age)
-                 return "";
-             //if (IsNullFromPLUS(item.min_age) || IsNullFromPLUS(item.max_age))
+             if (String.IsNullOrEmpty(item.min_age) || String.IsNullOrEmpty(item.max_age))
+                 return "Unknown Age Group";
+             UInt32 minAge;
+             UInt32 maxAge;
+             try
+             {
+                 minAge = Convert.ToUInt32(item.min_age);
+                 maxAge = Convert.ToUInt32(item.max_age);
+             }
+             catch (Exception)
+             {
+                 return "Unknown Age Group";
+             }
+             if (minAge > 150 || maxAge > 150 || minAge > maxAge)
+                 return "Unknown Age Group";
+             //if (String.IsNullOrEmpty(item.min_age) || String.IsNullOrEmpty(item.max_age))
              //    return "";
-             if (item.min_age <= 17 && item.max_age >= 18) // straddles adult & youth.  Indeterminate
-                 return "";
-             if (item.max_age <= 17)
-                 return "Y";
-             return "N";
+             if (minAge <= 17 && maxAge >= 18) // straddles adult & youth.  Indeterminate
+                 return "Other Age Group (e.g., Expectant)";  // MAYBE this is how mapping should work
+             if (maxAge <= 17)
+                 return "Youth";
+             return "Adult";
          } 
          
         /// <summary>
@@ -1639,17 +1697,17 @@ namespace TP8.Data
              // Usual problem, first name is not necessarily given_name (culture specific), but force for now.
              // Could make smarter if take location of event into account
              string ret = "";
-             if(!IsNullFromPLUS(item.given_name))
+             if(!String.IsNullOrEmpty(item.given_name))
              {
                 ret = item.given_name;
-                if(!IsNullFromPLUS(item.alternate_names))
+                if(!String.IsNullOrEmpty(item.alternate_names))
                     ret += " \"" + item.alternate_names + "\""; // treat as nick
              }
-             else if(!IsNullFromPLUS(item.full_name))
+             else if(!String.IsNullOrEmpty(item.full_name))
              {
                  ret = GetAllButLastWord(item.full_name);
              }
-             else if(!IsNullFromPLUS(item.alternate_names))
+             else if(!String.IsNullOrEmpty(item.alternate_names))
              {
                  ret = GetAllButLastWord(item.alternate_names);
              }
@@ -1676,15 +1734,15 @@ namespace TP8.Data
              // Usual problem, last name is not necessarily family_name (culture specific), but force for now.
              // Could make smarter if take location of event into account
              string ret = "";
-             if (!IsNullFromPLUS(item.family_name))
+             if (!String.IsNullOrEmpty(item.family_name))
              {
                  ret = item.family_name;
              }
-             else if (!IsNullFromPLUS(item.full_name))
+             else if (!String.IsNullOrEmpty(item.full_name))
              {
                  ret = GetLastWord(item.full_name);
              }
-             else if (!IsNullFromPLUS(item.alternate_names)) // could this be comma-separated? don't know
+             else if (!String.IsNullOrEmpty(item.alternate_names)) // could this be comma-separated? don't know
              {
                  ret = GetLastWord(item.alternate_names);
              }
@@ -1704,7 +1762,7 @@ namespace TP8.Data
          private bool MapEventData(Search_Response_Toplevel_Row item)
          {
              string evID = item.incident_id.ToString();
-             if (IsNullFromPLUS(evID))
+             if (String.IsNullOrEmpty(evID))
                  return false;
              TP_EventsDataItem edi = App.CurrentDisasterList.FindByIncidentID(evID);
              if (edi == null)
@@ -1721,18 +1779,42 @@ namespace TP8.Data
          // Only supporting 1 image so far.  Look for primary:
          private void MapImageInfo(Search_Response_Toplevel_Row item)
          {
+             /* Example:
+                    "images":[
+                    {
+                    "note_record_id":null,
+                    "image_id":"86576",
+                    "image_type":"jpeg",
+                    "image_height":"598",
+                    "image_width":"440",
+                    "created":"2013-11-07 13:58:29",
+                    "url":"tmp\/plus_cache\/pl.nlm.nih.govSLASHperson.2961741__86576_full.jpg",
+                    "url_thumb":"tmp\/plus_cache\/pl.nlm.nih.govSLASHperson.2961741__86576_thumb.jpg",
+                    "original_filename":"911-00003 Gray.jpg",
+                    "principal":"1",
+                    "sha1original":"b0b0e7f818effd77e81f413bf7b4cde8436119d3",
+                    "color_channels":"3",
+                    "note_id":0,
+                    "tags":[]
+                    }], */
              foreach (Search_Response_Image i in item.images)
              {
-                 if (i.principal == 1)
+                 if (i.principal == "1" || item.images.Count() == 1)
                  {
+                     string endpoint = App.pl.Endpoint.Address.Uri.AbsoluteUri; // find path to TriageTrak, chew off trailing "/?wsdl&api=<num>"
+                     int lastslash = endpoint.LastIndexOf('/');
+                     App.MyAssert(lastslash > 0);
+                     endpoint = endpoint.Substring(0, lastslash);
                      this.ImageName = i.original_filename; // MAYBE
-                     this.ImageEncoded = i.url_thumb; // MAYBE.  For full size, see i.url
+                     // Note: don't replace ...SLASH... with .../...
+                     this.ImageEncoded = endpoint + "/" + i.url_thumb; // MAYBE.  For full size, see i.url.  Dump this here, then we'll replace it in TP_PatientReportsSource after image fetch
+                     //this.GetImageSha1Hash
                      this.ImageCaption = "";
                      foreach (Search_Response_Tag t in i.tags)
                      {
-                         if (t.x == 0 && t.y == 0 && t.w == 0 && t.h == 0)
+                         if (t.tag_x == "0" && t.tag_y == "0" && t.tag_w == "0" && t.tag_h == "0")
                          {
-                             this.ImageCaption = t.value;
+                             this.ImageCaption = t.tag_text;
                              break;
                          }
                      }
@@ -1743,21 +1825,42 @@ namespace TP8.Data
          //private string MapImageName(Search_Response_Toplevel_Row item) {return "TODO";} // name when decoded, w/o path
          //private string MapImageEncoded(Search_Response_Toplevel_Row item) {return "TODO";}
          //private string MapImageCaption(Search_Response_Toplevel_Row item) {return "TODO";}
-         private string MapComments(Search_Response_Toplevel_Row item) {return "TODO";}
+         private string MapComments(Search_Response_Toplevel_Row item)
+         {
+             //"last_clothing":null,"other_comments":"LPF notification - disaster victim arrives at hospital triage station&amp;#10;Pictures: 1"
+             string oc = item.other_comments;
+             if (String.IsNullOrEmpty(oc) && String.IsNullOrEmpty(item.last_clothing)  && String.IsNullOrEmpty(item.last_seen))
+                 return "";
+             oc = oc.Replace("&amp;#10;", "\n"); // kludge until TriageTrak is fixed
+             oc = oc.Replace("&#10;", "\n");
+             string[] oca = oc.Split('\n');
+             string results = "";
+             foreach (string ss in oca)
+             {
+                 if (ss == "")
+                     continue;
+                 if (ss.Contains("LPF notification - disaster victim arrives at hospital triage station")) // Uniformative here
+                     continue;
+                 if (ss.Contains("Pictures: "))
+                     continue; // We'll handle this elsewhere
+                 if (ss.StartsWith("Comments: "))
+                 {
+                     results += ss.Substring("Comments: ".Length); // chew of Comments
+                     continue;
+                 }
+                 results += ss + "n";
+             }
+             if (!String.IsNullOrEmpty(item.last_clothing))
+                 results += "Last clothing: " + item.last_clothing + "\n";
+             if ((item.hospital_uuid == null) && !String.IsNullOrEmpty(item.last_seen))
+                 results += "Last seen: " + item.last_seen + "\n";
+             return results;
+         }
                         // TO DO: station staff
          private string MapWhyNoPhotoReason(Search_Response_Toplevel_Row item) {return "TODO";} // TO DO
          //private string FullNameEDXL_and_LP2 = "" {} // temp file for debug
                         //private BitmapImage _imageBitmap = null {} // Ignored for serialization
          private WriteableBitmap MapImageWriteableBitmap(Search_Response_Toplevel_Row item) {return null;} // TO DO
-
-         private bool IsNullFromPLUS(string s)
-         {
-             if (String.IsNullOrEmpty(s))
-                 return true;
-             if (s == "<null>")
-                return true;
-             return false;
-         }
 
     }
 }

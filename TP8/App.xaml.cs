@@ -86,7 +86,8 @@ namespace TP8
         public enum SortByItem
         {
             ArrivalTime,
-            PatientID,
+            PatientIdWithPrefixAlphabetic,
+            PatientIdSkipPrefixNumeric,
             FirstName,
             LastName,
             Gender,

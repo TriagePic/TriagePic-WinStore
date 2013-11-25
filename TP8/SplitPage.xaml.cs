@@ -32,6 +32,7 @@ namespace TP8
         private Popup discardMenuPopUp = null;
         private Popup whyDiscardedPopUp = null;
         private string uuid = "";
+        DispatcherTimer dt = null;
 
         public SplitPage()
         {
@@ -60,7 +61,7 @@ namespace TP8
             App.CurrentSearchResultsGroupName =(String)navigationParameter;
 
             // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
-            App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" checkbox
+            App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
             SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
 
             if (pageState == null)
@@ -86,6 +87,28 @@ namespace TP8
             CheckBoxCurrentEventOnlyPortrait.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
             CheckBoxMyOrgOnlyPortrait.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
             sortedByTextPortrait.Text = sortedByText.Text = "Sorted " + App.PatientDataGroups.GetShortSortDescription(); // Similar to DefaultViewModel["QueryText"] in SearchResultsPage
+            UpdateCountInTitle();
+            dt = new DispatcherTimer();
+            dt.Interval = new TimeSpan(0, 0, 0, 0, 1000); // 1000 milliseconds
+            dt.Tick += dt_TickRefreshView;
+            dt.Start();
+        }
+
+        public void dt_TickRefreshView(object sender, object e) // In Win8, 2nd arg has to be of type object, not EventArgs
+        {
+            App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
+            UpdateCountInTitle();
+            SampleDataSource.RefreshOutboxAndAllStationsItems();
+        }
+
+        private void UpdateCountInTitle()
+        {
+            int count;
+            if (App.CurrentSearchResultsGroupName.Contains("Outbox"))
+                count = App.PatientDataGroups.GetOutboxSortedAndFiltered().Count();
+            else
+                count = App.PatientDataGroups.GetAllStationsSortedAndFiltered().Count();
+            countOfItems.Text = "(" + count + ")";
         }
 
         /// <summary>
@@ -96,6 +119,7 @@ namespace TP8
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
+            dt.Stop();
             if (this.itemsViewSource.View != null)
             {
                 var selectedItem = (SampleDataItem)this.itemsViewSource.View.CurrentItem;
