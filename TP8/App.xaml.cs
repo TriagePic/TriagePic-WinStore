@@ -28,7 +28,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using Callisto.Controls;
-using MyToolkit.Controls;
+//using MyToolkit.Controls;
 using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
 using Windows.System.UserProfile;

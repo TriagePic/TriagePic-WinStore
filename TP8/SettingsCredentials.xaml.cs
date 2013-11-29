@@ -33,7 +33,10 @@ namespace TP8
         {
             string results = await App.service.VerifyPLCredentials(TextBoxUserNamePLUS.Text, PasswordBoxPLUS.Password, true /*hospitalStaffOrAdminOnly*/);
             if (results == "")
+            {
                 PasswordStatus.Text = "User name and password are valid";
+                // TO DO:  Save validated change to App.UserAndVersions.  See TP_UserAndVersions
+            }
             else
                 PasswordStatus.Text = "User name and/or password INVALID";
         }

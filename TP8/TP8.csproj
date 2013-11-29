@@ -349,12 +349,6 @@
     <Reference Include="PopupHelpers.Lib">
       <HintPath>..\..\PopupHelpers\PopupHelpers\PopupHelpers.Lib\bin\Debug\PopupHelpers.Lib.dll</HintPath>
     </Reference>
-    <Reference Include="TimeZones">
-      <HintPath>..\packages\WinRTTimeZones.0.7.4\lib\netcore45\TimeZones.dll</HintPath>
-    </Reference>
-    <Reference Include="TimeZones.NetCore">
-      <HintPath>..\packages\WinRTTimeZones.0.7.4\lib\netcore45\TimeZones.NetCore.dll</HintPath>
-    </Reference>
     <Reference Include="WinRTXamlToolkit">
       <HintPath>..\packages\winrtxamltoolkit.1.3.7.2\lib\netcore45\WinRTXamlToolkit.dll</HintPath>
     </Reference>

@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TP8"
     xmlns:common="using:TP8.Common"
-    xmlns:mytool="using:MyToolkit.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -15,6 +14,7 @@
     d:DesignHeight="768" 
     d:DesignWidth="320"> <!-- width was 346, but might be problem in Snapped View with its 320 width-->
     <!-- 768 height is minimum rez needs to be supported -->
+    <!-- WAS:     xmlns:mytool="using:MyToolkit.Controls" -->
         
     <!-- This page is designed for SNAPPED mode only.  For other modes, use the flyout version.  -->
 
