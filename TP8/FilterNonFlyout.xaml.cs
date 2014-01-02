@@ -147,6 +147,7 @@ namespace TP8
         {
             searchAgainstNameNF.IsChecked = App.CurrentFilterProfile.SearchAgainstName;
             searchAgainstIDNF.IsChecked = App.CurrentFilterProfile.SearchAgainstID;
+            reportedAtMyOrgOnlyNF.IsChecked = App.CurrentFilterProfile.ReportedAtMyOrgOnly;
             eventTestDemoExerciseNF.IsChecked = App.CurrentFilterProfile.DisasterEventIncludeTest;
             eventRealNF.IsChecked = App.CurrentFilterProfile.DisasterEventIncludeReal;
             eventPrivateNF.IsChecked = App.CurrentFilterProfile.DisasterEventIncludePrivate;
@@ -242,6 +243,12 @@ namespace TP8
             App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
         }
 
+        private void ReportedAtMyOrgOnlyNFCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            App.CurrentFilterProfile.ReportedAtMyOrgOnly = (bool)((CheckBox)sender).IsChecked;
+            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
+        }
+
         private void EventTestDemoExerciseNFCheckBox_Changed(object sender, RoutedEventArgs e)
         {
             App.CurrentFilterProfile.DisasterEventIncludeTest = (bool)((CheckBox)sender).IsChecked;
@@ -301,43 +308,7 @@ namespace TP8
             App.CurrentFilterProfile.IncludeUnknownAgeGroup = (bool)((CheckBox)sender).IsChecked;
             App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
         }
-/* WAS:
-        private void ZoneGreenNFCheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFilterProfile.IncludeGreenZone = (bool)((CheckBox)sender).IsChecked;
-            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
-        }
 
-        private void ZoneBHGreenNFCheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFilterProfile.IncludeBHGreenZone = (bool)((CheckBox)sender).IsChecked;
-            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
-        }
-
-        private void ZoneYellowNFCheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFilterProfile.IncludeYellowZone = (bool)((CheckBox)sender).IsChecked;
-            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
-        }
-
-        private void ZoneRedNFCheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFilterProfile.IncludeRedZone = (bool)((CheckBox)sender).IsChecked;
-            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
-        }
-
-        private void ZoneGrayNFCheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFilterProfile.IncludeGrayZone = (bool)((CheckBox)sender).IsChecked;
-            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
-        }
-
-        private void ZoneBlackNFCheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            App.CurrentFilterProfile.IncludeBlackZone = (bool)((CheckBox)sender).IsChecked;
-            App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
-        }
-*/
         private void HasNameNFCheckBox_Changed(object sender, RoutedEventArgs e)
         {
             App.CurrentFilterProfile.IncludeHasPatientName = (bool)((CheckBox)sender).IsChecked;

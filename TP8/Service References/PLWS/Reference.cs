@@ -18,216 +18,216 @@ namespace TP8.PLWS {
     [System.ServiceModel.ServiceContractAttribute(Namespace="soap/plusWebServices", ConfigurationName="PLWS.plusWebServicesPortType")]
     public interface plusWebServicesPortType {
         
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#ping", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#ping", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.pingResponse> pingAsync(TP8.PLWS.pingRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#pingWithEcho", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#pingWithEcho", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.pingWithEchoResponse> pingWithEchoAsync(TP8.PLWS.pingWithEchoRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getEventList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getEventList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getEventListResponse> getEventListAsync(TP8.PLWS.getEventListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getEventListUser", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getEventListUser", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getEventListUserResponse> getEventListUserAsync(TP8.PLWS.getEventListUserRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getGroupList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getGroupList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getGroupListResponse> getGroupListAsync(TP8.PLWS.getGroupListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getHospitalList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalListResponse> getHospitalListAsync(TP8.PLWS.getHospitalListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getHospitalData", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalData", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalDataResponse> getHospitalDataAsync(TP8.PLWS.getHospitalDataRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getHospitalPolicy", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalPolicy", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalPolicyResponse> getHospitalPolicyAsync(TP8.PLWS.getHospitalPolicyRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getHospitalLegalese", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalLegalese", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseResponse> getHospitalLegaleseAsync(TP8.PLWS.getHospitalLegaleseRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getHospitalLegaleseAnon", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalLegaleseAnon", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseAnonResponse> getHospitalLegaleseAnonAsync(TP8.PLWS.getHospitalLegaleseAnonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getHospitalLegaleseTimestamps", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalLegaleseTimestamps", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseTimestampsResponse> getHospitalLegaleseTimestampsAsync(TP8.PLWS.getHospitalLegaleseTimestampsRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#appCheck", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#appCheck", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#registerPushToken", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#registerPushToken", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerPushTokenResponse> registerPushTokenAsync(TP8.PLWS.registerPushTokenRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#registerUser", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#registerUser", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerUserResponse> registerUserAsync(TP8.PLWS.registerUserRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#registerUserActive", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#registerUserActive", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerUserActiveResponse> registerUserActiveAsync(TP8.PLWS.registerUserActiveRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#changeUserPassword", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#changeUserPassword", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.changeUserPasswordResponse> changeUserPasswordAsync(TP8.PLWS.changeUserPasswordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#resetUserPassword", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#resetUserPassword", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.resetUserPasswordResponse> resetUserPasswordAsync(TP8.PLWS.resetUserPasswordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#forgotUsername", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#forgotUsername", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.forgotUsernameResponse> forgotUsernameAsync(TP8.PLWS.forgotUsernameRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#checkUserAuth", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#checkUserAuth", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.checkUserAuthResponse> checkUserAuthAsync(TP8.PLWS.checkUserAuthRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#checkUserAuthHospital", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#checkUserAuthHospital", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.checkUserAuthHospitalResponse> checkUserAuthHospitalAsync(TP8.PLWS.checkUserAuthHospitalRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getUserStatus", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getUserStatus", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getUserStatusResponse> getUserStatusAsync(TP8.PLWS.getUserStatusRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getUserGroup", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getUserGroup", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getUserGroupResponse> getUserGroupAsync(TP8.PLWS.getUserGroupRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#search", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#search", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchResponse> searchAsync(TP8.PLWS.searchRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#searchWithAuth", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#searchWithAuth", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchWithAuthResponse> searchWithAuthAsync(TP8.PLWS.searchWithAuthRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#searchCount", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#searchCount", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchCountResponse> searchCountAsync(TP8.PLWS.searchCountRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#searchCountWithAuth", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#searchCountWithAuth", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchCountWithAuthResponse> searchCountWithAuthAsync(TP8.PLWS.searchCountWithAuthRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#findMostRecentReportAsFiltered", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#findMostRecentReportAsFiltered", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.findMostRecentReportAsFilteredResponse> findMostRecentReportAsFilteredAsync(TP8.PLWS.findMostRecentReportAsFilteredRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#reportPerson", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#reportPerson", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reportPersonResponse> reportPersonAsync(TP8.PLWS.reportPersonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#reReportPerson", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#reReportPerson", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reReportPersonResponse> reReportPersonAsync(TP8.PLWS.reReportPersonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#expirePerson", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#expirePerson", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.expirePersonResponse> expirePersonAsync(TP8.PLWS.expirePersonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#reportAbuse", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#reportAbuse", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reportAbuseResponse> reportAbuseAsync(TP8.PLWS.reportAbuseRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getPersonExpiryDate", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getPersonExpiryDate", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getPersonExpiryDateResponse> getPersonExpiryDateAsync(TP8.PLWS.getPersonExpiryDateRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#setPersonExpiryDate", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#setPersonExpiryDate", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.setPersonExpiryDateResponse> setPersonExpiryDateAsync(TP8.PLWS.setPersonExpiryDateRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#setPersonExpiryDateOneYear", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#setPersonExpiryDateOneYear", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.setPersonExpiryDateOneYearResponse> setPersonExpiryDateOneYearAsync(TP8.PLWS.setPersonExpiryDateOneYearRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getUuidByMassCasualtyId", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getUuidByMassCasualtyId", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#changeMassCasualtyId", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#changeMassCasualtyId", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.changeMassCasualtyIdResponse> changeMassCasualtyIdAsync(TP8.PLWS.changeMassCasualtyIdRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#hasRecordBeenRevised", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#hasRecordBeenRevised", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.hasRecordBeenRevisedResponse> hasRecordBeenRevisedAsync(TP8.PLWS.hasRecordBeenRevisedRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#addComment", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#addComment", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.addCommentResponse> addCommentAsync(TP8.PLWS.addCommentRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getPersonPermissions", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getPersonPermissions", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getPersonPermissionsResponse> getPersonPermissionsAsync(TP8.PLWS.getPersonPermissionsRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getImageCountsAndTokens", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getImageCountsAndTokens", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageCountsAndTokensResponse> getImageCountsAndTokensAsync(TP8.PLWS.getImageCountsAndTokensRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getImageList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getImageList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageListResponse> getImageListAsync(TP8.PLWS.getImageListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getImageListBlock", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getImageListBlock", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageListBlockResponse> getImageListBlockAsync(TP8.PLWS.getImageListBlockRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=31#getNullTokenList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getNullTokenList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getNullTokenListResponse> getNullTokenListAsync(TP8.PLWS.getNullTokenListRequest request);
     }
@@ -1452,25 +1452,21 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalSH;
+        public string filterHospital;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalWRNMMC;
+        public bool filterHasImage;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalOther;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string pageStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string perPage;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
@@ -1493,9 +1489,8 @@ namespace TP8.PLWS {
                     bool filterAgeChild, 
                     bool filterAgeAdult, 
                     bool filterAgeUnknown, 
-                    bool filterHospitalSH, 
-                    bool filterHospitalWRNMMC, 
-                    bool filterHospitalOther, 
+                    string filterHospital, 
+                    bool filterHasImage, 
                     string pageStart, 
                     string perPage, 
                     string sortBy) {
@@ -1514,9 +1509,8 @@ namespace TP8.PLWS {
             this.filterAgeChild = filterAgeChild;
             this.filterAgeAdult = filterAgeAdult;
             this.filterAgeUnknown = filterAgeUnknown;
-            this.filterHospitalSH = filterHospitalSH;
-            this.filterHospitalWRNMMC = filterHospitalWRNMMC;
-            this.filterHospitalOther = filterHospitalOther;
+            this.filterHospital = filterHospital;
+            this.filterHasImage = filterHasImage;
             this.pageStart = pageStart;
             this.perPage = perPage;
             this.sortBy = sortBy;
@@ -1627,33 +1621,29 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalSH;
+        public string filterHospital;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalWRNMMC;
+        public bool filterHasImage;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalOther;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string pageStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string perPage;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=21)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=22)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=21)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string password;
         
@@ -1676,9 +1666,8 @@ namespace TP8.PLWS {
                     bool filterAgeChild, 
                     bool filterAgeAdult, 
                     bool filterAgeUnknown, 
-                    bool filterHospitalSH, 
-                    bool filterHospitalWRNMMC, 
-                    bool filterHospitalOther, 
+                    string filterHospital, 
+                    bool filterHasImage, 
                     string pageStart, 
                     string perPage, 
                     string sortBy, 
@@ -1699,9 +1688,8 @@ namespace TP8.PLWS {
             this.filterAgeChild = filterAgeChild;
             this.filterAgeAdult = filterAgeAdult;
             this.filterAgeUnknown = filterAgeUnknown;
-            this.filterHospitalSH = filterHospitalSH;
-            this.filterHospitalWRNMMC = filterHospitalWRNMMC;
-            this.filterHospitalOther = filterHospitalOther;
+            this.filterHospital = filterHospital;
+            this.filterHasImage = filterHasImage;
             this.pageStart = pageStart;
             this.perPage = perPage;
             this.sortBy = sortBy;
@@ -1814,25 +1802,21 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalSH;
+        public string filterHospital;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalWRNMMC;
+        public bool filterHasImage;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalOther;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string pageStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string perPage;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
@@ -1855,9 +1839,8 @@ namespace TP8.PLWS {
                     bool filterAgeChild, 
                     bool filterAgeAdult, 
                     bool filterAgeUnknown, 
-                    bool filterHospitalSH, 
-                    bool filterHospitalWRNMMC, 
-                    bool filterHospitalOther, 
+                    string filterHospital, 
+                    bool filterHasImage, 
                     string pageStart, 
                     string perPage, 
                     string sortBy) {
@@ -1876,9 +1859,8 @@ namespace TP8.PLWS {
             this.filterAgeChild = filterAgeChild;
             this.filterAgeAdult = filterAgeAdult;
             this.filterAgeUnknown = filterAgeUnknown;
-            this.filterHospitalSH = filterHospitalSH;
-            this.filterHospitalWRNMMC = filterHospitalWRNMMC;
-            this.filterHospitalOther = filterHospitalOther;
+            this.filterHospital = filterHospital;
+            this.filterHasImage = filterHasImage;
             this.pageStart = pageStart;
             this.perPage = perPage;
             this.sortBy = sortBy;
@@ -1984,33 +1966,29 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalSH;
+        public string filterHospital;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalWRNMMC;
+        public bool filterHasImage;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHospitalOther;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string pageStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
         public string perPage;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=21)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=22)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=21)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string password;
         
@@ -2033,9 +2011,8 @@ namespace TP8.PLWS {
                     bool filterAgeChild, 
                     bool filterAgeAdult, 
                     bool filterAgeUnknown, 
-                    bool filterHospitalSH, 
-                    bool filterHospitalWRNMMC, 
-                    bool filterHospitalOther, 
+                    string filterHospital, 
+                    bool filterHasImage, 
                     string pageStart, 
                     string perPage, 
                     string sortBy, 
@@ -2056,9 +2033,8 @@ namespace TP8.PLWS {
             this.filterAgeChild = filterAgeChild;
             this.filterAgeAdult = filterAgeAdult;
             this.filterAgeUnknown = filterAgeUnknown;
-            this.filterHospitalSH = filterHospitalSH;
-            this.filterHospitalWRNMMC = filterHospitalWRNMMC;
-            this.filterHospitalOther = filterHospitalOther;
+            this.filterHospital = filterHospital;
+            this.filterHasImage = filterHasImage;
             this.pageStart = pageStart;
             this.perPage = perPage;
             this.sortBy = sortBy;
@@ -3364,7 +3340,7 @@ namespace TP8.PLWS {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.plusWebServicesPort)) {
-                return new System.ServiceModel.EndpointAddress("https://triagetrak.nlm.nih.gov/?wsdl&api=31");
+                return new System.ServiceModel.EndpointAddress("https://triagetrak.nlm.nih.gov/?wsdl&api=32");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

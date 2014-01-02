@@ -32,7 +32,8 @@ namespace TP8
         private Popup discardMenuPopUp = null;
         private Popup whyDiscardedPopUp = null;
         private string uuid = "";
-        DispatcherTimer dt = null;
+//        DispatcherTimer dt = null;
+        private bool isOutbox = true;
 
         public SplitPage()
         {
@@ -50,19 +51,57 @@ namespace TP8
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        protected async override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState) // Glenn changes to async
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var group = SampleDataSource.GetGroup((String)navigationParameter);
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
 
             // Dunno if this is a good idea, but need to get group for sort flyout:
             App.CurrentSearchResultsGroupName =(String)navigationParameter;
+            App.MyAssert(App.CurrentSearchResultsGroupName == "Outbox" || App.CurrentSearchResultsGroupName == "AllStations");
+            isOutbox = (bool)(App.CurrentSearchResultsGroupName == "Outbox");
 
             // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
             App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
             SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
+
+            sortedByTextPortrait.Text = sortedByText.Text = "Sorted " + App.PatientDataGroups.GetShortSortDescription(); // Similar to DefaultViewModel["QueryText"] in SearchResultsPage
+            // Either the user naviagated here, or we are resuming from a suspend.  In either case, all stations data may be old.  Refresh if possible:
+            if (isOutbox)
+            {
+                SetOutboxEventAndOrgText(); // Based on App.OutboxCheckBoxCurrentEventOnly
+                CheckBoxCurrentEventOnlyPortrait.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
+                CheckBoxMyOrgOnlyPortrait.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+                // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
+                App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
+                SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
+                UpdateCountInTitle();
+            }
+            else
+            {
+                CheckBoxCurrentEventOnly.Visibility = CheckBoxCurrentEventOnlyPortrait.Visibility = Visibility.Collapsed;
+                SetAllStationsEventAndOrgText();
+                CheckBoxMyOrgOnlyPortrait.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
+                if (App.PatientDataGroups.GetAllStations().Count() == 0)
+                {
+                    // Provide local stale data as backup in case connectivity is no good:
+                    await App.PatientDataGroups.ReadCachedAllStationsList();
+                    if (App.PatientDataGroups.GetAllStations().Count() != 0)
+                    {
+                        App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
+                        SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
+                    }
+                }
+                UpdateCountInTitle();
+                if (App.goodWebServiceConnectivity)
+                {
+                    countOfItems.Text = "(...)";
+                    await App.PatientDataGroups.ReloadAllStationsListAsync();
+                    UpdateCountInTitle();
+                }
+                // else show stale data & its count from when app was started or last refreshed during this session.
+            }
 
             if (pageState == null)
             {
@@ -83,28 +122,24 @@ namespace TP8
                     this.itemsViewSource.View.MoveCurrentTo(selectedItem);
                 }
             }
-            SetEventAndOrgText(); // Based on App.CheckBoxCurrentEventOnly
-            CheckBoxCurrentEventOnlyPortrait.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
-            CheckBoxMyOrgOnlyPortrait.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
-            sortedByTextPortrait.Text = sortedByText.Text = "Sorted " + App.PatientDataGroups.GetShortSortDescription(); // Similar to DefaultViewModel["QueryText"] in SearchResultsPage
-            UpdateCountInTitle();
-            dt = new DispatcherTimer();
-            dt.Interval = new TimeSpan(0, 0, 0, 0, 1000); // 1000 milliseconds
-            dt.Tick += dt_TickRefreshView;
-            dt.Start();
+
+            //dt = new DispatcherTimer();
+            //dt.Interval = new TimeSpan(0, 0, 0, 0, 1000); // 1000 milliseconds
+            //dt.Tick += dt_TickRefreshView;
+            //dt.Start();
         }
 
-        public void dt_TickRefreshView(object sender, object e) // In Win8, 2nd arg has to be of type object, not EventArgs
-        {
-            App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
-            UpdateCountInTitle();
-            SampleDataSource.RefreshOutboxAndAllStationsItems();
-        }
+        //public void dt_TickRefreshView(object sender, object e) // In Win8, 2nd arg has to be of type object, not EventArgs
+        //{
+        //    App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
+        //    UpdateCountInTitle();
+        //    SampleDataSource.RefreshOutboxAndAllStationsItems();
+        //}
 
         private void UpdateCountInTitle()
         {
             int count;
-            if (App.CurrentSearchResultsGroupName.Contains("Outbox"))
+            if (isOutbox)
                 count = App.PatientDataGroups.GetOutboxSortedAndFiltered().Count();
             else
                 count = App.PatientDataGroups.GetAllStationsSortedAndFiltered().Count();
@@ -119,7 +154,7 @@ namespace TP8
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
-            dt.Stop();
+            //dt.Stop();
             if (this.itemsViewSource.View != null)
             {
                 var selectedItem = (SampleDataItem)this.itemsViewSource.View.CurrentItem;
@@ -447,28 +482,51 @@ namespace TP8
                 CheckBoxCurrentEventOnlyPortrait.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
             else
                 CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
-            SetEventAndOrgText();
+            SetOutboxEventAndOrgText();
             LoadState(App.CurrentSearchResultsGroupName, null);
         }
 
         private void CheckBoxMyOrgOnly_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            App.OutboxCheckBoxMyOrgOnly = (bool)((CheckBox)sender).IsChecked;
-            if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
-                CheckBoxMyOrgOnlyPortrait.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+            if (isOutbox)
+            {
+                App.OutboxCheckBoxMyOrgOnly = (bool)((CheckBox)sender).IsChecked;
+                if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
+                    CheckBoxMyOrgOnlyPortrait.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+                else
+                    CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+                SetOutboxEventAndOrgText();
+            }
             else
-                CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
-            SetEventAndOrgText();
+            {
+
+                App.AllStationsCheckBoxMyOrgOnly = (bool)((CheckBox)sender).IsChecked;
+                if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
+                    CheckBoxMyOrgOnlyPortrait.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
+                else
+                    CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
+                SetAllStationsEventAndOrgText();
+            }
             LoadState(App.CurrentSearchResultsGroupName, null);
         }
 
-        private void SetEventAndOrgText()
+        private void SetOutboxEventAndOrgText()
         {
             if (App.OutboxCheckBoxCurrentEventOnly)
                 eventAndOrgTextPortrait.Text = eventAndOrgText.Text = App.CurrentDisaster.EventName + ", ";
             else
                 eventAndOrgTextPortrait.Text = eventAndOrgText.Text = "All Events, ";
             if (App.OutboxCheckBoxMyOrgOnly)
+                eventAndOrgTextPortrait.Text = eventAndOrgText.Text += App.CurrentOrgContactInfo.OrgAbbrOrShortName;
+            else
+                eventAndOrgTextPortrait.Text = eventAndOrgText.Text += "All Orgs";
+        }
+
+        private void SetAllStationsEventAndOrgText()
+        {
+            // Only current event supported
+            eventAndOrgTextPortrait.Text = eventAndOrgText.Text = App.CurrentDisaster.EventName + ", ";
+            if (App.AllStationsCheckBoxMyOrgOnly)
                 eventAndOrgTextPortrait.Text = eventAndOrgText.Text += App.CurrentOrgContactInfo.OrgAbbrOrShortName;
             else
                 eventAndOrgTextPortrait.Text = eventAndOrgText.Text += "All Orgs";

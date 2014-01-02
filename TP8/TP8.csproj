@@ -12,8 +12,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>TP8_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>TP8_StoreKey.pfx</PackageCertificateKeyFile>
     <ExpressionBlendVersion>5.0.30709.0</ExpressionBlendVersion>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <PackageCertificateThumbprint>E3506B3E7479C71D0A1CA34A78FE24DDB628C5F2</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -104,6 +106,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ExtendedSplash.xaml.cs">
+      <DependentUpon>ExtendedSplash.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChartsFlipPage.xaml.cs">
       <DependentUpon>ChartsFlipPage.xaml</DependentUpon>
     </Compile>
@@ -112,6 +117,9 @@
     </Compile>
     <Compile Include="DataModel\TP_ZoneFilters.cs" />
     <Compile Include="DataModel\FrameworkElementExtensions.cs" />
+    <Compile Include="StartupWizUserControl.xaml.cs">
+      <DependentUpon>StartupWizUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ZoneCheckBox.xaml.cs">
       <DependentUpon>ZoneCheckBox.xaml</DependentUpon>
     </Compile>
@@ -206,35 +214,35 @@
     <None Include="Common\ReadMe.txt" />
     <None Include="packages.config" />
     <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
-    <None Include="Service References\PLWS\item.wsdl" />
+    <None Include="Service References\PLWS\item1.wsdl" />
+    <None Include="TP8_StoreKey.pfx" />
     <None Include="TP8_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\blank_for_filter.png" />
-    <Content Include="Assets\NoPhotoBrown%28C17819%29.png" />
+    <Content Include="Assets\NoPhotoBrown%28C17819%29%28300x225%29.png" />
+    <Content Include="Assets\StoreCameraLogo%2850x50%29.png" />
     <Content Include="Assets\yellow_diamond.png" />
     <Content Include="Assets\yellow_outlined_diamond.png" />
-    <Content Include="Assets\ZoneBHGreen.png" />
-    <Content Include="Assets\ZoneGreen.png" />
-    <Content Include="Assets\ZoneYellow.png" />
-    <Content Include="Assets\ZoneRed.png" />
-    <Content Include="Assets\ZoneGray.png" />
-    <Content Include="Assets\ZoneBlack.png" />
-    <Content Include="Assets\SplashCameraLogo.png" />
-    <Content Include="Assets\Logo %28orig sample%29.png" />
+    <Content Include="Assets\SplashCameraLogo%28620x300%29.png" />
     <Content Include="Assets\Red.png" />
-    <Content Include="Assets\Logo.png" />
-    <Content Include="Assets\SmallCameraLogo.png" />
-    <Content Include="Assets\SmallLogo %28orig sample%29.png" />
-    <Content Include="Assets\SplashCameraLogo%28300x300%29.png">
+    <Content Include="Assets\SmallCameraLogo%2830x30%29.png" />
+    <Content Include="Assets\PhotoBackgroundCameraLogo%28300x300%29.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\SplashScreen %28orig sample%29.png" />
-    <Content Include="Assets\SquareCameraLogo.png" />
-    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\SquareCameraLogo%28150x150%29.png" />
     <Content Include="Assets\LightGray.png" />
     <Content Include="Assets\MediumGray.png" />
     <Content Include="Assets\DarkGray.png" />
+    <None Include="Package.StoreAssociation.xml" />
+    <Page Include="ExtendedSplash.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StartupWizUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ZoneCheckBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -340,14 +348,12 @@
     <Reference Include="Callisto">
       <HintPath>..\packages\Callisto.1.2.6\lib\winrt45\Callisto.dll</HintPath>
     </Reference>
-    <Reference Include="MyToolkit">
-      <HintPath>..\packages\MyToolkit.1.9.0\lib\netcore45\MyToolkit.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PopupHelpers.Lib">
-      <HintPath>..\..\PopupHelpers\PopupHelpers\PopupHelpers.Lib\bin\Debug\PopupHelpers.Lib.dll</HintPath>
+    <Reference Include="PopupHelpers.Lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\PopupHelpers\PopupHelpers\PopupHelpers.Lib\bin\Release\PopupHelpers.Lib.dll</HintPath>
     </Reference>
     <Reference Include="WinRTXamlToolkit">
       <HintPath>..\packages\winrtxamltoolkit.1.3.7.2\lib\netcore45\WinRTXamlToolkit.dll</HintPath>

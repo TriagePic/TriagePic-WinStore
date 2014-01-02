@@ -52,8 +52,15 @@ namespace TP8
         /// <summary>
         /// Encrypts the PL username and password and returns them as base64 encoded strings
         /// </summary>
-        public async void EncryptAndBase64EncodePLCredentials()
+        public void EncryptAndBase64EncodePLCredentials()
         // Compare Win 7: void GetEncryptedPLCredentials(ref string plUsername, ref string plPassword)
+        {
+            // Using This version so we can call it from constructor
+            plUserNameEncryptedAndBase64Encoded = EncryptAndBase64EncodeString(plUserName).Result; // blocks awaiting results
+            plPasswordEncryptedAndBase64Encoded  = EncryptAndBase64EncodeString(plPassword).Result; // blocks awaiting results
+        }
+
+        public async Task EncryptAndBase64EncodePLCredentialsAsync()
         {
             plUserNameEncryptedAndBase64Encoded = await EncryptAndBase64EncodeString(plUserName);
             plPasswordEncryptedAndBase64Encoded = await EncryptAndBase64EncodeString(plPassword);

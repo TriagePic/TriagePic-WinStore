@@ -71,7 +71,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-         <TextBlock x:Name="SubtitleWithCount" Grid.RowSpan="2" FontSize="20" FontWeight="Light" Margin="120,120,0,0"/>
+         <TextBlock x:Name="SubtitleWithCount" Text="{Binding Path=subtitleWithCount}"  Grid.RowSpan="2" FontSize="20" FontWeight="Light" Margin="120,120,0,0"/>
 
             <!--
             The remainder of the page is one large FlipView that displays details for

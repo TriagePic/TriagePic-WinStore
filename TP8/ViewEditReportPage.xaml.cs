@@ -260,7 +260,7 @@ namespace TP8
             ViewedDisasterEventTypeIcon = Event.GetIconUriFromEventType();
             if (pr_.ImageWriteableBitmap == null)
             {
-                if (pr_.ImageEncoded.StartsWith("Assets/")) // Might be Assets/NoPhotoBrown(C17819).png
+                if (pr_.ImageEncoded.StartsWith("Assets/")) // Might be Assets/NoPhotoBrown(C17819)(300x225).png
                     pr_.ImageEncoded = "";
                 pr_.ImageWriteableBitmap = await CreateImageAsync(pr_.ImageEncoded);
             }
@@ -305,7 +305,7 @@ namespace TP8
         private void RefreshPatientImageSource()
         {
             if (App.CurrentPatient.ImageWriteableBitmap == null)
-                SetPatientImageSource(new BitmapImage(new Uri(EMBEDDED_FILE_PREFIX + "SplashCameraLogo(300x300).png", UriKind.Absolute)));
+                SetPatientImageSource(new BitmapImage(new Uri(EMBEDDED_FILE_PREFIX + "PhotoBackgroundCameraLogo(300x300).png", UriKind.Absolute)));
             else
                 SetPatientImageSource(App.CurrentPatient.ImageWriteableBitmap);
         }

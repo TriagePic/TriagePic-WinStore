@@ -18,10 +18,12 @@ namespace TP8
                 "  At Device: " + App.DeviceName;
             TextBoxUserNamePLUS.Text = App.pd.plUserName;
             PasswordBoxPLUS.Password = App.pd.plPassword;
-            if (UpdateCredentialsAndCheckSyntax())
-            {
+            PasswordStatus.Text = "";
+            // NO, Can cause lockup due to synchronous call:
+            //if (UpdateCredentialsAndCheckSyntaxSync())
+            //{
                 var t = Validate();  // assign to t to suppress compiler warning
-            }
+            //}
         }
 
         private void ValidateButton_Click(object sender, RoutedEventArgs e)
@@ -43,15 +45,23 @@ namespace TP8
 
         private void TextBoxUserNamePLUS_TextChanged(object sender, Windows.UI.Xaml.Controls.TextChangedEventArgs e)
         {
-            UpdateCredentialsAndCheckSyntax();
+            var t = UpdateCredentialsAndCheckSyntax();
         }
 
         private void PasswordBoxPLUS_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            UpdateCredentialsAndCheckSyntax();
+            var t = UpdateCredentialsAndCheckSyntax();
         }
 
-        private bool UpdateCredentialsAndCheckSyntax()
+// PROBLEMATIC
+//        private bool UpdateCredentialsAndCheckSyntaxSync()
+//        {
+//            // Version to call from constructor
+//            var output = UpdateCredentialsAndCheckSyntax();
+//            return output.Result; // blocks on results
+//        }
+//
+        private async Task<bool> UpdateCredentialsAndCheckSyntax()
         {
             // Would be better to have a settingsFlyout onClose handler, but how to do that not so clear
             // Password:
@@ -67,7 +77,7 @@ namespace TP8
 
             string u = App.pd.plUserName = TextBoxUserNamePLUS.Text;
             string s = App.pd.plPassword = PasswordBoxPLUS.Password;
-            App.pd.EncryptAndBase64EncodePLCredentials(); // might be slow
+            await App.pd.EncryptAndBase64EncodePLCredentialsAsync();
             if (u.Length == 0  && s.Length == 0)
             {
                 PasswordStatus.Text = "Please enter user name & password"; return false;

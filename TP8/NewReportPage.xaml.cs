@@ -246,7 +246,7 @@ namespace TP8
         private void RefreshPatientImageSource()
         {
             if (App.CurrentPatient.ImageWriteableBitmap == null)
-                SetPatientImageSource(new BitmapImage(new Uri(EMBEDDED_FILE_PREFIX + "SplashCameraLogo(300x300).png", UriKind.Absolute)));
+                SetPatientImageSource(new BitmapImage(new Uri(EMBEDDED_FILE_PREFIX + "PhotoBackgroundCameraLogo(300x300).png", UriKind.Absolute)));
             else
                 SetPatientImageSource(App.CurrentPatient.ImageWriteableBitmap);
         }
@@ -456,6 +456,8 @@ namespace TP8
 
             if (Notes.Text == NOTES_TEXT_HINT) // Must match string in XAML too
                 Notes.Text = "";
+            if (App.RosterNames != "")
+                Notes.Text += "\nRoster at Station:\n" + App.RosterNames; // DON'T DO THIS FOR RE-SEND... wait til we handle rostering smarter. 
             if (SyncAndGetCaptionTextBox() == CAPTION_TEXT_HINT) // CAPTION_TEXT_HINT must match string in XAML too
                 SetCaptionTextBox("");
 

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="b56191b4-c587-4cef-bec1-222c0ed2775c" Publisher="CN=NLM" Version="1.0.0.0" />
+  <Identity Name="43399NLMLHNCBCCEB.TriagePic" Publisher="CN=39A47D4F-3C3F-4466-B992-4884C00F3449" Version="1.0.0.0" />
   <Properties>
     <DisplayName>TriagePic</DisplayName>
-    <PublisherDisplayName>NLM</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <PublisherDisplayName>NLM LHNCBC CEB</PublisherDisplayName>
+    <Logo>Assets\StoreCameraLogo(50x50).png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.2.1</OSMinVersion>
@@ -15,9 +15,9 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TP8.App">
-      <VisualElements DisplayName="TriagePic" Logo="Assets\SquareCameraLogo.png" SmallLogo="Assets\SmallCameraLogo.png" Description="TriagePic for Win8 Store, Modern UI.  National Library of Medicine.  Glenn Pearson, software developer" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="TriagePic" Logo="Assets\SquareCameraLogo(150x150).png" SmallLogo="Assets\SmallCameraLogo(30x30).png" Description="TriagePic for Win8 Store, Modern UI.  National Library of Medicine.  Glenn Pearson, software developer" ForegroundText="light" BackgroundColor="#C17819">
         <DefaultTile ShowName="allLogos" ShortName="TriagePic" />
-        <SplashScreen Image="Assets\SplashCameraLogo.png" />
+        <SplashScreen Image="Assets\SplashCameraLogo(620x300).png" />
       </VisualElements>
       <Extensions>
         <Extension Category="windows.search" />

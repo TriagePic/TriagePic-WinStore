@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Documents;
+using TP8.Common;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -26,6 +27,20 @@ namespace TP8
     /// </summary>
     public sealed partial class ItemDetailFlipViewPage : TP8.Common.LayoutAwarePage
     {
+        private string _subtitleWithCount;
+        public string subtitleWithCount
+        {
+            get { return _subtitleWithCount; }
+            set
+            {
+                if (value != _subtitleWithCount)
+                {
+                    _subtitleWithCount = value;
+                    //OnPropertyChanged("SubtitleWithCount");
+                }
+            }
+        }
+
         public ItemDetailFlipViewPage()
         {
             this.InitializeComponent();
@@ -133,13 +148,43 @@ namespace TP8
         {
             if (this.flipView.SelectedIndex < 0)
                 return; // Ignore spurious SelectionChanged events, which sometimes happen after valid call.
-            var tb = (TextBlock)(DependencyObject)MyToolkit.UI.FrameworkElementExtensions.FindVisualChild(this, "SubtitleWithCount");
+            // Doesn't work: subtitleWithCount = "(" + (this.flipView.SelectedIndex + 1).ToString() + " of " + this.flipView.Items.Count.ToString() + ")";
+#if WAS
+            // var tb = (TextBlock)(DependencyObject)MyToolkit.UI.FrameworkElementExtensions.FindVisualChild(this, "SubtitleWithCount");
+            var tb = (TextBlock)(DependencyObject)FindVisualChild<SubtitleWithCount>(this);
             // similar to VisualTreeHelper.GetChild()
             if (tb != null)
             {
                 tb.Text = "(" + (this.flipView.SelectedIndex + 1).ToString() + " of " + this.flipView.Items.Count.ToString() + ")";
             }
+#endif
+            Frame f = (Frame)Window.Current.Content;
+            LayoutAwarePage p = (LayoutAwarePage)f.Content;
+            var tb = (TextBlock)p.FindName("SubtitleWithCount");
+            if (tb != null)
+            {
+                tb.Text = "(" + (this.flipView.SelectedIndex + 1).ToString() + " of " + this.flipView.Items.Count.ToString() + ")";
+            }
         }
+
+/* HOW TO USE?
+        private childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject 
+        { 
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++) 
+            { 
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i); 
+                if (child != null && child is childItem) 
+                    return (childItem)child; 
+                else 
+                { 
+                    childItem childOfChild = FindVisualChild<childItem>(child); 
+                    if (childOfChild != null) 
+                        return childOfChild; 
+                } 
+            } 
+            return null; 
+        } 
+*/
 
 #if SETASIDE
         private void flipView_Loaded(object sender, RoutedEventArgs e)

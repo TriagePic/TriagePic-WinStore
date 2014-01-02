@@ -26,6 +26,13 @@ namespace TP8
             set { this.SetProperty(ref searchAgainstName, value); }
         }
 
+        private bool reportedAtMyOrgOnly;
+        public bool ReportedAtMyOrgOnly
+        {
+            get { return reportedAtMyOrgOnly; }
+            set { this.SetProperty(ref reportedAtMyOrgOnly, value); }
+        }
+
         private bool searchAgainstID;
         public bool SearchAgainstID
         {
@@ -260,6 +267,7 @@ namespace TP8
             FilterProfileName="Default - " + App.CurrentOrgContactInfo.OrgAbbrOrShortName;
             SearchAgainstName = true;
             SearchAgainstID = true;
+            ReportedAtMyOrgOnly = true;
             DisasterEventIncludeTest = true;
             DisasterEventIncludeReal = true;
             DisasterEventIncludePrivate = true;

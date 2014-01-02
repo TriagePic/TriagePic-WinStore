@@ -669,7 +669,7 @@ namespace TP8.Data
              *             imageName += ".png";
              */
 
-            string imageName = "Assets/NoPhotoBrown(C17819).png";
+            string imageName = "Assets/NoPhotoBrown(C17819)(300x225).png";
             return imageName;
         }
 
@@ -1831,24 +1831,27 @@ namespace TP8.Data
              string oc = item.other_comments;
              if (String.IsNullOrEmpty(oc) && String.IsNullOrEmpty(item.last_clothing)  && String.IsNullOrEmpty(item.last_seen))
                  return "";
-             oc = oc.Replace("&amp;#10;", "\n"); // kludge until TriageTrak is fixed
-             oc = oc.Replace("&#10;", "\n");
-             string[] oca = oc.Split('\n');
              string results = "";
-             foreach (string ss in oca)
+             if (!String.IsNullOrEmpty(oc))
              {
-                 if (ss == "")
-                     continue;
-                 if (ss.Contains("LPF notification - disaster victim arrives at hospital triage station")) // Uniformative here
-                     continue;
-                 if (ss.Contains("Pictures: "))
-                     continue; // We'll handle this elsewhere
-                 if (ss.StartsWith("Comments: "))
+                 oc = oc.Replace("&amp;#10;", "\n"); // kludge until TriageTrak is fixed
+                 oc = oc.Replace("&#10;", "\n");
+                 string[] oca = oc.Split('\n');
+                 foreach (string ss in oca)
                  {
-                     results += ss.Substring("Comments: ".Length); // chew of Comments
-                     continue;
+                     if (ss == "")
+                         continue;
+                     if (ss.Contains("LPF notification - disaster victim arrives at hospital triage station")) // Uniformative here
+                         continue;
+                     if (ss.Contains("Pictures: "))
+                         continue; // We'll handle this elsewhere
+                     if (ss.StartsWith("Comments: "))
+                     {
+                         results += ss.Substring("Comments: ".Length); // chew of Comments
+                         continue;
+                     }
+                     results += ss + "n";
                  }
-                 results += ss + "n";
              }
              if (!String.IsNullOrEmpty(item.last_clothing))
                  results += "Last clothing: " + item.last_clothing + "\n";

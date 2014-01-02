@@ -89,22 +89,32 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageChecklist}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="✅  Checklist" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
-        <TextBlock x:Name="DisasterEvent" HorizontalAlignment="Left" Height="32" Margin="481,177,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Disaster Event:" VerticalAlignment="Top" Width="240" FontSize="20"/>
-        <!-- Setting SelectedItem="{Binding None}" and SelectedValuePath=None didn't help bug-->
-        <ComboBox x:Name="EventComboBox" SelectedItem="{Binding None}" HorizontalAlignment="Left" Margin="484,214,4,0" Grid.Row="1" VerticalAlignment="Top" Width="566" MaxHeight="40" SelectionChanged="EventComboBox_SelectionChanged">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="2">
-                        <Image Source="{Binding Path=TypeIconUri}" />
-                        <TextBlock Text="{Binding Path=EventName}" Margin="2"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <TextBlock x:Name="RosterName" HorizontalAlignment="Left" Height="32" Margin="481,300,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Roster Name:" VerticalAlignment="Top" Width="240" FontSize="20"/>
-        <TextBox x:Name="RosterTextBox" HorizontalAlignment="Left" Margin="484,353,0,0" Grid.Row="1" TextWrapping="Wrap" Width="566" Height="32" VerticalAlignment="Top" AcceptsReturn="True" TextChanged="RosterNameTextBox_TextChanged"/>
-        <Button x:Name="Pick" Content="Pick" HorizontalAlignment="Left" Margin="1091,347,0,0" Grid.Row="1" VerticalAlignment="Top" Click="PickButton_Click"/>
-
+        <StackPanel x:Name="mainBox" Grid.Row="1" Margin="481,177,0,0">
+            <TextBlock x:Name="DisasterEvent" HorizontalAlignment="Left" Height="26" TextWrapping="Wrap" Text="Disaster Event:" VerticalAlignment="Top" Width="240" FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <Image HorizontalAlignment="Left" Margin="50,5,10,5" Source="Assets/yellow_diamond.png" Stretch="None"/>
+                <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Height="20" Text="Test, demo, or drill" FontSize="15" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Image HorizontalAlignment="Left" Margin="50,5,10,10" Source="Assets/yellow_outlined_diamond.png" Stretch="None"/>
+                <TextBlock HorizontalAlignment="Left" Margin="0,0,0,0" Height="20" Text="Real - not a drill" FontSize="15" />
+            </StackPanel>
+            <!-- Setting SelectedItem="{Binding None}" and SelectedValuePath=None didn't help bug-->
+            <ComboBox x:Name="EventComboBox" SelectedItem="{Binding None}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="566" MaxHeight="40" SelectionChanged="EventComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Image Source="{Binding Path=TypeIconUri}" />
+                            <TextBlock Text="{Binding Path=EventName}" Margin="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock x:Name="RosterName" HorizontalAlignment="Left" Margin="0,20,0,0" Height="32" TextWrapping="Wrap" Text="Roster Name:" VerticalAlignment="Top" Width="240" FontSize="20"/>
+            <Button x:Name="Pick" Content="Pick" HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Top" Click="PickButton_Click" FontSize="15"/>
+            <TextBox x:Name="RosterTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="566" Height="32" VerticalAlignment="Top" AcceptsReturn="True" TextChanged="RosterNameTextBox_TextChanged"/>
+        </StackPanel>
+        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -121,7 +131,7 @@
                     </Storyboard>
                 </VisualState>
 
-                <!-- The back button and title have different styles when snapped -->
+                <!-- The back button and title have different styles when snapped.  Snapped = 320 width -->
                 <VisualState x:Name="Snapped">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
@@ -130,40 +140,15 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DisasterEvent" Storyboard.TargetProperty="Margin">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainBox" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
                                     <Thickness>4,177,4,0</Thickness>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="EventComboBox" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>4,214,4,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RosterName" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>4,300,4,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RosterTextBox" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>4,353,4,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Pick" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>4,400,4,0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="EventComboBox" Storyboard.TargetProperty="Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="312"/> <!-- 320 minus two size 4 margins -->
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

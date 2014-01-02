@@ -134,6 +134,11 @@ namespace TP8
             App.CurrentFilterProfile.AControlChanged = true; // 1 or more controls changed
         }
 
+        //private void GoBack(object sender, RoutedEventArgs e)
+        //{
+
+//        }
+
         /* TO DO:
         private void ShowTitleAsRadioButton_Checked(object sender, RoutedEventArgs e)
         {

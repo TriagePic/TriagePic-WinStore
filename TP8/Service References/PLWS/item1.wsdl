@@ -308,9 +308,8 @@
           <xsd:element form="unqualified" name="filterAgeChild" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeAdult" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeUnknown" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalSH" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalWRNMMC" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalOther" type="xsd:boolean" />
+          <xsd:element form="unqualified" name="filterHospital" type="xsd:string" />
+          <xsd:element form="unqualified" name="filterHasImage" type="xsd:boolean" />
           <xsd:element form="unqualified" name="pageStart" type="xsd:integer" />
           <xsd:element form="unqualified" name="perPage" type="xsd:integer" />
           <xsd:element form="unqualified" name="sortBy" type="xsd:string" />
@@ -342,9 +341,8 @@
           <xsd:element form="unqualified" name="filterAgeChild" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeAdult" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeUnknown" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalSH" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalWRNMMC" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalOther" type="xsd:boolean" />
+          <xsd:element form="unqualified" name="filterHospital" type="xsd:string" />
+          <xsd:element form="unqualified" name="filterHasImage" type="xsd:boolean" />
           <xsd:element form="unqualified" name="pageStart" type="xsd:integer" />
           <xsd:element form="unqualified" name="perPage" type="xsd:integer" />
           <xsd:element form="unqualified" name="sortBy" type="xsd:string" />
@@ -378,9 +376,8 @@
           <xsd:element form="unqualified" name="filterAgeChild" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeAdult" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeUnknown" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalSH" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalWRNMMC" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalOther" type="xsd:boolean" />
+          <xsd:element form="unqualified" name="filterHospital" type="xsd:string" />
+          <xsd:element form="unqualified" name="filterHasImage" type="xsd:boolean" />
           <xsd:element form="unqualified" name="pageStart" type="xsd:integer" />
           <xsd:element form="unqualified" name="perPage" type="xsd:integer" />
           <xsd:element form="unqualified" name="sortBy" type="xsd:string" />
@@ -411,9 +408,8 @@
           <xsd:element form="unqualified" name="filterAgeChild" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeAdult" type="xsd:boolean" />
           <xsd:element form="unqualified" name="filterAgeUnknown" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalSH" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalWRNMMC" type="xsd:boolean" />
-          <xsd:element form="unqualified" name="filterHospitalOther" type="xsd:boolean" />
+          <xsd:element form="unqualified" name="filterHospital" type="xsd:string" />
+          <xsd:element form="unqualified" name="filterHasImage" type="xsd:boolean" />
           <xsd:element form="unqualified" name="pageStart" type="xsd:integer" />
           <xsd:element form="unqualified" name="perPage" type="xsd:integer" />
           <xsd:element form="unqualified" name="sortBy" type="xsd:string" />
@@ -1252,7 +1248,7 @@
   <wsdl:binding name="plusWebServicesBinding" type="tns:plusWebServicesPortType">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="ping">
-      <soap:operation soapAction="?wsdl&amp;api=31#ping" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#ping" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1261,7 +1257,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="pingWithEcho">
-      <soap:operation soapAction="?wsdl&amp;api=31#pingWithEcho" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#pingWithEcho" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1270,7 +1266,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getEventList">
-      <soap:operation soapAction="?wsdl&amp;api=31#getEventList" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getEventList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1279,7 +1275,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getEventListUser">
-      <soap:operation soapAction="?wsdl&amp;api=31#getEventListUser" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getEventListUser" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1288,7 +1284,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getGroupList">
-      <soap:operation soapAction="?wsdl&amp;api=31#getGroupList" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getGroupList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1297,7 +1293,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalList">
-      <soap:operation soapAction="?wsdl&amp;api=31#getHospitalList" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getHospitalList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1306,7 +1302,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalData">
-      <soap:operation soapAction="?wsdl&amp;api=31#getHospitalData" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getHospitalData" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1315,7 +1311,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalPolicy">
-      <soap:operation soapAction="?wsdl&amp;api=31#getHospitalPolicy" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getHospitalPolicy" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1324,7 +1320,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalLegalese">
-      <soap:operation soapAction="?wsdl&amp;api=31#getHospitalLegalese" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getHospitalLegalese" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1333,7 +1329,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalLegaleseAnon">
-      <soap:operation soapAction="?wsdl&amp;api=31#getHospitalLegaleseAnon" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getHospitalLegaleseAnon" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1342,7 +1338,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalLegaleseTimestamps">
-      <soap:operation soapAction="?wsdl&amp;api=31#getHospitalLegaleseTimestamps" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getHospitalLegaleseTimestamps" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1351,7 +1347,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="appCheck">
-      <soap:operation soapAction="?wsdl&amp;api=31#appCheck" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#appCheck" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1360,7 +1356,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="registerPushToken">
-      <soap:operation soapAction="?wsdl&amp;api=31#registerPushToken" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#registerPushToken" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1369,7 +1365,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="registerUser">
-      <soap:operation soapAction="?wsdl&amp;api=31#registerUser" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#registerUser" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1378,7 +1374,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="registerUserActive">
-      <soap:operation soapAction="?wsdl&amp;api=31#registerUserActive" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#registerUserActive" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1387,7 +1383,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="changeUserPassword">
-      <soap:operation soapAction="?wsdl&amp;api=31#changeUserPassword" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#changeUserPassword" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1396,7 +1392,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="resetUserPassword">
-      <soap:operation soapAction="?wsdl&amp;api=31#resetUserPassword" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#resetUserPassword" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1405,7 +1401,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="forgotUsername">
-      <soap:operation soapAction="?wsdl&amp;api=31#forgotUsername" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#forgotUsername" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1414,7 +1410,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="checkUserAuth">
-      <soap:operation soapAction="?wsdl&amp;api=31#checkUserAuth" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#checkUserAuth" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1423,7 +1419,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="checkUserAuthHospital">
-      <soap:operation soapAction="?wsdl&amp;api=31#checkUserAuthHospital" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#checkUserAuthHospital" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1432,7 +1428,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getUserStatus">
-      <soap:operation soapAction="?wsdl&amp;api=31#getUserStatus" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getUserStatus" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1441,7 +1437,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getUserGroup">
-      <soap:operation soapAction="?wsdl&amp;api=31#getUserGroup" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getUserGroup" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1450,7 +1446,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="search">
-      <soap:operation soapAction="?wsdl&amp;api=31#search" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#search" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1459,7 +1455,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="searchWithAuth">
-      <soap:operation soapAction="?wsdl&amp;api=31#searchWithAuth" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#searchWithAuth" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1468,7 +1464,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="searchCount">
-      <soap:operation soapAction="?wsdl&amp;api=31#searchCount" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#searchCount" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1477,7 +1473,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="searchCountWithAuth">
-      <soap:operation soapAction="?wsdl&amp;api=31#searchCountWithAuth" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#searchCountWithAuth" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1486,7 +1482,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="findMostRecentReportAsFiltered">
-      <soap:operation soapAction="?wsdl&amp;api=31#findMostRecentReportAsFiltered" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#findMostRecentReportAsFiltered" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1495,7 +1491,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="reportPerson">
-      <soap:operation soapAction="?wsdl&amp;api=31#reportPerson" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#reportPerson" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1504,7 +1500,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="reReportPerson">
-      <soap:operation soapAction="?wsdl&amp;api=31#reReportPerson" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#reReportPerson" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1513,7 +1509,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="expirePerson">
-      <soap:operation soapAction="?wsdl&amp;api=31#expirePerson" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#expirePerson" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1522,7 +1518,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="reportAbuse">
-      <soap:operation soapAction="?wsdl&amp;api=31#reportAbuse" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#reportAbuse" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1531,7 +1527,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPersonExpiryDate">
-      <soap:operation soapAction="?wsdl&amp;api=31#getPersonExpiryDate" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getPersonExpiryDate" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1540,7 +1536,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="setPersonExpiryDate">
-      <soap:operation soapAction="?wsdl&amp;api=31#setPersonExpiryDate" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#setPersonExpiryDate" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1549,7 +1545,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="setPersonExpiryDateOneYear">
-      <soap:operation soapAction="?wsdl&amp;api=31#setPersonExpiryDateOneYear" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#setPersonExpiryDateOneYear" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1558,7 +1554,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getUuidByMassCasualtyId">
-      <soap:operation soapAction="?wsdl&amp;api=31#getUuidByMassCasualtyId" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getUuidByMassCasualtyId" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1567,7 +1563,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="changeMassCasualtyId">
-      <soap:operation soapAction="?wsdl&amp;api=31#changeMassCasualtyId" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#changeMassCasualtyId" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1576,7 +1572,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="hasRecordBeenRevised">
-      <soap:operation soapAction="?wsdl&amp;api=31#hasRecordBeenRevised" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#hasRecordBeenRevised" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1585,7 +1581,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addComment">
-      <soap:operation soapAction="?wsdl&amp;api=31#addComment" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#addComment" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1594,7 +1590,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getPersonPermissions">
-      <soap:operation soapAction="?wsdl&amp;api=31#getPersonPermissions" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getPersonPermissions" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1603,7 +1599,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getImageCountsAndTokens">
-      <soap:operation soapAction="?wsdl&amp;api=31#getImageCountsAndTokens" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getImageCountsAndTokens" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1612,7 +1608,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getImageList">
-      <soap:operation soapAction="?wsdl&amp;api=31#getImageList" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getImageList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1621,7 +1617,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getImageListBlock">
-      <soap:operation soapAction="?wsdl&amp;api=31#getImageListBlock" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getImageListBlock" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1630,7 +1626,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getNullTokenList">
-      <soap:operation soapAction="?wsdl&amp;api=31#getNullTokenList" style="document" />
+      <soap:operation soapAction="?wsdl&amp;api=32#getNullTokenList" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1641,7 +1637,7 @@
   </wsdl:binding>
   <wsdl:service name="plusWebServices">
     <wsdl:port name="plusWebServicesPort" binding="tns:plusWebServicesBinding">
-      <soap:address location="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=31" />
+      <soap:address location="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=32" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

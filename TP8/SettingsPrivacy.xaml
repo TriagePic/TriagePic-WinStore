@@ -6,19 +6,43 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
+    d:DesignHeight="800"
     d:DesignWidth="400">
     
     <Grid Style="{StaticResource LayoutRootStyle}" Background="White">
         <StackPanel Orientation="Vertical">
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
-                        Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor scelerisque lorem in vehicula. Aliquam tincidunt, lacus ut sagittis tristique, turpis massa volutpat augue, eu rutrum ligula ante a ante" 
-                        TextWrapping="Wrap"/>            
-            <!-- <HyperlinkButton 
-                NavigateUri="http://windows8applications.codeplex.com/"
-                Content="Click to Access Source Code"/>     -->           
-            <!-- <Button Content="Tap to do dummy operation"
-                    Click="Button_Click_1" Foreground="Black" BorderBrush="#FF991111"/> -->
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap">
+                The TriagePic/TriageTrak system collects and displays rather-minimal data about people arriving at a triage station.
+                This comprises personally identifiable information (name, photo,
+                gender, age group, notes) and general medical status (triage zone).
+                <LineBreak />
+                <LineBreak />
+                This version of TriagePic exchanges patient data only with a designated instance of TriageTrak,
+                via secure https web services.  It will largely be the policies surrounding the particular TriageTrak
+                instance that determine its degree of data privacy.
+                <LineBreak />
+                <LineBreak />
+                TriagePic caches data locally.  This cache is cleared if the app is uninstalled.  The cached TriageTrak
+                username and password are encrypted.
+            </TextBlock>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="#FFEC1414" FontSize="20" 
+                Text="When Reporting to NLM's Demo TriageTrak" Margin="0,10,0,0"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black"  TextWrapping="Wrap">
+                This intended for testing and evaluation, so don't report actual patient data there.  Although you'll be reporting data to a disaster
+                event that requires 'hospital staff' privilege, you will share access with
+                other evaluators given that privilege, so consider the data effectively public.  Only post data about
+                actual people there if circumstances warrant it.
+                <LineBreak />
+                <LineBreak />
+                Information in your TriageTrak login profile, such as email address, will be treated confidentially
+                by NLM and be used only to assist you.  It is NLM policy not to release such
+                information to third parties.
+            </TextBlock>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="#FFEC1414" TextWrapping="Wrap" FontSize="20" Margin="0,10,0,0"
+                Text="With a Private Instance of TriageTrak"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap"
+                Text="The hosting organization should establish infrastructure, policies, and practices to protect privacy, consistent with HIPAA or other appropriate regulations."/>
+
         </StackPanel>
     </Grid>
 </UserControl>

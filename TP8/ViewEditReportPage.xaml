@@ -136,14 +136,14 @@
                 <Viewbox x:Name="PatientImageViewboxSnapped" Visibility="Collapsed" Margin="0,10,0,0" Height="280" Width="280" VerticalAlignment="Top">
                     <Canvas x:Name="PatientImageSnapped" HorizontalAlignment="Left"  VerticalAlignment="Top"  Height="280" Width="280" MaxHeight="404" MaxWidth="550" Background="#FFC17819" >
                         <TextBlock x:Name="patientImageTextOverlaySnapped"  Canvas.Left="7" Canvas.Top="50" Text="No photo.  Click here for webcam." Canvas.ZIndex="1" FontSize="18" Tapped="patientImage_Tapped" FontFamily="Global User Interface"/>
-                        <Image x:Name="patientImageSnapped" Height="280" Width="280" Source="Assets/SplashCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
+                        <Image x:Name="patientImageSnapped" Height="280" Width="280" Source="Assets/PhotoBackgroundCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
                     </Canvas>
                 </Viewbox>
                 <!-- Next item hidden except when portrait view.  With 100px margins, leaves at least 568 width: -->
                 <Viewbox x:Name="PatientImageViewboxPortrait" Visibility="Collapsed" Margin="0,10,0,0" Height="480" Width="568" VerticalAlignment="Top">
                     <Canvas x:Name="PatientImagePortrait" HorizontalAlignment="Left"  VerticalAlignment="Top"  Height="480" Width="568" MaxHeight="568" MaxWidth="1240" Background="#FFC17819" >
                         <TextBlock x:Name="patientImageTextOverlayPortrait" Canvas.Left="130" Canvas.Top="50" Text="No photo.  Click here for webcam." Canvas.ZIndex="1" FontSize="18" Tapped="patientImage_Tapped" FontFamily="Global User Interface"/>
-                        <Image x:Name="patientImagePortrait" Height="480" Width="568" Source="Assets/SplashCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
+                        <Image x:Name="patientImagePortrait" Height="480" Width="568" Source="Assets/PhotoBackgroundCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
                     </Canvas>
                 </Viewbox>
                 <!-- In landscape & filled view, caption is in column 3.  In snapped view, its hidden (for now) -->
@@ -195,7 +195,7 @@
                 <Viewbox x:Name="PatientImageViewboxLandscape"  Height="404" Width="550" VerticalAlignment="Top">
                     <Canvas x:Name="PatientImageLandscape" HorizontalAlignment="Left"  VerticalAlignment="Top"  Height="404" Width="550" MaxHeight="404" MaxWidth="550" Background="#FFC17819" >
                         <TextBlock x:Name ="patientImageTextOverlayLandscape" Canvas.Left="78" Canvas.Top="64" Text="No photo.  Click here for webcam." Canvas.ZIndex="1" FontSize="26" Tapped="patientImage_Tapped" FontFamily="Global User Interface"/>
-                        <Image x:Name="patientImageLandscape" Height="404" Width="545" Source="Assets/SplashCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
+                        <Image x:Name="patientImageLandscape" Height="404" Width="545" Source="Assets/PhotoBackgroundCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
                     </Canvas>
                 </Viewbox>
                 <TextBox x:Name="Caption" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/>

@@ -58,7 +58,9 @@
                 <CheckBox x:Name ="searchAgainstIDNF" Content="ID" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" Margin="30,0,0,0"
                            Checked="SearchAgainstIDNFCheckBox_Changed" Unchecked="SearchAgainstIDNFCheckBox_Changed"/>
             </StackPanel>
-
+            <TextBlock Text="Reported At" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <CheckBox x:Name="reportedAtMyOrgOnlyNF" Content="My Org Only (otherwise any org)" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="210"
+                Checked="ReportedAtMyOrgOnlyNFCheckBox_Changed" Unchecked="ReportedAtMyOrgOnlyNFCheckBox_Changed"/>
             <TextBlock Text="Disaster Event" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="eventTestDemoExerciseNF" Content="Test/Demo/Exercise" VerticalAlignment="Stretch" BorderBrush="Black" Foreground="Black" MinWidth="210"

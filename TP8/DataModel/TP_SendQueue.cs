@@ -165,37 +165,47 @@ namespace TP8.Data
 
             while (true)
             {
-                Type type = ((Frame)Window.Current.Content).CurrentSourcePageType;
-                if (type != null && (type.Name=="BasicPageNew"  || type.Name=="BasicPageViewEdit"))
+                if (Window.Current.Content != null)
                 {
-                    //if (_Frame.Content.GetType() != typeof(BasicPageNew))
-                    //    return;
-                    string s = type.ToString();
-                    //var bpn = (BasicPageNew)_Frame.Content;
-                    //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.dark_traffic;
-                    DarkenTrafficLightOnReportPage(type);
-                    sw.Reset();
-                    sw.Start();
-                    results = await App.service.GetPing(pingLatencyInTenthsOfSeconds); // Thread.Sleep(50); // total delay would be around 62 milliseconds
-                    sw.Stop();
-                    pingLatencyInTenthsOfSeconds = Convert.ToInt32(Math.Round(Convert.ToDouble(sw.ElapsedMilliseconds) / 100.0));
-                    if (sw.Elapsed.TotalMilliseconds > (double)3000.0 || results.Contains("ERROR:")) // > 3 seconds or error
+                    // Throws Invalid conversion exception, but otherwise seems OK:
+                    Type type = ((Frame)Window.Current.Content).CurrentSourcePageType;
+                    // Throws exception: var frame = (Frame)Window.Current.Content;
+                    //dynamic frame = Window.Current.Content;
+                    //dynamic type = frame==null?null:frame.CurrentSourcePageType;
+                    //Type type = frame.GetType();
+                    //string name = Window.Current.Content.ToString();
+                    //if(name.Contains("BasicPageNew") || name.Contains("BasicPageViewEdit")) // use contains because of TP8. prefix
+                    if (type != null && (type.Name == "BasicPageNew" || type.Name == "BasicPageViewEdit"))
                     {
-                        //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.red_traffic;
-                        LightUpRed(type);
-                        App.goodWebServiceConnectivity = false;
-                    }
-                    else if (sw.Elapsed.TotalMilliseconds > (double)500.0) // 1/2 second
-                    {
-                        //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.yellow_traffic;
-                        LightUpYellow(type);
-                        App.goodWebServiceConnectivity = true; // good but not great
-                    }
-                    else
-                    {
-                        //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.green_traffic;
-                        LightUpGreen(type);
-                        App.goodWebServiceConnectivity = true;
+                        //if (_Frame.Content.GetType() != typeof(BasicPageNew))
+                        //    return;
+                        string s = type.ToString();
+                        //var bpn = (BasicPageNew)_Frame.Content;
+                        //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.dark_traffic;
+                        DarkenTrafficLightOnReportPage(type);
+                        sw.Reset();
+                        sw.Start();
+                        results = await App.service.GetPing(pingLatencyInTenthsOfSeconds); // Thread.Sleep(50); // total delay would be around 62 milliseconds
+                        sw.Stop();
+                        pingLatencyInTenthsOfSeconds = Convert.ToInt32(Math.Round(Convert.ToDouble(sw.ElapsedMilliseconds) / 100.0));
+                        if (sw.Elapsed.TotalMilliseconds > (double)3000.0 || results.Contains("ERROR:")) // > 3 seconds or error
+                        {
+                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.red_traffic;
+                            LightUpRed(type);
+                            App.goodWebServiceConnectivity = false;
+                        }
+                        else if (sw.Elapsed.TotalMilliseconds > (double)500.0) // 1/2 second
+                        {
+                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.yellow_traffic;
+                            LightUpYellow(type);
+                            App.goodWebServiceConnectivity = true; // good but not great
+                        }
+                        else
+                        {
+                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.green_traffic;
+                            LightUpGreen(type);
+                            App.goodWebServiceConnectivity = true;
+                        }
                     }
                 }
                 //Thread.Sleep(pingInterval);

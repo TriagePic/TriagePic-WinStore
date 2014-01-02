@@ -61,6 +61,11 @@ namespace TP8
         {
             //Ignore App.CurrentDisaster.EventName;
             App.SearchResultsEventTitleTextBasedOnCurrentFilterProfile = eventText.Text = GetEventTextBasedOnCurrentFilterProfile();
+            // exclude Org from App.SearchResultsEventTitleTextBasedOnCurrentFilterProfile, to ease interrogating string elsewhere
+            if (App.CurrentFilterProfile.ReportedAtMyOrgOnly)
+                eventText.Text += ", " + App.CurrentOrgContactInfo.OrgAbbrOrShortName;
+            else
+                eventText.Text += ", Any Org";
             App.CurrentSearchQuery = navigationParameter as String;
             //App.PatientDataGroups.ReFilter(); // filter or query has changed.  This will affect contents of groups fetched below.
             App.PatientDataGroups.ReSortAndFilter();
@@ -260,13 +265,16 @@ namespace TP8
                 {
                     this.DefaultViewModel["Results"] = GetSearchResultList(g, query);
                 }
-
+#if PROBLEM
+//...namely, code here will show "No results found" and no group subtitles if *either* group has 0 entries, but only makes sense if *both* have 0 entries.
+//so disable for now
                 // Ensure results are found
                 object results;
                 ICollection resultsCollection;
                 if (this.DefaultViewModel.TryGetValue("Results", out results) &&
                     (resultsCollection = results as ICollection) != null &&
                     resultsCollection.Count != 0)
+#endif
                 {
                     VisualStateManager.GoToState(this, "ResultsFound", true);
                     return;
@@ -275,6 +283,7 @@ namespace TP8
 
             // Display informational text when there are no search results.
             VisualStateManager.GoToState(this, "NoResultsFound", true);
+
         }
 
         /// <summary>

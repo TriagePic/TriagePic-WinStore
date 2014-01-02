@@ -24,7 +24,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using LPF_SOAP;
-using Newtonsoft.Json; // needed for WriteableBitmap.PixelBuffer.ToStream()
+using Newtonsoft.Json;
+using System.Runtime.Serialization; // needed for WriteableBitmap.PixelBuffer.ToStream()
 
 // This is the underlying TP data model, which is mapped to the SampleDataItem of the SampleDataSource model with its data bindings in the standard item templates.
 namespace TP8.Data
@@ -187,6 +188,7 @@ namespace TP8.Data
     /// SampleDataSource initializes with placeholder data rather than live production
     /// data so that sample data is provided at both design-time and run-time.
     /// </summary>
+    [DataContract]
     public class TP_PatientDataGroups
     {
         const string PATIENT_REPORTS_ALL_STATIONS_FILENAME = "PatientReportsAllStations.xml";
@@ -269,7 +271,7 @@ namespace TP8.Data
         {
             if(_outbox.Count() == 0)
                 await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword);
-            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword);
+            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, true); // startup is true
 /* WAS:
             await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             if(_allstations.Count() == 0)
@@ -289,74 +291,109 @@ namespace TP8.Data
             SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
         }
 
-
-        public async Task ProcessAllStationsList(string plname, string plpass) //, bool clearFirst)
+        public async Task ReloadAllStationsListAsync()
         {
-            // Compare Win 7 FormTriagePic.ProcessEventList(...)
+            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword); // caches too
+            ScrubAllStations();
+            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false); // as in ReSortAndMinimallyFilter
+            SampleDataSource.RefreshAllStationsItems(); // For benefit of next peek
+        }
+
+        public async Task ReadCachedAllStationsList()
+        {
+            await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME); // These results were previously filtered, so don't have to do that again.
+        }
+
+        public async Task PurgeCachedAllStationsList()
+        {
+            // Do this when the current event changes, cache is no longer valid
+            _allstations.Clear();
+            _allstationssorted.Clear();
+            _allstationssortedandfiltered.Clear();
+            await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME); // empty file
+        }
+
+        /// <summary>
+        /// Get All Stations list from web service for current event.  Assume that in general there's already stale data available if we don't succeed here.
+        /// </summary>
+        /// <param name="plname"></param>
+        /// <param name="plpass"></param>
+        /// <returns></returns>
+        /// 
+        public async Task ProcessAllStationsList(string plname, string plpass) // Compare Win 7 FormTriagePic.ProcessEventList(...)
+        {
+           await ProcessAllStationsList(plname, plpass, false);
+        }
+
+        public async Task ProcessAllStationsList(string plname, string plpass, bool onStartup) // Compare Win 7 FormTriagePic.ProcessEventList(...)
+        {
             //if (clearFirst)
-                _allstations.Clear();
-            bool useCachedAllStationsCurrentEventList = false; // This was global in Win 7
+
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
             s = await App.service.GetReportsFromAllStationsCurrentEvent(plname, plpass);
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - All stations current event list\n"; 
-                //MessageDialog dlg = new MessageDialog("Could not connect to web service to get disaster event list.  Using local cached version instead.");
-                //await dlg.ShowAsync();
-                useCachedAllStationsCurrentEventList = true;
+                App.DelayedMessageToUserOnStartup += "  - All stations current event list\n";
+                return;
             }
-// Maybe empty is OK here
-//            else
-//            {
-//                //s = App.service.GetCleanedContentFromRawResults(s);
-//                if (s.Length == 0)
-//                {
-//                    await App.ErrorLog.ReportToErrorLog("During TP_PatientReportsSource.ProcessEventList", "Invalid empty all stations event list", false);
-//                    // For the user, this is not an error
-//                    App.DelayedMessageToUserOnStartup += "  - All stations current event list (actually, got list from web service but it was invalid)\n"; 
-//                    //MessageDialog dlg = new MessageDialog("Could not get valid disaster event list from web service.  Using local cached version instead.");
-//                    //await dlg.ShowAsync();
-//                    useCachedAllStationsCurrentEventList = true;
-//                }
-//            }
-/* TO DO IN NEXT VERSION:
-            if (useCachedAllStationsCurrentEventList)
-            {
-                await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME); // These results were previously filtered, so don't have to do that again.
-            }
-            else */
-            {
-                responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
-                // Hopefully don't have to add more filtering here... we'll see.
-                if (responseRows != null)
-                {
-                    foreach (var item in responseRows)
-                    {
-                        // TO DO:  In future version, support Practice.  For now, skip any records so labeled
-                        if (item.edxl != null && item.edxl.Count() > 0 && item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
-                            continue;
-#if ONLY_OK
-                        _allstations.Add(await LoadNewPatientReportTextAndImage(item, new TP_PatientReport()));
-                        //No, causes loop artifacts: SampleDataSource.RefreshOutboxAndAllStationsItems();
-                    }
-#else
-                        TP_PatientReport pr = new TP_PatientReport();
-                        pr.LoadFromJsonSearchResponse(item);
-                        _allstations.Add(pr);
 
-                    }
-                    // separate loop to load photos:
-                    foreach (var p in _allstations)
-                    {
-                        if (p.ImageEncoded.Contains("plus_cache")) // sanity check
-                            await LoadNewPatientReportImage(p);
-                    }
-#endif
-                }
+            responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
+            // Hopefully don't have to add more filtering here... we'll see.
+            if (responseRows == null) // Assume this is an error, not just zero reports
+            {
+                // For the user, this is not an error
+                App.DelayedMessageToUserOnStartup += "  - All stations current event list\n";
+                return;
             }
-            // TO DO IN NEXT VERSION WHEN DESIGN IS CLEARER:                  await _allstations.WriteXML();
+
+            _allstations.Clear(); // throw away stale data
+            foreach (var item in responseRows)
+            {
+                // TO DO:  In future version, support Practice.  For now, skip any records so labeled
+                if (item.edxl != null && item.edxl.Count() > 0 && item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
+                    continue;
+
+                // No:_allstations.Add(await LoadNewPatientReportTextAndImage(item, new TP_PatientReport()));
+                //No, causes loop artifacts: SampleDataSource.RefreshOutboxAndAllStationsItems();
+            //}
+
+                TP_PatientReport pr = new TP_PatientReport();
+                pr.LoadFromJsonSearchResponse(item);
+                if (pr.ImageEncoded.Contains("plus_cache")) // sanity check
+                    await LoadNewPatientReportImage(pr);
+                _allstations.Add(pr);
+
+            }
+            // separate loop to load photos:
+#if MAYBENOT
+            // We're getting "Collection was modified; eumerationoperation may not execute" problem.
+            // So add ".ToList()" to make copy.
+            List<TP_PatientReport> all = new List<TP_PatientReport>();
+            all = _allstations.ToList();
+            //foreach (TP_PatientReport i in _allstations)
+            //{
+            //        all.Add(i);
+            //}
+            _allstations.Clear(); // avoid memory clog
+
+            foreach (var p in all)
+            {
+                if (p.ImageEncoded.Contains("plus_cache")) // sanity check
+                    await LoadNewPatientReportImage(p);
+            }
+            _allstations.ReplaceWithList(all);
+#endif
+#if STILLERROR
+            foreach (var p in _allstations.GetAsList())
+            {
+                if (p.ImageEncoded.Contains("plus_cache")) // sanity check
+                    await LoadNewPatientReportImage(p);
+            }
+#endif
+            await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
+            // Caller will take care of _allstationssorted, _allstationssortedandfiltered
         }
 
         public async Task ProcessOutboxList(string plname, string plpass) //, bool clearFirst)
@@ -428,34 +465,20 @@ namespace TP8.Data
             return pr;
         }
 
-
-
-        /*
-        public void ReFilter()
-        {
-            _outboxfiltered.Clear();
-            foreach(TP_PatientReport i in _outbox)
-            {
-                if(InFilteredResults(i, App.CurrentSearchQuery))
-                    _outboxfiltered.Add(i);
-            }
-            _allstationsfiltered.Clear();
-            foreach (TP_PatientReport i in _allstations)
-            {
-                if (InFilteredResults(i, App.CurrentSearchQuery))
-                    _allstationsfiltered.Add(i);
-            }
-        }*/
-
         private void Scrub()
         {
             ScrubOutbox();
-            ScrubImpl(_allstations);
+            ScrubAllStations();
         }
 
         public void ScrubOutbox()
         {
             ScrubImpl(_outbox);
+        }
+
+        public void ScrubAllStations()
+        {
+            ScrubImpl(_allstations);
         }
 
         private void ScrubImpl(TP_PatientReports l)
@@ -472,14 +495,14 @@ namespace TP8.Data
 
         public void ReSortAndFilter()
         {
-            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true);
-            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, true);
+            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
+            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, true, false);
         }
 
         public void ReSortAndMinimallyFilter() // used by SplitPage, filter is only "current event only" checkbox
         {
-            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, false);
-            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, false);
+            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, false, true);
+            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false);
         }
         /// <summary>
         /// When called, converts TP_PatientReports to List<TP_PatientReport>
@@ -487,7 +510,7 @@ namespace TP8.Data
         /// <param name="orig"></param>
         /// <param name="sort"></param>
         /// <param name="sortfilt"></param>
-        private void ReSortAndFilterImpl(TP_PatientReports origL, TP_PatientReports sortL, TP_PatientReports sortfiltL, bool useFullFilter)
+        private void ReSortAndFilterImpl(TP_PatientReports origL, TP_PatientReports sortL, TP_PatientReports sortfiltL, bool useFullFilter, bool isOutbox)
         {
             // If I could figure out how to define TP_PatientReports.OrderBy, wouldn't need these conversions here and at end:
             List<TP_PatientReport> orig = origL.GetAsList();
@@ -577,46 +600,73 @@ namespace TP8.Data
             {
                 // Use limited filtering of Outbox, All Stations splitview.
                 // For fastest speed, do some of the logic outside of loops
-                if (!App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
-                {
-                    foreach (TP_PatientReport i in sort)
-                        sortfilt.Add(i);
-                }
-                else if (App.OutboxCheckBoxCurrentEventOnly && App.OutboxCheckBoxMyOrgOnly)
-                {
-                    foreach (TP_PatientReport i in sort)
-                    {
-                        if (i.EventName == App.CurrentDisaster.EventName && i.OrgName == App.CurrentOrgContactInfo.OrgName)
-                            sortfilt.Add(i);
-                    }
-                }
-                else if (App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
-                {
-                    foreach (TP_PatientReport i in sort)
-                    {
-                        if (i.EventName == App.CurrentDisaster.EventName)
-                            sortfilt.Add(i);
-                    }
-                }
-                else if (!App.OutboxCheckBoxCurrentEventOnly && App.OutboxCheckBoxMyOrgOnly)
-                {
-                    foreach (TP_PatientReport i in sort)
-                    {
-                        if (i.OrgName == App.CurrentOrgContactInfo.OrgName)
-                            sortfilt.Add(i);
-                    }
-                }
-/* WAS, AND LOGIC NOT QUITE RIGHT:
-                foreach (TP_PatientReport i in sort)
+                if (isOutbox)
                 {
                     if (!App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
-                        sortfilt.Add(i);
-                    else if (App.OutboxCheckBoxCurrentEventOnly && i.EventName == App.CurrentDisaster.EventName)
-                        sortfilt.Add(i);
-                    else if (App.OutboxCheckBoxMyOrgOnly && i.OrgName == App.CurrentOrgContactInfo.OrgName)
-                        sortfilt.Add(i);
-                    // else continue
-                } */
+                    {
+                        foreach (TP_PatientReport i in sort)
+                            sortfilt.Add(i);
+                    }
+                    else if (App.OutboxCheckBoxCurrentEventOnly && App.OutboxCheckBoxMyOrgOnly)
+                    {
+                        foreach (TP_PatientReport i in sort)
+                        {
+                            if (i.EventName == App.CurrentDisaster.EventName && i.OrgName == App.CurrentOrgContactInfo.OrgName)
+                                sortfilt.Add(i);
+                        }
+                    }
+                    else if (App.OutboxCheckBoxCurrentEventOnly && !App.OutboxCheckBoxMyOrgOnly)
+                    {
+                        foreach (TP_PatientReport i in sort)
+                        {
+                            if (i.EventName == App.CurrentDisaster.EventName)
+                                sortfilt.Add(i);
+                        }
+                    }
+                    else if (!App.OutboxCheckBoxCurrentEventOnly && App.OutboxCheckBoxMyOrgOnly)
+                    {
+                        foreach (TP_PatientReport i in sort)
+                        {
+                            if (i.OrgName == App.CurrentOrgContactInfo.OrgName)
+                                sortfilt.Add(i);
+                        }
+                    }
+                }
+                else // All Stations split view doesn't implement current event checkbox.  It is always set to true.
+                {
+
+                    if (!App.AllStationsCheckBoxMyOrgOnly)
+                    {
+                        foreach (TP_PatientReport i in sort)
+                            sortfilt.Add(i);
+                    }
+                    else
+                    {
+                        foreach (TP_PatientReport i in sort)
+                        {
+                            if (i.OrgName == App.CurrentOrgContactInfo.OrgName)
+                                sortfilt.Add(i);
+                        }
+                    }
+                    /* Alternative would be to sanity-check this, but we're ONLY loading current event
+                    if (App.AllStationsCheckBoxMyOrgOnly)
+                    {
+                        foreach (TP_PatientReport i in sort)
+                        {
+                            if (i.EventName == App.CurrentDisaster.EventName && i.OrgName == App.CurrentOrgContactInfo.OrgName)
+                                sortfilt.Add(i);
+                        }
+                    }
+                    else
+                    {
+                        foreach (TP_PatientReport i in sort)
+                        {
+                            if (i.EventName == App.CurrentDisaster.EventName)
+                                sortfilt.Add(i);
+                        }
+                    } */
+
+                }
             }
 
             // DON'T NEED, because orig not altered: origL.ReplaceWithList(orig);
@@ -1016,6 +1066,8 @@ namespace TP8.Data
             if (String.IsNullOrEmpty(patientName) && !App.CurrentFilterProfile.IncludeHasNoPatientName)
                 return false;
             if (!String.IsNullOrEmpty(patientName) && !App.CurrentFilterProfile.IncludeHasPatientName)
+                return false;
+            if (App.CurrentFilterProfile.ReportedAtMyOrgOnly && (i.OrgName != App.CurrentOrgContactInfo.OrgName))
                 return false;
             App.MyAssert(!String.IsNullOrEmpty(i.Gender));
             switch (i.Gender)

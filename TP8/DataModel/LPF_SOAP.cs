@@ -1301,14 +1301,11 @@ INSTEAD: */
             sarin.eventShortname = App.CurrentDisaster.EventShortName;
             sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
             sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
-#if v32_OR_LATER
-            sarin.filterOrganizations = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
-#else
-            sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
-#endif
+            sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
+            // WAS before V32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
             sarin.pageStart = "0";
-            sarin.perPage = "1000";
+            sarin.perPage = "250"; // 1000 gave out of memory problems
             sarin.sortBy = ""; // = updated desc, score desc
             sarin.searchTerm = "";
             try
@@ -1343,11 +1340,8 @@ INSTEAD: */
             sarin.eventShortname = App.CurrentDisaster.EventShortName;
             sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
             sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
-#if v32_OR_LATER
-            sarin.filterOrganizations = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
-#else
-            sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
-#endif
+            sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
+            // WAS before v32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
             sarin.pageStart = "0";
             sarin.perPage = "1000";

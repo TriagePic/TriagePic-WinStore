@@ -89,7 +89,7 @@ namespace TP8.Data
                if (_imagePath.StartsWith("Assets/")) // kludge transition for fixed-color tiles
                    this._image = new BitmapImage(new Uri(SampleDataCommon._baseUri, this._imagePath));
                else if (_imagePath.Contains("/plus_cache/") || String.IsNullOrEmpty(_imagePath))
-                   this._image = new BitmapImage(new Uri(SampleDataCommon._baseUri, "Assets/SmallCameraLogo.png")); // TEMP KLUDGE... In ideal world wouldn't get here
+                   this._image = new BitmapImage(new Uri(SampleDataCommon._baseUri, "Assets/SquareCameraLogo(150x150).png")); // TEMP KLUDGE... In ideal world wouldn't get here
                else
                    GetImageFromEncoding();
                return this._image;
@@ -365,6 +365,11 @@ namespace TP8.Data
         public static void RefreshOutboxItems() // Glenn adds
         {
             _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
+        }
+
+        public static void RefreshAllStationsItems() // Glenn adds
+        {
+            _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
         }
 
         public static void RefreshOutboxAndAllStationsItems() // Glenn adds

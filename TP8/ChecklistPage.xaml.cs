@@ -91,7 +91,7 @@ namespace TP8
 
         private void RosterNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //TO DO
+            App.RosterNames = RosterTextBox.Text;
         }
 
         private async void PickButton_Click(object sender, RoutedEventArgs e) // Could return "Task"
@@ -163,6 +163,9 @@ namespace TP8
                 App.CurrentOtherSettings.CurrentEventShortName = tpEvent.EventShortName;
                 App.CurrentOtherSettingsList.UpdateOrAdd(App.CurrentOtherSettings);
                 await App.CurrentOtherSettingsList.WriteXML();
+
+                // Invalid cache data when current event changes
+                await App.PatientDataGroups.PurgeCachedAllStationsList();
             }
         }
 

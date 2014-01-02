@@ -53,6 +53,7 @@ namespace TP8.Data
             }
         }
 #endif
+        // Suppress RaisePropertyChanged, because it causes problems in Checklist page Event combo box.  But will suppression cause it's own problems?  Dunno
         private string _eventName;
         public string EventName
         {
@@ -60,7 +61,7 @@ namespace TP8.Data
             set
             {
                 _eventName = value;
-                RaisePropertyChanged();
+                //RaisePropertyChanged();
             }
         }
 
@@ -71,7 +72,7 @@ namespace TP8.Data
             set
             {
                 _eventType = value;
-                RaisePropertyChanged();
+                //RaisePropertyChanged();
             }
         }
 
@@ -543,6 +544,7 @@ namespace TP8.Data
                         inner.Add(edi);
                     }
                 }
+                await WriteXML();
             }
         }
 

@@ -74,6 +74,7 @@ namespace TP8
         public static ObservableCollection<TP_EventsDataItem> CurrentDisasterListForCombo = new ObservableCollection<TP_EventsDataItem>();
         public static TP_EventsDataList CurrentDisasterListFilters = new TP_EventsDataList();
         public static TP_EventsDataItem CurrentDisaster = new TP_EventsDataItem();
+        public static string RosterNames = "";
         //public static string CurrentDisasterEventName = "";
         //public static string CurrentDisasterEventTypeIcon { get; set; }
         //public static string CurrentDisasterEventID = "";
@@ -119,6 +120,7 @@ namespace TP8
 
         public static bool OutboxCheckBoxCurrentEventOnly = true;
         public static bool OutboxCheckBoxMyOrgOnly = true;
+        public static bool AllStationsCheckBoxMyOrgOnly = true;
 
         public static TP_ZoneChoices ZoneChoices = new TP_ZoneChoices();
 
@@ -188,6 +190,8 @@ namespace TP8
                     try
                     {
                         await SuspensionManager.RestoreAsync();
+                        await DoStartup();
+                        await DoResumeFromTermination();
                     }
                     catch (SuspensionManagerException)
                     {
@@ -199,13 +203,56 @@ namespace TP8
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
+            if (rootFrame.Content != null)
+                Window.Current.Activate(); // app is already running, or the navigation state was restored.
+            else
+            {
+                // Code associated with DoStartup was here, now separate function, called from ExtendedStartup
+                // See multimedialion.wordpress.com/2012/12/13/adding-an-extended-splash-screen-to-a-windows-8-app-tutorial-c
+                SplashScreen splashScreen = args.SplashScreen;
+                ExtendedSplash eSplash = new ExtendedSplash(splashScreen);
+                // Register an event handler to be exectued when the splash screen has been dismissed
+                splashScreen.Dismissed += new TypedEventHandler<SplashScreen, object>(eSplash.onSplashScreenDismissed);
+                //Maybe not...rootFrame.Content = eSplash; // suggested by stackoverflow.com/questions/12743355/screen-flashes-between-splash-and-extended-splash-in-windows-8-app
+                Window.Current.Content = eSplash;
+
+                // Ensure the current window is active
+                Window.Current.Activate();
+                // THIS HUNG: Do not repeat app initialization when already running, just ensure that
+                // the window is active
+                //if (args.PreviousExecutionState == ApplicationExecutionState.Running)
+                //{
+                //    Window.Current.Activate();
+                //    return;
+                //}
+                dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+                await DoStartup();
+                Window.Current.Content = rootFrame; // restore after splash screen
+                sendQueue.StartWork(); // DON'T await.  Needs to be after Window.Current.Content = rootFrame;
+ //           if (rootFrame.Content == null)
+ //           {
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+                if (!rootFrame.Navigate(typeof(HomeItemsPage), "AllGroups"))
+                {
+                    throw new Exception("Failed to create initial page");
+                }
+            }
+        }
+
+        public static async Task DoStartup()
+        {
             await ErrorLog.Init();
             await App.ErrorLog.ReportToErrorLog("FYI: Beginning App.Launch", "", false);
 
             UserWin8Account = await GetUserWin8Account();
             DeviceName = GetDeviceName();
 
-            await UserAndVersions.Init(); // Need PL password for web services to work.  Also init's pd
+            await OrgDataList.Init(); // get list of all hospitals/organizations defined at our TriageTrak.  Don't need username/password for this.
+            // Do this early so startup wizard has info it needs.
+
+            await UserAndVersions.Init(); // Need PL password for web services to work.  Also init's pd.  Startup wiz called here.
             // Initialize app model before navigating to home page, so groups will be set up
 #if MAYBE_NOT_ANY_MORE
             //DefaultFilterProfile.ResetFilterProfileToDefault();
@@ -216,7 +263,7 @@ namespace TP8
             //DelayedMessageToUserOnStartup += "  - TEST OF DELAYED MESSAGE";
             PatientDataGroups = new TP_PatientDataGroups(); // which will use CurrentFilterProfile
             await PatientDataGroups.Init(); // reads in data.  See Init2 further below
-            RegisterSettings(); // Added for settings flyout
+            App.RegisterSettings(); // Added for settings flyout
             // Initialize from events data model.  Take first disaster event in list as default for now.
             //var evcol = new ObservableCollection<TP_EventsDataItem>();
             //evcol = TP_EventsDataList.GetEvents();
@@ -226,11 +273,14 @@ namespace TP8
             foreach (TP_EventsDataItem i in CurrentDisasterList)
                 CurrentDisasterListForCombo.Add(i);
 
-            await OrgDataList.Init(); // get list of all hospitals/organizations defined at our PL/Vesuvius
+            // Moved earlier: await OrgDataList.Init(); // get list of all hospitals/organizations defined at our PL/Vesuvius
 
-            await OrgContactInfoList.Init();
-            if (OrgContactInfoList.Count() > 0)
-                CurrentOrgContactInfo = OrgContactInfoList.First(); // causes too many problems elsewhere: FirstOrDefault();
+            if (String.IsNullOrEmpty(CurrentOrgContactInfo.OrgAbbrOrShortName)) // usually already setup
+            {
+                await OrgContactInfoList.Init();
+                if (OrgContactInfoList.Count() > 0)
+                    CurrentOrgContactInfo = OrgContactInfoList.First(); // causes too many problems elsewhere: FirstOrDefault();
+            }
 
             await ZoneChoices.Init(); // does minimal.  Just done in case OrgPolicyList.Init() runs into trouble.
             await OrgPolicyList.Init(); // Will also fetch data for ZoneChoices.
@@ -245,40 +295,120 @@ namespace TP8
 
             PatientDataGroups.Init2(); // See Init further above.  Init2 handles work after CurrentFilterProfile, actual App.CurrentDisaster have been defined.
 
-            sendQueue.StartWork(); // DON'T await
+            // Moved to later in call sequence: sendQueue.StartWork(); // DON'T await
             await App.ErrorLog.ReportToErrorLog("FYI: Ending App.Launch", "", false);
+        }
 
-            if (rootFrame.Content == null)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                if (!rootFrame.Navigate(typeof(HomeItemsPage), "AllGroups"))
-                {
-                    throw new Exception("Failed to create initial page");
-                }
-            }
-            // Ensure the current window is active
-            Window.Current.Activate();
-            // THIS HUNG: Do not repeat app initialization when already running, just ensure that
-            // the window is active
-            //if (args.PreviousExecutionState == ApplicationExecutionState.Running)
-            //{
-            //    Window.Current.Activate();
-            //    return;
-            //}
-            dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+        private static void DoSaveOnTermination()
+        {
+            // Save things here that aren't otherwise captured by our XML files.
+            // Things captured in XML files:
+            //   CurrentDisasterList
+            //   CurrentDisasterListFilters
+            //   CurrentOtherSettingsList
+            //   FilterProfileList
+            //   ZoneChoices
+            //   OrgPolicyList
+            //   OrgDataList - all hospitals/orgs defined
+            //   OrgContactInfoList - ignore all but first entry on list
+            //   UserAndVersions list
+
+            // Much of this is handled in DoStartup
+            // For this to work for non-strings, supposedly "[DataContract]" should preface struct/class declaration, and "[DataMember]" prefix each member var
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_EventsDataItem));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_PatientReport));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OtherSettings));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_FilterProfile));
+            SuspensionManager.KnownTypes.Add(typeof(TP_PatientDataGroups));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(SortByItem));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OrgPolicy));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OrgContactInfo));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(PLWS.plusWebServicesPortTypeClient));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(LPF_JSON));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_ErrorLog));
+            // Probably not: SuspensionManager.KnownTypes.Add(typeof(ProtectData));
+
+
+            SuspensionManager.SessionState["PatientDataGroups"] = PatientDataGroups;
+
+            // Globals of type string:
+            SuspensionManager.SessionState["RosterNames"] = RosterNames;
+            SuspensionManager.SessionState["CurrentSearchQuery"] = CurrentSearchQuery;
+            SuspensionManager.SessionState["CurrentSearchResultsGroupName"] = CurrentSearchResultsGroupName;
+            SuspensionManager.SessionState["SearchResultsEventTitleTextBasedOnCurrentFilterProfile"] = SearchResultsEventTitleTextBasedOnCurrentFilterProfile;
+            // Don't need, regenerate instead: SuspensionManager.SessionState["UserWin8Account"] = UserWin8Account;
+            SuspensionManager.SessionState["DeviceName"] = DeviceName;
+            SuspensionManager.SessionState["DelayedMessageToUserOnStartup"] = DelayedMessageToUserOnStartup;
+
+
+            // Globals of type bool:
+            SuspensionManager.SessionState["ReportAltered"] = ReportAltered; // used by ViewEditReport
+            SuspensionManager.SessionState["ReportDiscared"] = ReportDiscarded; // used by ViewEditReport
+            SuspensionManager.SessionState["OutboxCheckBoxCurrentEventOnly"] = OutboxCheckBoxCurrentEventOnly;
+            SuspensionManager.SessionState["OutboxCheckBoxMyOrgOnly"] = OutboxCheckBoxMyOrgOnly;
+            SuspensionManager.SessionState["AllStationsCheckBoxMyOrgOnly"] = AllStationsCheckBoxMyOrgOnly;
+            SuspensionManager.SessionState["BlockWebServices"] = BlockWebServices;
+            // Probably not: goodWebServiceConnectivity = false; // Determined by pings.  Don't bother with stale data:
+            //   (bool)SuspensionManager.SessionState["goodWebServiceConnectivity"];
+            SuspensionManager.SessionState["AppFinishedLaunching"] = AppFinishedLaunching;
+
+            // followed by SuspensionManager.SaveAsync();
+        }
+
+        private static async Task DoResumeFromTermination()
+        {
+            // Called after DoStartup.  Organized here by data type.
+            // Globals of type string:
+            RosterNames = (string)SuspensionManager.SessionState["RosterNames"];
+            CurrentSearchQuery = (string)SuspensionManager.SessionState["CurrentSearchQuery"];
+            CurrentSearchResultsGroupName = (string)SuspensionManager.SessionState["CurrentSearchResultsGroupName"];
+            SearchResultsEventTitleTextBasedOnCurrentFilterProfile = (string)SuspensionManager.SessionState["SearchResultsEventTitleTextBasedOnCurrentFilterProfile"];
+            if (String.IsNullOrEmpty(UserWin8Account))
+                UserWin8Account = await GetUserWin8Account(); // Regenerate instead of: UserWin8Account = (string)SuspensionManager.SessionState["UserWin8Account"];
+            if (String.IsNullOrEmpty(DeviceName))
+                DeviceName = GetDeviceName(); // Regenerate instead of: DeviceName = (string)SuspensionManager.SessionState["DeviceName"];
+            DelayedMessageToUserOnStartup = (string)SuspensionManager.SessionState["DelayedMessageToUserOnStartup"]; 
+
+            // Globals of type bool:
+            ReportAltered = (bool)SuspensionManager.SessionState["ReportAltered"]; // used by ViewEditReport
+            ReportDiscarded = (bool)SuspensionManager.SessionState["ReportDiscared"]; // used by ViewEditReport
+            OutboxCheckBoxCurrentEventOnly = (bool)SuspensionManager.SessionState["OutboxCheckBoxCurrentEventOnly"];
+            OutboxCheckBoxMyOrgOnly = (bool)SuspensionManager.SessionState["OutboxCheckBoxMyOrgOnly"];
+            AllStationsCheckBoxMyOrgOnly = (bool)SuspensionManager.SessionState["AllStationsCheckBoxMyOrgOnly"];
+            BlockWebServices = (bool)SuspensionManager.SessionState["BlockWebServices"];
+            // Probably not: goodWebServiceConnectivity = false; // Determined by pings.  Don't bother with stale data: (bool)SuspensionManager.SessionState["goodWebServiceConnectivity"];
+            AppFinishedLaunching = (bool)SuspensionManager.SessionState["AppFinishedLaunching"];
+
+            // Complex types:
+            // Most of restoration of these is handled in DoStartup, but we'll see what's needed here.
+
+            // Probably not: dispatcher = (CoreDispatcher)SuspensionManager.SessionState["dispatcher"];
+            // Probably not: CurrentDisasterListForCombo = (ObservableCollection<TP_EventsDataItem>)SuspensionManager.SessionState["CurrentDisasterListForCombo"];
+            // Probably not: CurrentDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["CurrentDisaster"];
+            // Probably not: CurrentPatient = (TP_PatientReport)SuspensionManager.SessionState["CurrentPatient"];
+            // Probably not: CurrentOtherSettings = (TP_OtherSettings)SuspensionManager.SessionState["CurrentOtherSettings"];
+            // Probably not: ViewedDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["ViewedDisaster"];  // used by ViewEditReport
+            // Probably not: CurrentFilterProfile = (TP_FilterProfile)SuspensionManager.SessionState["CurrentFilterProfile"];
+            PatientDataGroups = (TP_PatientDataGroups)SuspensionManager.SessionState["PatientDataGroups"];
+            // Probably not: SortFlyoutItem = (SortByItem)SuspensionManager.SessionState["SortFlyoutItem"];
+            // Probably not: OrgPolicy = (TP_OrgPolicy)SuspensionManager.SessionState["OrgPolicy"]; // first entry on OrgPolicyList
+            // Probably not: CurrentOrgContactInfo = (TP_OrgContactInfo)SuspensionManager.SessionState["CurrentOrgContactInfo"]; // first entry on OrgContactInfoList
+            // Probably not: pl = (PLWS.plusWebServicesPortTypeClient)SuspensionManager.SessionState["pl"];
+            // Probably not: service = (LPF_JSON)SuspensionManager.SessionState["service"];
+            // Probably not: ErrorLog = (TP_ErrorLog)SuspensionManager.SessionState["ErrorLog"];
+            // Probably not: pd = (ProtectData)SuspensionManager.SessionState["pd"];
+            // Probably not: sendQueue = (TP_SendQueue)SuspensionManager.SessionState["sendQueue"];
         }
 
         #region Settings
 
-        private void RegisterSettings()
+        private static void RegisterSettings()
         {
             var pane = SettingsPane.GetForCurrentView();
             pane.CommandsRequested += Pane_CommandsRequested;
         }
 
-        void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        static void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
             // one way of doing it:
             //    var aboutCommand = new SettingsCommand("About", "About", SettingsHandler);
@@ -392,9 +522,20 @@ namespace TP8
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            DoSaveOnTermination();
             await SuspensionManager.SaveAsync();
+            // Generally, we are saving everything as we go along, so shouldn't have to do this here...
             await PatientDataGroups.GetOutbox().WriteXML();
             await PatientDataGroups.GetAllStations().WriteXML("PatientReportsAllStations.xml"); // REVISIT WHEN WE HAVE ACTUALLY WEB SERVICES
+            //   CurrentDisasterList
+            //   CurrentDisasterListFilters
+            //   CurrentOtherSettingsList
+            //   FilterProfileList
+            //   ZoneChoices
+            //   OrgPolicyList
+            //   OrgDataList - all hospitals/orgs defined
+            //   OrgContactInfoList - ignore all but first entry on list
+            //   UserAndVersions list
 
             // Petzold's suggested way to save stack of page navigation, but I think SuspensionManager does that for us:
             // ApplicationDataContainer appData = ApplicationData.Current.LocalSettings;
@@ -472,7 +613,7 @@ namespace TP8
         /// Return the name of the current logged on user.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GetUserWin8Account()
+        public static async Task<string> GetUserWin8Account()
         {
             // These calls may return null or empty strings
             string displayName = await UserInformation.GetDisplayNameAsync(); // In theory, blockable by privacy settings, UserInformation.NameAccessAllowed.
@@ -493,7 +634,7 @@ namespace TP8
         /// Returns the local win 8 host name.
         /// </summary>
         /// <returns></returns>
-        private string GetDeviceName()
+        private static string GetDeviceName()
         {
             // This is the local win 8 host name, not the hardware manufacturer.
             // From social.msdn.microsoft.com/Forums/windowsapps/en-US/.../retrieve-computer-name-and-the-mac-id-of-the-device
