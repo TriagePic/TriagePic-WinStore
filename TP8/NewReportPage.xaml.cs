@@ -598,13 +598,17 @@ namespace TP8
             App.MyAssert(CheckBoxPeds.IsChecked == false);
             switch (pr_.AgeGroup)
             {
+                case "Other Age Group (e.g., Expectant)": // pregnant
+                    CheckBoxAdult.IsChecked = CheckBoxPeds.IsChecked = true; break;
                 case "Adult":
                     CheckBoxAdult.IsChecked = true; break;
-                case "Pediatric":
+                case "Youth":  // WAS: Pediatric
                     CheckBoxPeds.IsChecked = true; break;
-                case "Unknown":
-                default: break;
+                case "Unknown Age Group":  // WAS: "Unknown"
+                    break;
+                default: App.MyAssert(false); break;
             }
+
             App.MyAssert(CheckBoxMale.IsChecked == false);
             App.MyAssert(CheckBoxFemale.IsChecked == false);
             switch (pr_.Gender)
@@ -616,7 +620,8 @@ namespace TP8
                 case "Complex":
                     CheckBoxMale.IsChecked = CheckBoxFemale.IsChecked = true; break;
                 case "Unknown":
-                default: break;
+                    break;
+                default: App.MyAssert(false); break;
             }
             zoneSelected = pr_.Zone;
             ZoneSelect(zoneSelected);

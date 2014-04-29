@@ -13,9 +13,19 @@ namespace TP8
         public SettingsCredentials()
         {
             InitializeComponent();
-            TextBlockMyWin8Login.Text =
-                "  " + App.UserWin8Account + "\n" +
-                "  At Device: " + App.DeviceName;
+            if (String.IsNullOrEmpty(App.UserWin8Account)) // UserWin8Account may be empty string if user has PC Settings/Privacy/"Let apps use my name and account picture" as false.
+            {
+                TextBlockMyWin8Login.Text =
+                    "  [Login name not available to apps,\n" +
+                    "  due to your PC Settings/Privacy choice]\n" + 
+                    "  At Device: " + App.DeviceName;
+            }
+            else
+            {
+                TextBlockMyWin8Login.Text =
+                    "  " + App.UserWin8Account + "\n" + // UserWin8Account may be empty string if user has PC Settings/Privacy/"Let apps use my name and account picture" as false.
+                    "  At Device: " + App.DeviceName;
+            }
             TextBoxUserNamePLUS.Text = App.pd.plUserName;
             PasswordBoxPLUS.Password = App.pd.plPassword;
             PasswordStatus.Text = "";

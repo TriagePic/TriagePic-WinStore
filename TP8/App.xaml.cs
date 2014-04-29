@@ -246,7 +246,7 @@ namespace TP8
             await ErrorLog.Init();
             await App.ErrorLog.ReportToErrorLog("FYI: Beginning App.Launch", "", false);
 
-            UserWin8Account = await GetUserWin8Account();
+            UserWin8Account = await GetUserWin8Account();  // May be empty string if PC Settings/Prvacy/"Let apps use my name and account picture" is false
             DeviceName = GetDeviceName();
 
             await OrgDataList.Init(); // get list of all hospitals/organizations defined at our TriageTrak.  Don't need username/password for this.
@@ -316,7 +316,7 @@ namespace TP8
             // Much of this is handled in DoStartup
             // For this to work for non-strings, supposedly "[DataContract]" should preface struct/class declaration, and "[DataMember]" prefix each member var
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_EventsDataItem));
-            // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_PatientReport));
+            SuspensionManager.KnownTypes.Add(typeof(TP_PatientReport)); // Added April 28, 2014
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OtherSettings));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_FilterProfile));
             SuspensionManager.KnownTypes.Add(typeof(TP_PatientDataGroups));
@@ -328,7 +328,8 @@ namespace TP8
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_ErrorLog));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(ProtectData));
 
-
+            // Complex:
+            SuspensionManager.SessionState["CurrentPatient"] = CurrentPatient; // Added April 28, 2014
             SuspensionManager.SessionState["PatientDataGroups"] = PatientDataGroups;
 
             // Globals of type string:
@@ -364,6 +365,7 @@ namespace TP8
             CurrentSearchResultsGroupName = (string)SuspensionManager.SessionState["CurrentSearchResultsGroupName"];
             SearchResultsEventTitleTextBasedOnCurrentFilterProfile = (string)SuspensionManager.SessionState["SearchResultsEventTitleTextBasedOnCurrentFilterProfile"];
             if (String.IsNullOrEmpty(UserWin8Account))
+                // May be empty string if PC Settings/Prvacy/"Let apps use my name and account picture" is false
                 UserWin8Account = await GetUserWin8Account(); // Regenerate instead of: UserWin8Account = (string)SuspensionManager.SessionState["UserWin8Account"];
             if (String.IsNullOrEmpty(DeviceName))
                 DeviceName = GetDeviceName(); // Regenerate instead of: DeviceName = (string)SuspensionManager.SessionState["DeviceName"];
@@ -385,7 +387,7 @@ namespace TP8
             // Probably not: dispatcher = (CoreDispatcher)SuspensionManager.SessionState["dispatcher"];
             // Probably not: CurrentDisasterListForCombo = (ObservableCollection<TP_EventsDataItem>)SuspensionManager.SessionState["CurrentDisasterListForCombo"];
             // Probably not: CurrentDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["CurrentDisaster"];
-            // Probably not: CurrentPatient = (TP_PatientReport)SuspensionManager.SessionState["CurrentPatient"];
+            CurrentPatient = (TP_PatientReport)SuspensionManager.SessionState["CurrentPatient"]; // added April 28, 2014.  Current Patient has uncompleted New Report, might be swapped out when taking photo
             // Probably not: CurrentOtherSettings = (TP_OtherSettings)SuspensionManager.SessionState["CurrentOtherSettings"];
             // Probably not: ViewedDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["ViewedDisaster"];  // used by ViewEditReport
             // Probably not: CurrentFilterProfile = (TP_FilterProfile)SuspensionManager.SessionState["CurrentFilterProfile"];
@@ -424,7 +426,8 @@ namespace TP8
             string heading = "My Credentials"; // Using this variable a third time in settings.HeaderText doesn't work
             SettingsCommand credentialsCommand = new SettingsCommand(heading, heading, (x) =>
             {
-                SettingsFlyout settings = new SettingsFlyout();
+                // Note that 8.1 adds Windows.UI.Xaml.Controls.SettingsFlyout.  So we have specify we want Callisto (or do more code changes to specify going over former.
+                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
                 settings.Content = new SettingsCredentials();
                 settings.HeaderText = "My Credentials"; // font color of text will be white or black automatically, depending on background
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
@@ -439,7 +442,7 @@ namespace TP8
             heading = "Policy Options, Set Centrally";
             SettingsCommand optionsCentralCommand = new SettingsCommand(heading, heading, (x) =>
             {
-                SettingsFlyout settings = new SettingsFlyout();
+                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
                 settings.Content = new SettingsOptionsCentral();
                 settings.HeaderText = "Policy Options";
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
@@ -451,7 +454,7 @@ namespace TP8
             heading = "Options Set Here";
             SettingsCommand optionsLocalCommand = new SettingsCommand(heading, heading, (x) =>
             {
-                SettingsFlyout settings = new SettingsFlyout();
+                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
                 settings.Content = new SettingsOptionsLocal();
                 settings.HeaderText = "Options Set Here";
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
@@ -463,7 +466,7 @@ namespace TP8
             heading = "My Organization";
             SettingsCommand orgCommand = new SettingsCommand(heading, heading, (x) =>
             {
-                SettingsFlyout settings = new SettingsFlyout();
+                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
                 settings.Content = new SettingsMyOrg();
                 settings.HeaderText = "My Organization";
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
@@ -475,7 +478,7 @@ namespace TP8
             heading = "Data Privacy";
             SettingsCommand privacyCommand = new SettingsCommand(heading, heading, (x) =>
             {
-                SettingsFlyout settings = new SettingsFlyout();
+                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
                 settings.Content = new SettingsPrivacy();
                 settings.HeaderText = "Data Privacy";
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
@@ -487,7 +490,7 @@ namespace TP8
             heading = "About & Support";
             SettingsCommand aboutCommand = new SettingsCommand(heading, heading, (x) =>
             {
-                SettingsFlyout settings = new SettingsFlyout();
+                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
                 settings.Content = new SettingsAbout();
                 settings.HeaderText = "About & Support"; // font color of text will be white or black automatically, depending on background
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
@@ -616,7 +619,8 @@ namespace TP8
         public static async Task<string> GetUserWin8Account()
         {
             // These calls may return null or empty strings
-            string displayName = await UserInformation.GetDisplayNameAsync(); // In theory, blockable by privacy settings, UserInformation.NameAccessAllowed.
+            // Next 3 calls will be empty string if PC Settings/Prvacy/"Let apps use my name and account picture" is false
+            string displayName = await UserInformation.GetDisplayNameAsync(); // Blockable by privacy settings, UserInformation.NameAccessAllowed.
             // If user is logged on with Microsoft account, this additional info is available:
             string firstName = await UserInformation.GetFirstNameAsync();
             string lastName = await UserInformation.GetLastNameAsync();

@@ -487,6 +487,11 @@ namespace LPF_SOAP
             else // TO DO error detection around convert to int32
                 App.OrgPolicy.OrgPatientIdFixedDigits = Convert.ToInt32(hpout.patientIdSuffixFixedLength);
             App.OrgPolicy.OrgPatientIdPrefixText = hpout.patientIdPrefix;
+// KLUDGE DUE TO DESIGN MESS UP IN TRIAGETRACK AND OTHER APPS:
+            int len = hpout.patientIdPrefix.Length;
+            if (hpout.patientIdPrefix[len-1] != '-') // Force hyphen
+                App.OrgPolicy.OrgPatientIdPrefixText += "-";
+// END KLUDGE
             App.MyAssert(App.OrgPolicy.OrgPatientIdPrefixText != null);
             App.OrgPolicy.TriageZoneListJSON = hpout.triageZoneList;
             await App.ZoneChoices.ParseJsonList(hpout.triageZoneList);

@@ -27,7 +27,9 @@ namespace TP8
 
             StartupPasswordStatus.Text = "";
             StartupOrgComboBox.ItemsSource = App.OrgDataList;
-            StartupOrgComboBox.SelectedIndex = 0; // Until we know otherwise
+            // Compare with similar code in SettingsMyOrg
+            // No, don't trigger handler here: StartupOrgComboBox.SelectedIndex = 0; // Until we know otherwise
+            int choice = 0;
             if (!String.IsNullOrEmpty(App.CurrentOrgContactInfo.OrgName))
             {
                 int count = 0;
@@ -35,14 +37,14 @@ namespace TP8
                 {
                     if (i.OrgName == App.CurrentOrgContactInfo.OrgName)  // Could match instead throughout on EventShortName
                     {
-                        StartupOrgComboBox.SelectedIndex = count;
+                        choice = count;// StartupOrgComboBox.SelectedIndex = count;
                         break;
                     }
                     count++;
                 }
                 // if no match, then remain with first item selected
             }
-
+            StartupOrgComboBox.SelectedIndex = choice; // trigger handler
         }
 
 		private StartupWiz m_startupWiz;
@@ -99,18 +101,15 @@ namespace TP8
 
         }
 
-        private void StartupDoneButton_Click(object sender, RoutedEventArgs e)
+        private void StartupValidateAndContinueButton_Click(object sender, RoutedEventArgs e)
         {
+            var t = Validate(); // assign to t to suppress compiler warning
+            if (StartupPasswordStatus.Text == "User name and/or password INVALID")
+                return;
             App.pd.plUserName = StartupTextBoxUserNamePLUS.Text;
             App.pd.plPassword = StartupPasswordBoxPLUS.Password;
             m_startupWiz.Result = 1;  
             m_startupWiz.CloseAsync();
-        }
-
-
-        private void StartupValidateButton_Click(object sender, RoutedEventArgs e)
-        {
-            var t = Validate(); // assign to t to suppress compiler warning
         }
 
         private async Task Validate()
@@ -124,6 +123,22 @@ namespace TP8
             else
                 StartupPasswordStatus.Text = "User name and/or password INVALID";
         }
+
+#if WAS
+        private void StartupDoneButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.pd.plUserName = StartupTextBoxUserNamePLUS.Text;
+            App.pd.plPassword = StartupPasswordBoxPLUS.Password;
+            m_startupWiz.Result = 1;  
+            m_startupWiz.CloseAsync();
+        }
+
+
+        private void StartupValidateButton_Click(object sender, RoutedEventArgs e)
+        {
+            var t = Validate(); // assign to t to suppress compiler warning
+        }
+#endif
 
         private void StartupTextBoxUserNamePLUS_TextChanged(object sender, Windows.UI.Xaml.Controls.TextChangedEventArgs e)
         {
@@ -216,9 +231,15 @@ namespace TP8
             m_startupWiz.Result = 0; // means cancel
             m_startupWiz.CloseAsync();
             // Let's try this:
-            Window.Current.Close(); // Will suspend the app.  Since only 1 current window, will go back to start screen
+            //try
+            //{
+            //    worked in 8.0 without try/catch, but not 8.1: Window.Current.Close(); // Will suspend the app.  Since only 1 current window, will go back to start screen
+                // 8.1: generated InvalidOperation exception (closing main Window in Store app) if not caught
+            //}
+            //catch (Exception)
+            //{ }
             // The big gun would be, but this might fail Store certification:
-            // Application.Current.Exit();
+            Application.Current.Exit();
         }
     }
 }

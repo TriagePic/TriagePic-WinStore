@@ -100,7 +100,8 @@ namespace TP8
             cp.CommitButtonText = "Select"; // "OK" is default
             //cp.SelectionMode = ContactSelectionMode.Fields;
             //cp.DesiredFields.Add(KnownContactField.Email);
-            var contacts = await cp.PickMultipleContactsAsync();
+            //obsolete after 8.0: var contacts = await cp.PickMultipleContactsAsync();
+            var contacts = await cp.PickContactsAsync();
 
             if (contacts == null || contacts.Count == 0)
             {
@@ -109,8 +110,8 @@ namespace TP8
             }
             foreach (var contact in contacts)
             {
-                if(!String.IsNullOrEmpty(RosterTextBox.Text))
-                    RosterTextBox.Text += "; ";
+                if (!String.IsNullOrEmpty(RosterTextBox.Text))
+                    RosterTextBox.Text += "\n"; // was: "; ";
                 RosterTextBox.Text += contact.Name;
             }
 

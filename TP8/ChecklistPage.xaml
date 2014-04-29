@@ -99,8 +99,8 @@
                 <Image HorizontalAlignment="Left" Margin="50,5,10,10" Source="Assets/yellow_outlined_diamond.png" Stretch="None"/>
                 <TextBlock HorizontalAlignment="Left" Margin="0,0,0,0" Height="20" Text="Real - not a drill" FontSize="15" />
             </StackPanel>
-            <!-- Setting SelectedItem="{Binding None}" and SelectedValuePath=None didn't help bug-->
-            <ComboBox x:Name="EventComboBox" SelectedItem="{Binding None}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="566" MaxHeight="40" SelectionChanged="EventComboBox_SelectionChanged">
+            <!-- Setting SelectedItem="{Binding None}" and SelectedValuePath=None didn't help bug.  Former generated error under 8.1 -->
+            <ComboBox x:Name="EventComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="566" MaxHeight="40" SelectionChanged="EventComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="2">
@@ -110,9 +110,9 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <TextBlock x:Name="RosterName" HorizontalAlignment="Left" Margin="0,20,0,0" Height="32" TextWrapping="Wrap" Text="Roster Name:" VerticalAlignment="Top" Width="240" FontSize="20"/>
-            <Button x:Name="Pick" Content="Pick" HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Top" Click="PickButton_Click" FontSize="15"/>
-            <TextBox x:Name="RosterTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="566" Height="32" VerticalAlignment="Top" AcceptsReturn="True" TextChanged="RosterNameTextBox_TextChanged"/>
+            <TextBlock x:Name="RosterName" HorizontalAlignment="Left" Margin="0,20,0,0" Height="32" TextWrapping="Wrap" Text="Roster Name(s):" VerticalAlignment="Top" Width="240" FontSize="20"/>
+            <Button x:Name="Pick" Content="Pick from My Contacts" HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Top" Click="PickButton_Click" FontSize="15"/>
+            <TextBox x:Name="RosterTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="566" Height="131" VerticalAlignment="Top" AcceptsReturn="True" TextChanged="RosterNameTextBox_TextChanged"/>
         </StackPanel>
         
         <VisualStateManager.VisualStateGroups>

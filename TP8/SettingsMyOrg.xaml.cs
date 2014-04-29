@@ -23,7 +23,8 @@ namespace TP8
             InitializeComponent();
 
             OrgComboBox.ItemsSource = App.OrgDataList;
-            OrgComboBox.SelectedIndex = 0; // Until we know otherwise
+            // No, don't trigger handler here: OrgComboBox.SelectedIndex = 0; // Until we know otherwise
+            int choice = 0;
             if (!String.IsNullOrEmpty(App.CurrentOrgContactInfo.OrgName))
             {
                 int count = 0;
@@ -31,15 +32,16 @@ namespace TP8
                 {
                     if (i.OrgName == App.CurrentOrgContactInfo.OrgName)  // Could match instead throughout on EventShortName
                     {
-                        OrgComboBox.SelectedIndex = count;
+                        choice = count;//OrgComboBox.SelectedIndex = count;
                         break;
                     }
                     count++;
                 }
                 // if no match, then remain with first item selected
             }
+            OrgComboBox.SelectedIndex = choice; // trigger handler
 
-            DisplayCurrentOrgContactInfo();
+            // move to handler: DisplayCurrentOrgContactInfo();
         }
 
         private void DisplayCurrentOrgContactInfo()
@@ -102,7 +104,10 @@ namespace TP8
          
             TP_OrgData d = (TP_OrgData)OrgComboBox.SelectedValue;
             if (d.OrgName == App.CurrentOrgContactInfo.OrgName)
+            {
+                DisplayCurrentOrgContactInfo();
                 return;
+            }
 
             SomeTextOrgInfo.Text = "";
             /*string s = */ await App.CurrentOrgContactInfo.GetCurrentOrgContactInfo(d.OrgUuid, d.OrgName);

@@ -971,7 +971,7 @@ namespace TP8.Data
             App.MyAssert(!String.IsNullOrEmpty(_eventShortName));
             App.MyAssert(!String.IsNullOrEmpty(_eventType));
             App.MyAssert(!String.IsNullOrEmpty(_eventName));  // No longer supporting unnamed events
-            App.MyAssert(!String.IsNullOrEmpty(_userNameForDevice));
+//// SOME PROBLEM            App.MyAssert(!String.IsNullOrEmpty(_userNameForDevice));
             App.MyAssert(!String.IsNullOrEmpty(_dateEDXL));
             App.MyAssert(!String.IsNullOrEmpty(_distributionID_EDXL));
             App.MyAssert(!String.IsNullOrEmpty(_senderID_EDXL));
