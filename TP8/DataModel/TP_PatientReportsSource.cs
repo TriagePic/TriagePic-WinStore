@@ -335,7 +335,7 @@ namespace TP8.Data
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - All stations current event list\n";
+                App.DelayedMessageToUserOnStartup += "  - List of reports from all stations, for current event\n";
                 return;
             }
 
@@ -344,7 +344,7 @@ namespace TP8.Data
             if (responseRows == null) // Assume this is an error, not just zero reports
             {
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - All stations current event list\n";
+                App.DelayedMessageToUserOnStartup += "  - List of reports from all stations, for the current event\n"; // Let's add 'the' here, for programmer to distinguish from prev msg.
                 return;
             }
 

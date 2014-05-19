@@ -1,4 +1,5 @@
-﻿using TP8.Common;
+﻿#define CALLISTO
+using TP8.Common;
 using TP8.Data;
 using LPF_SOAP;
 
@@ -27,7 +28,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+#if CALLISTO
 using Callisto.Controls;
+#endif
 //using MyToolkit.Controls;
 using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
@@ -410,6 +413,7 @@ namespace TP8
             pane.CommandsRequested += Pane_CommandsRequested;
         }
 
+#if CALLISTO
         static void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
             // one way of doing it:
@@ -512,6 +516,24 @@ namespace TP8
             _flyout.Closed += (o, e) => _flyout = null;
         }
  */
+#else
+        // SOON
+        // See http://msdn.microsoft.com/en-us/library/windows/apps/bg182878.aspx#SettingsFlyout
+        // Compared to Callisto, more content is supplied in flyout XAML rather than here in C#
+        static void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            string heading = "My Credentials";
+            Windows.UI.ApplicationSettings.SettingsCommand credentialCommand =
+                new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
+                {
+                    SettingsFlyoutCredentials sfCredentials = new SettingsFlyoutCredentials();
+                    sfCredentials.Show();
+                });
+
+            args.Request.ApplicationCommands.Add(credentialsCommand);
+        // more to do
+        }
+#endif
         #endregion
 
 

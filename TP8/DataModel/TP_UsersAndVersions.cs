@@ -151,7 +151,8 @@ namespace TP8.Data // nah .DataModel
             {
                 foreach (var x in inner)
                 {
-                    if (String.IsNullOrEmpty(x.User) ||
+                    if (x.User == null ||
+                        // was: String.IsNullOrEmpty(x.User) ||   ... but maybe empty string if user doesn't give apps permission to get Win 8 user name.  Changed May, 2014.  
                         // String.IsNullOrEmpty(x.Version) ||
                         (x.User != "LastCompatibleVersion" && (String.IsNullOrEmpty(x.plUsername) || String.IsNullOrEmpty(x.plPassword))))
                     {
