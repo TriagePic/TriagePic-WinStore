@@ -1,0 +1,71 @@
+﻿<SettingsFlyout
+    x:Class="TP8.SettingsFlyoutAbout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    Title="About + Support"
+    HeaderForeground="White" 
+    HeaderBackground="#FF4617B4"
+    Background="White"
+    d:DesignWidth="346">
+    <!-- header background is purple, #FF4617B4, same as (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; -->
+
+    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
+        <!-- Glenn makes margins smaller, but to get right margin smaller, need to set both width and margin -->
+    <StackPanel VerticalAlignment="Stretch" Margin="-20,0,-20,0" Width="305" >
+
+            <!-- The StackPanel(s) below define individual content sections -->
+
+        <!-- Content Section 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+            <TextBlock Style="{StaticResource SubtitleTextStyle}" Foreground="#FFD81414" FontSize="20"
+                        Text="About TriagePic for Win 8.1 Store" 
+                        TextWrapping="Wrap" Margin="0,0,0,6"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        TextWrapping="Wrap">
+                        Developed during 2013-14 by<LineBreak/>
+                        Glenn Pearson and colleagues,<LineBreak/>
+                        Lost Person Finder project,<LineBreak/>
+                        Communications Engineering Branch,<LineBreak/>
+                        Lister Hill National Center for Biomedical Communications,<LineBreak/>
+                        National Library of Medicine, Bethesda, MD.
+            </TextBlock>
+            <TextBlock Style="{StaticResource SubtitleTextStyle}" Foreground="#FFD81414" FontSize="20"
+                        Text="Primary Support" 
+                        TextWrapping="Wrap" Margin="0,6"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="Contact your organization's administrator for this system first." 
+                        TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource SubtitleTextStyle}" Foreground="#FFD81414" FontSize="20"
+                        Text="Additional Resources" 
+                        TextWrapping="Wrap" Margin="0,6"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="For a quick overview of TriagePic (particular the Win7 version) and its use with TriageTrak, visit NLM's Lost Person Finder (LPF) website." 
+                        TextWrapping="Wrap"/>
+            <HyperlinkButton 
+                NavigateUri="http://lpf.nlm.nih.gov/"
+                Content="LPF website" BorderBrush="#FF991111" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="More details about this app may be found at the GitHub 'TriagePic-WinStore' project site, particularly the wiki." 
+                        TextWrapping="Wrap"/>
+            <HyperlinkButton 
+                NavigateUri="https://github.com/TriagePic/TriagePic-WinStore/wiki"
+                Content="GitHub project wiki" BorderBrush="#FF991111" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="See also NLM's TriageTrak demo website." 
+                        TextWrapping="Wrap"/>
+            <HyperlinkButton 
+                NavigateUri="https://triagetrak.nlm.nih.gov/"
+                Content="TriageTrak demo website" BorderBrush="#FF991111" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+
+        </StackPanel>
+
+        <!-- Define more Content Sections below as necessary -->
+
+    </StackPanel>
+</SettingsFlyout>

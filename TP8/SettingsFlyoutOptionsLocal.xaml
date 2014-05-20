@@ -1,0 +1,35 @@
+﻿<SettingsFlyout
+    x:Class="TP8.SettingsFlyoutOptionsLocal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    Title="Options Set Here"
+    HeaderForeground="White" 
+    HeaderBackground="#FF4617B4"
+    Background="White"
+    d:DesignWidth="346">
+
+    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+        <!-- The StackPanel(s) below define individual content sections -->
+
+        <!-- Content Section 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+            <TextBlock Text="Web Service Endpoint" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+
+            <TextBlock Name="TextBlockEndpoints" Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="  TriagePic Reports to:&#x0a;    my site&#x0a;]" 
+                        TextWrapping="Wrap"/>
+            <TextBlock Name="TextBlockCustomized" Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="Endpoint Address Customized?  No&#x0a;Address can be customized by device admin in OtherSettings.XML" 
+                        TextWrapping="Wrap" FontSize="10"/>
+            <ToggleSwitch x:Name="blockToggle" Header="Block Communication (for testing only)" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="#FFA21616" BorderBrush="Black" BorderThickness="2" Toggled="blockToggle_Toggled" Background="#FF7C7C9C" Margin="0,10,0,0"/>
+        </StackPanel>
+        <!-- Define more Content Sections below as necessary -->
+    </StackPanel>
+</SettingsFlyout>

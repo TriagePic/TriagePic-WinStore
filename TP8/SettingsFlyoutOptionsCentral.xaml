@@ -1,0 +1,32 @@
+﻿<SettingsFlyout
+    x:Class="TP8.SettingsFlyoutOptionsCentral"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TP8"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    Title="Policy Options"
+    HeaderForeground="White" 
+    HeaderBackground="#FF4617B4"
+    Background="White"
+    d:DesignWidth="346">
+
+    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+        <!-- The StackPanel(s) below define individual content sections -->
+
+        <!-- Content Section 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+            <TextBlock Text="Options Set Centrally" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
+            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+                        Text="The information below is read-only here, and will be the same for all my organization's TriagePic devices/stations.  It is set by an administrator of the central web site to which TriagePic reports."
+                        TextWrapping="Wrap"/>
+            <!-- could add in future: Some options are specific to particular disaster events or hospital/organization locations.) -->
+            <TextBlock x:Name="SomeText" Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap" Margin="0,10,0,0" MinHeight="100" />
+        </StackPanel>
+        <!-- Define more Content Sections below as necessary -->
+    </StackPanel>
+</SettingsFlyout>

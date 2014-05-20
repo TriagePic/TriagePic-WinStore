@@ -120,6 +120,24 @@
     </Compile>
     <Compile Include="DataModel\TP_ZoneFilters.cs" />
     <Compile Include="DataModel\FrameworkElementExtensions.cs" />
+    <Compile Include="SettingsFlyoutAbout.xaml.cs">
+      <DependentUpon>SettingsFlyoutAbout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsFlyoutCredentials.xaml.cs">
+      <DependentUpon>SettingsFlyoutCredentials.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsFlyoutMyOrg.xaml.cs">
+      <DependentUpon>SettingsFlyoutMyOrg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsFlyoutOptionsCentral.xaml.cs">
+      <DependentUpon>SettingsFlyoutOptionsCentral.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsFlyoutOptionsLocal.xaml.cs">
+      <DependentUpon>SettingsFlyoutOptionsLocal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsFlyoutPrivacy.xaml.cs">
+      <DependentUpon>SettingsFlyoutPrivacy.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StartupWizUserControl.xaml.cs">
       <DependentUpon>StartupWizUserControl.xaml</DependentUpon>
     </Compile>
@@ -239,6 +257,30 @@
     <Content Include="Assets\DarkGray.png" />
     <None Include="Package.StoreAssociation.xml" />
     <Page Include="ExtendedSplash.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsFlyoutAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsFlyoutCredentials.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsFlyoutMyOrg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsFlyoutOptionsCentral.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsFlyoutOptionsLocal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsFlyoutPrivacy.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

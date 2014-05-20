@@ -1,4 +1,4 @@
-﻿#define CALLISTO
+﻿//#define CALLISTO
 using TP8.Common;
 using TP8.Data;
 using LPF_SOAP;
@@ -427,6 +427,7 @@ namespace TP8
             // Also there is a companion color chart of these application-inaccessible colors at http://www.quppa.net/win8col/ )
             // However, we can specify one of the default purple shades (e.g., using ComboBoxSelectedBackgroundThemeBrush)
             // For list of application-accessible system "theme" brushes and their color values, see http://metro.excastle.com/xaml-system-brushes .
+            
             string heading = "My Credentials"; // Using this variable a third time in settings.HeaderText doesn't work
             SettingsCommand credentialsCommand = new SettingsCommand(heading, heading, (x) =>
             {
@@ -500,6 +501,8 @@ namespace TP8
                 settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
                 settings.IsOpen = true;
             });
+
+            args.Request.ApplicationCommands.Add(aboutCommand);
         }
 
 /* One way of doing it:
@@ -522,8 +525,11 @@ namespace TP8
         // Compared to Callisto, more content is supplied in flyout XAML rather than here in C#
         static void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
+
+
+
             string heading = "My Credentials";
-            Windows.UI.ApplicationSettings.SettingsCommand credentialCommand =
+            Windows.UI.ApplicationSettings.SettingsCommand credentialsCommand =
                 new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
                 {
                     SettingsFlyoutCredentials sfCredentials = new SettingsFlyoutCredentials();
@@ -531,7 +537,56 @@ namespace TP8
                 });
 
             args.Request.ApplicationCommands.Add(credentialsCommand);
-        // more to do
+
+            heading = "Policy Options, Set Centrally"; // Title set in XAML is simply "Policy Options", to avoid "...".  Section title below it is "Options Set Centrally"
+            Windows.UI.ApplicationSettings.SettingsCommand optionsCentralCommand =
+                new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
+                {
+                    SettingsFlyoutOptionsCentral sfOptionsCentral = new SettingsFlyoutOptionsCentral();
+                    sfOptionsCentral.Show();
+                });
+
+            args.Request.ApplicationCommands.Add(optionsCentralCommand);
+
+            heading = "Options Set Here";
+            Windows.UI.ApplicationSettings.SettingsCommand optionsLocalCommand =
+                new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
+                {
+                    SettingsFlyoutOptionsLocal sfOptionsLocal = new SettingsFlyoutOptionsLocal();
+                    sfOptionsLocal.Show();
+                });
+
+            args.Request.ApplicationCommands.Add(optionsLocalCommand);
+
+            heading = "My Organization";
+            Windows.UI.ApplicationSettings.SettingsCommand orgCommand =
+                new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
+                {
+                    SettingsFlyoutMyOrg sfOrg = new SettingsFlyoutMyOrg();
+                    sfOrg.Show();
+                });
+
+            args.Request.ApplicationCommands.Add(orgCommand);
+
+            heading = "Data Privacy";
+            Windows.UI.ApplicationSettings.SettingsCommand privacyCommand =
+                new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
+                {
+                    SettingsFlyoutPrivacy sfPrivacy = new SettingsFlyoutPrivacy();
+                    sfPrivacy.Show();
+                });
+
+            args.Request.ApplicationCommands.Add(privacyCommand);
+
+            heading = "About + Support"; // Use "+" insted of "&" because of width constraints on title, to avoid "..."
+            Windows.UI.ApplicationSettings.SettingsCommand aboutCommand =
+                new Windows.UI.ApplicationSettings.SettingsCommand(heading, heading, (handler) =>
+                {
+                    SettingsFlyoutAbout sfAbout = new SettingsFlyoutAbout();
+                    sfAbout.Show();
+                });
+
+            args.Request.ApplicationCommands.Add(aboutCommand);
         }
 #endif
         #endregion
