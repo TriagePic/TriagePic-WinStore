@@ -1,5 +1,4 @@
-﻿//#define CALLISTO
-using TP8.Common;
+﻿using TP8.Common;
 using TP8.Data;
 using LPF_SOAP;
 
@@ -28,9 +27,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-#if CALLISTO
-using Callisto.Controls;
-#endif
+// WAS in Win 8.0: using Callisto.Controls;
 //using MyToolkit.Controls;
 using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
@@ -413,120 +410,12 @@ namespace TP8
             pane.CommandsRequested += Pane_CommandsRequested;
         }
 
-#if CALLISTO
+
         static void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
-            // one way of doing it:
-            //    var aboutCommand = new SettingsCommand("About", "About", SettingsHandler);
-            //    args.Request.ApplicationCommands.Add(aboutCommand);
-
-            // Note that the background color of main Settings page, and the header of the permission child page, will reflect the current user-chosen Win8 themes (purple is default).
-            // However, in win 8.0, it is not possible to access that color choice
-            // (see http://irisclasson.com/2012/08/22/winrtmetro-app-q-n-a-can-i-access-accent-start-screen-background-color-in-my-app/ )
-            // except in a fragile way that will cause it to fail Windows Store compatibility (using pinvoke... see http://blog.quppa.net/2013/01/02/retrieving-windows-8-theme-colours/ 
-            // Also there is a companion color chart of these application-inaccessible colors at http://www.quppa.net/win8col/ )
-            // However, we can specify one of the default purple shades (e.g., using ComboBoxSelectedBackgroundThemeBrush)
-            // For list of application-accessible system "theme" brushes and their color values, see http://metro.excastle.com/xaml-system-brushes .
-            
-            string heading = "My Credentials"; // Using this variable a third time in settings.HeaderText doesn't work
-            SettingsCommand credentialsCommand = new SettingsCommand(heading, heading, (x) =>
-            {
-                // Note that 8.1 adds Windows.UI.Xaml.Controls.SettingsFlyout.  So we have specify we want Callisto (or do more code changes to specify going over former.
-                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
-                settings.Content = new SettingsCredentials();
-                settings.HeaderText = "My Credentials"; // font color of text will be white or black automatically, depending on background
-                settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
-                //settings.HeaderBrush = new SoldiColorBrush(Color.FromArgb(255, 0, 77, 96));
-                //settings.Background = new SolidColorBrush(Colors.White); // unclear if this does anything
-                settings.IsOpen = true;
-            });
-
-            args.Request.ApplicationCommands.Add(credentialsCommand);
-
-            // reusing the SettingsCommand object didn't work, so use a new 1 each time.
-            heading = "Policy Options, Set Centrally";
-            SettingsCommand optionsCentralCommand = new SettingsCommand(heading, heading, (x) =>
-            {
-                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
-                settings.Content = new SettingsOptionsCentral();
-                settings.HeaderText = "Policy Options";
-                settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
-                settings.IsOpen = true;
-            });
-
-            args.Request.ApplicationCommands.Add(optionsCentralCommand);
-
-            heading = "Options Set Here";
-            SettingsCommand optionsLocalCommand = new SettingsCommand(heading, heading, (x) =>
-            {
-                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
-                settings.Content = new SettingsOptionsLocal();
-                settings.HeaderText = "Options Set Here";
-                settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
-                settings.IsOpen = true;
-            });
-
-            args.Request.ApplicationCommands.Add(optionsLocalCommand);
-
-            heading = "My Organization";
-            SettingsCommand orgCommand = new SettingsCommand(heading, heading, (x) =>
-            {
-                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
-                settings.Content = new SettingsMyOrg();
-                settings.HeaderText = "My Organization";
-                settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
-                settings.IsOpen = true;
-            });
-
-            args.Request.ApplicationCommands.Add(orgCommand);
-
-            heading = "Data Privacy";
-            SettingsCommand privacyCommand = new SettingsCommand(heading, heading, (x) =>
-            {
-                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
-                settings.Content = new SettingsPrivacy();
-                settings.HeaderText = "Data Privacy";
-                settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
-                settings.IsOpen = true;
-            });
-
-            args.Request.ApplicationCommands.Add(privacyCommand);
-
-            heading = "About & Support";
-            SettingsCommand aboutCommand = new SettingsCommand(heading, heading, (x) =>
-            {
-                Callisto.Controls.SettingsFlyout settings = new Callisto.Controls.SettingsFlyout();
-                settings.Content = new SettingsAbout();
-                settings.HeaderText = "About & Support"; // font color of text will be white or black automatically, depending on background
-                settings.HeaderBrush = (SolidColorBrush)Application.Current.Resources["ComboBoxSelectedBackgroundThemeBrush"]; // Will be purple, #FF4617B4
-                settings.IsOpen = true;
-            });
-
-            args.Request.ApplicationCommands.Add(aboutCommand);
-        }
-
-/* One way of doing it:
-        private SettingsFlyout _flyout;
-
-        private void SettingsHandler(IUICommand command)
-        {
-            _flyout = new SettingsFlyout // Callisto control
-            {
-                HeaderText = "About",
-                Content = new SettingsAbout(),
-                IsOpen = true
-            };
-            _flyout.Closed += (o, e) => _flyout = null;
-        }
- */
-#else
-        // SOON
-        // See http://msdn.microsoft.com/en-us/library/windows/apps/bg182878.aspx#SettingsFlyout
-        // Compared to Callisto, more content is supplied in flyout XAML rather than here in C#
-        static void Pane_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
-        {
-
-
+            // See http://msdn.microsoft.com/en-us/library/windows/apps/bg182878.aspx#SettingsFlyout
+            // Pane_CommandsRequested() was originally implemented with CALLISTO flyout controls in Win 8.0.
+            // Compared to Callisto, more content is supplied in flyout XAML rather than here in C#
 
             string heading = "My Credentials";
             Windows.UI.ApplicationSettings.SettingsCommand credentialsCommand =
@@ -588,7 +477,7 @@ namespace TP8
 
             args.Request.ApplicationCommands.Add(aboutCommand);
         }
-#endif
+
         #endregion
 
 
@@ -640,7 +529,7 @@ namespace TP8
             // Register a ResultsSuggestionChosen if you app displays result suggestion in the search pane
             // TO DO
         }
- */
+    */
 
         /// <summary>
         /// Invoked when the application is activated to display search results.

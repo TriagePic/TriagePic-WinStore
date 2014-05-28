@@ -3,3 +3,9 @@ obj/
 packages/
 *.suo
 *.user
+SettingsAbout.*
+SettingsCredentials.*
+SettingsMyOrg.*
+SettingsOptionsCentral.*
+SettingsOptionsLocal.*
+SettingsPrivacy.*

@@ -1306,7 +1306,8 @@ INSTEAD: */
             sarin.eventShortname = App.CurrentDisaster.EventShortName;
             sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
             sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
-            sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
+            // spec says: sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
+            sarin.filterHospital = "all"; // temporary workaround
             // WAS before V32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
             sarin.pageStart = "0";

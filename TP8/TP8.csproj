@@ -146,9 +146,6 @@
     </Compile>
     <Compile Include="DataModel\TP_SendQueue.cs" />
     <Compile Include="DataModel\TP_SentCodeObj.cs" />
-    <Compile Include="SettingsCredentials.xaml.cs">
-      <DependentUpon>SettingsCredentials.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DataModel\TP_UsersAndVersions.cs" />
     <Compile Include="DataModel\TP_PatientReportsSource.cs" />
     <Compile Include="DataModel\TP_PatientReport.cs" />
@@ -156,9 +153,6 @@
     <Compile Include="DataModel\TP_OtherSettingsSource.cs" />
     <Compile Include="DataModel\TP_OrgDataSource.cs" />
     <Compile Include="DataModel\TP_OrgContactInfoSource.cs" />
-    <Compile Include="SettingsMyOrg.xaml.cs">
-      <DependentUpon>SettingsMyOrg.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DataModel\ProtectData.cs" />
     <Compile Include="DataModel\TP_OrgPolicySource.cs" />
     <Compile Include="DataModel\LPF_SOAP.cs" />
@@ -188,18 +182,6 @@
     <Compile Include="DataModel\TP_EventsDataSource.cs" />
     <Compile Include="SortFlyout.xaml.cs">
       <DependentUpon>SortFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsOptionsLocal.xaml.cs">
-      <DependentUpon>SettingsOptionsLocal.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsOptionsCentral.xaml.cs">
-      <DependentUpon>SettingsOptionsCentral.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsPrivacy.xaml.cs">
-      <DependentUpon>SettingsPrivacy.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsAbout.xaml.cs">
-      <DependentUpon>SettingsAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="FilterFlyout.xaml.cs">
       <DependentUpon>FilterFlyout.xaml</DependentUpon>
@@ -292,14 +274,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SettingsCredentials.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsMyOrg.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <None Include="Service References\PLWS\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -335,22 +309,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FilterFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsOptionsLocal.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsOptionsCentral.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsPrivacy.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsAbout.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -390,9 +348,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Callisto">
-      <HintPath>..\packages\Callisto.1.2.6\lib\winrt45\Callisto.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
