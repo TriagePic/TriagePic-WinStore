@@ -52,9 +52,7 @@ namespace TP8
             // 2nd try: TP_EventsDataList edl = new TP_EventsDataList();
             if (App.DelayedMessageToUserOnStartup != "") // Got content during App.OnLaunched, but can't be easily shown until now
             {
-                MessageDialog dlg = new MessageDialog(
-                    "Could not connect to TriageTrak web service.  Using previous information, cached locally, instead for:\n" +
-                    App.DelayedMessageToUserOnStartup);
+                MessageDialog dlg = new MessageDialog(App.DelayedMessageToUserOnStartup);
                 await dlg.ShowAsync();
                 App.DelayedMessageToUserOnStartup = "";
             }

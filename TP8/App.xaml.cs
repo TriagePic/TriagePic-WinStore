@@ -148,6 +148,8 @@ namespace TP8
         public static bool goodWebServiceConnectivity = false; // until we know better.  Determined by pings.
         //public static List<string> SentStatusMessageAsSemaphore = new List<string>();
         public static string DelayedMessageToUserOnStartup = ""; // Occurs during App.OnLaunched, but can't be easily shown until home page launch
+        public const string NO_OR_BAD_WEB_SERVICE_PREFIX =
+            "Could not connect to TriageTrak web service.  Using previous information, cached locally, instead for:\n"; // Often used with delayed message
         public static bool AppFinishedLaunching = false; // set to true during home page launch
 
         public static App Instance

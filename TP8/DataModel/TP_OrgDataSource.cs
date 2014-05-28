@@ -213,7 +213,7 @@ namespace TP8.Data // nah: .DataModel
                 await App.OrgDataList.ReadXML(); // Win 7: hospitals = service.ReadHopsitalListFromFile();
                 if (/*newHospitalListFileCreated || */ inner.Count() == 0)
                 {
-                    App.DelayedMessageToUserOnStartup +=
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + 
                         "  - List of organizations (e.g., hospitals)\n" +
                         "      Nor was this list available from a cache file on this machine!\n\n" +
 
@@ -227,7 +227,7 @@ namespace TP8.Data // nah: .DataModel
                 else
                 {
                     // For the user, this is not an error
-                    App.DelayedMessageToUserOnStartup += "  - List of organizations (e.g., hospitals)\n"; 
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - List of organizations (e.g., hospitals)\n"; 
                     // MessageDialog dlg = new MessageDialog(
                     //    "Could not connect to web service to get list of organizations (e.g., hospitals).  Using local cached version instead.");
                     // await dlg.ShowAsync();

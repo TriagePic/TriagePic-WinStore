@@ -270,8 +270,8 @@ namespace TP8.Data
         public async void Init2()
         {
             if(_outbox.Count() == 0)
-                await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword);
-            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, true); // startup is true
+                await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword, true); // startup is true
+            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, true, false); // startup is true, invalid Cache first is false (unnecessary)
 /* WAS:
             await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             if(_allstations.Count() == 0)
@@ -313,6 +313,7 @@ namespace TP8.Data
             await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME); // empty file
         }
 
+
         /// <summary>
         /// Get All Stations list from web service for current event.  Assume that in general there's already stale data available if we don't succeed here.
         /// </summary>
@@ -322,12 +323,15 @@ namespace TP8.Data
         /// 
         public async Task ProcessAllStationsList(string plname, string plpass) // Compare Win 7 FormTriagePic.ProcessEventList(...)
         {
-           await ProcessAllStationsList(plname, plpass, false);
+           await ProcessAllStationsList(plname, plpass, false, false);
         }
 
-        public async Task ProcessAllStationsList(string plname, string plpass, bool onStartup) // Compare Win 7 FormTriagePic.ProcessEventList(...)
+        public async Task ProcessAllStationsList(string plname, string plpass, bool onStartup, bool invalidateCacheFirst) 
         {
-            //if (clearFirst)
+            // Compare Win 7 FormTriagePic.ProcessEventList(...)
+            MessageDialog ImmediateDlg = new MessageDialog("");
+            if (invalidateCacheFirst) // do this only if current event has changed
+                await PurgeCachedAllStationsList();
 
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
@@ -335,7 +339,27 @@ namespace TP8.Data
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - List of reports from all stations, for current event\n";
+                if(onStartup)
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - List of reports from all stations, for current event\n";
+                else
+                {
+                    ImmediateDlg.Content = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - List of reports from all stations, for current event\n";
+                    await ImmediateDlg.ShowAsync();
+                }
+                return;
+            }
+
+            if(s == "")
+            {
+                string msg = "For this event, there are no reports yet, from any stations or organizations reporting to our TriageTrak.\n" +
+                    "Either the event is new or any earlier reports were purged.";
+                if (onStartup)
+                    App.DelayedMessageToUserOnStartup = msg;
+                else
+                {
+                    ImmediateDlg.Content = msg;
+                    await ImmediateDlg.ShowAsync();
+                }
                 return;
             }
 
@@ -343,8 +367,16 @@ namespace TP8.Data
             // Hopefully don't have to add more filtering here... we'll see.
             if (responseRows == null) // Assume this is an error, not just zero reports
             {
-                // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - List of reports from all stations, for the current event\n"; // Let's add 'the' here, for programmer to distinguish from prev msg.
+                if (onStartup)
+                    // For the user, this is not an error
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX +
+                        "  - Valid list of reports from all stations, for the current event\n"; // Let's add 'Valid' here, for programmer to distinguish from prev msg.
+                else
+                {
+                    ImmediateDlg.Content = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Valid ist of reports from all stations, for the current event\n";
+                    await ImmediateDlg.ShowAsync();
+                }
+
                 return;
             }
 
@@ -396,7 +428,12 @@ namespace TP8.Data
             // Caller will take care of _allstationssorted, _allstationssortedandfiltered
         }
 
-        public async Task ProcessOutboxList(string plname, string plpass) //, bool clearFirst)
+        public async Task ProcessOutboxList(string plname, string plpass)
+        {
+            await ProcessOutboxList(plname, plpass, false); // = on startup
+        }
+
+        public async Task ProcessOutboxList(string plname, string plpass, bool onStartup) //, bool clearFirst)
         {
             App.MyAssert(_outbox.Count() == 0);
             // When we got here, we've ALREADY tried reading cache file, so don't try again.
@@ -406,7 +443,15 @@ namespace TP8.Data
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - Outbox list\n";
+                MessageDialog ImmediateDlg = new MessageDialog("");
+                if (onStartup)
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Outbox list\n";
+                else
+                {
+                    ImmediateDlg.Content = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Outbox list\n";
+                    await ImmediateDlg.ShowAsync();
+                }
+                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Outbox list\n";
                 //MessageDialog dlg = new MessageDialog("Could not connect to web service to get disaster event list.  Using local cached version instead.");
                 //await dlg.ShowAsync();
             }

@@ -1310,6 +1310,7 @@ INSTEAD: */
             sarin.filterHospital = "all"; // temporary workaround
             // WAS before V32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
+            sarin.filterHasImage = false; // true would return ONLY reports with images
             sarin.pageStart = "0";
             sarin.perPage = "250"; // 1000 gave out of memory problems
             sarin.sortBy = ""; // = updated desc, score desc

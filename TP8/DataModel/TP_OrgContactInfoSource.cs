@@ -353,7 +353,7 @@ namespace TP8.Data // nah: .DataModel
             {
                 await ReadXML(); // in case call to web service wiped out App.CurrentOrgContactInfo
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - My organization's contact info\n"; 
+                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - My organization's contact info\n"; 
                 // MessageDialog dlg = new MessageDialog("Could not connect to web service to get my organization's contact info.  Using local cached version instead.");
                 // await dlg.ShowAsync();
             }

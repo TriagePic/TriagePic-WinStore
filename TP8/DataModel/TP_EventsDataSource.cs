@@ -475,7 +475,7 @@ namespace TP8.Data
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - Disaster event list\n"; 
+                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Disaster event list\n"; 
                 //MessageDialog dlg = new MessageDialog("Could not connect to web service to get disaster event list.  Using local cached version instead.");
                 //await dlg.ShowAsync();
                 useCachedEventList = true;
@@ -487,7 +487,7 @@ namespace TP8.Data
                 {
                     await App.ErrorLog.ReportToErrorLog("During TP_EventsDataSource.ProcessEventList", "Invalid empty disaster event list", false);
                     // For the user, this is not an error
-                    App.DelayedMessageToUserOnStartup += "  - Disaster event list (actually, got list from web service but it was invalid)\n"; 
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Disaster event list (actually, got list from web service but it was empty)\n"; 
                     //MessageDialog dlg = new MessageDialog("Could not get valid disaster event list from web service.  Using local cached version instead.");
                     //await dlg.ShowAsync();
                     useCachedEventList = true;

@@ -305,7 +305,7 @@ namespace TP8.Data // nah: .DataModel
                 await ReadXML(); // in case call to web service wiped out App.OrgPolicy and App.OrgPolicyList
                 App.OrgPolicy = this.First();
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup += "  - My organization's policies for TriagePic settings\n";
+                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - My organization's policies for TriagePic settings\n";
                 // MessageDialog dlg = new MessageDialog("Could not connect to web service to get my organization's policies for TriagePic settings.  Using local cached version instead.");
                 // await dlg.ShowAsync();
             }

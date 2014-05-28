@@ -155,6 +155,9 @@ namespace TP8
             if (EventComboBox.SelectedItem != null)
             {
                 TP8.Data.TP_EventsDataItem tpEvent = (TP_EventsDataItem)EventComboBox.SelectedItem;
+                if (App.CurrentDisaster.EventName == tpEvent.EventName)
+                    return; // no real work to do.  May be the case when we begin visit to checklist page.  New May 2014
+
                 App.CurrentDisaster.TypeIconUri = tpEvent.TypeIconUri;
                 App.CurrentDisaster.EventName = tpEvent.EventName;
                 App.CurrentDisaster.EventType = tpEvent.EventType; // will this work?  instead of TP_EventsDataItem.GetEventTypeFromIconUri(tpEvent.TypeIconUri);
@@ -166,7 +169,8 @@ namespace TP8
                 await App.CurrentOtherSettingsList.WriteXML();
 
                 // Invalid cache data when current event changes
-                await App.PatientDataGroups.PurgeCachedAllStationsList();
+                // WAS, but this now included in next step: await App.PatientDataGroups.PurgeCachedAllStationsList();
+                await App.PatientDataGroups.ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, false, true); // = on startup; invalidate cache first
             }
         }
 
