@@ -1295,7 +1295,7 @@ INSTEAD: */
 
         // NEW WITH Win 8 - Calls to PL Search functions:
         /// <summary>
-        /// Returns the incident list for a given user
+        /// Gets all reports for the current event, independent of submitter or submitting organization
         /// </summary>
         public async Task<string> GetReportsFromAllStationsCurrentEvent(string userPL, string passwordPL)
         {
@@ -1306,8 +1306,25 @@ INSTEAD: */
             sarin.eventShortname = App.CurrentDisaster.EventShortName;
             sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
             sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
-            // spec says: sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
-            sarin.filterHospital = "all"; // temporary workaround
+/* NO.  Always get all records here.  Filter later
+            if(App.OutboxCheckBoxMyOrgOnly)
+            {
+                string Name = App.CurrentOrgContactInfo.OrgName;
+                string Uuid = App.OrgDataList.GetOrgUuidFromOrgName(Name);
+                if (Uuid == "") // couldn't find match
+                {
+                    App.MyAssert(false);
+                    //Uuid = App.OrgDataList.First().OrgUuid;
+                    //Name = App.OrgDataList.First().OrgName;
+                }
+                sarin.filterHospital = Uuid;
+            }
+            else
+            {
+                // spec says: sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, [but not implemeneted] comma-separated org shortnames
+                // What Greg chose to implement instead is single hospital uuid  */
+                sarin.filterHospital = "all"; // temporary workaround
+            //}
             // WAS before V32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
             sarin.filterHasImage = false; // true would return ONLY reports with images
@@ -1336,7 +1353,7 @@ INSTEAD: */
 
         // NEW WITH Win 8 - Calls to PL Search functions:
         /// <summary>
-        /// Returns the incident list for a given user
+        /// Gets all reports for the current event, from the current hospital.  Caller must filter more, to narrow.
         /// </summary>
         public async Task<string> GetReportsForOutbox(string userPL, string passwordPL)
         {
@@ -1347,11 +1364,20 @@ INSTEAD: */
             sarin.eventShortname = App.CurrentDisaster.EventShortName;
             sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
             sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
-            sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, comma-separated org shortnames
+            string Name = App.CurrentOrgContactInfo.OrgName;
+            string Uuid = App.OrgDataList.GetOrgUuidFromOrgName(Name);
+            if (Uuid == "") // couldn't find match
+            {
+                App.MyAssert(false);
+                //Uuid = App.OrgDataList.First().OrgUuid;
+                //Name = App.OrgDataList.First().OrgName;
+            }
+            sarin.filterHospital = Uuid; // instead of "" or "all" = don't filter on orgs.
             // WAS before v32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
+            sarin.filterHasImage = false;  // true would return ONLY reports with images
             sarin.pageStart = "0";
-            sarin.perPage = "1000";
+            sarin.perPage = "250"; // "1000";
             sarin.sortBy = ""; // = updated desc, score desc
             sarin.searchTerm = "";
             try

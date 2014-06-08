@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using TP8.Data;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -20,6 +21,8 @@ namespace TP8
 {
     public sealed partial class SettingsFlyoutCredentials : SettingsFlyout
     {
+        private string plUserNameOrig;
+        private string plPasswordOrig;
         public SettingsFlyoutCredentials()
         {
             InitializeComponent();
@@ -36,8 +39,8 @@ namespace TP8
                     "  " + App.UserWin8Account + "\n" + // UserWin8Account may be empty string if user has PC Settings/Privacy/"Let apps use my name and account picture" as false.
                     "  At Device: " + App.DeviceName;
             }
-            TextBoxUserNamePLUS.Text = App.pd.plUserName;
-            PasswordBoxPLUS.Password = App.pd.plPassword;
+            plUserNameOrig = TextBoxUserNamePLUS.Text = App.pd.plUserName;
+            plPasswordOrig = PasswordBoxPLUS.Password = App.pd.plPassword;
             PasswordStatus.Text = "";
             // NO, Can cause lockup due to synchronous call:
             //if (UpdateCredentialsAndCheckSyntaxSync())
@@ -152,6 +155,16 @@ namespace TP8
                 PasswordStatus.Text = "Password needs at least 1 digit"; return false;
             }
             PasswordStatus.Text = "User name and password syntax OK"; return true;
+        }
+
+        private async void SettingsFlyout_BackClick(object sender, BackClickEventArgs e)
+        {
+            if(plUserNameOrig != App.pd.plUserName || plPasswordOrig != App.pd.plPassword)
+            {
+                TP_UserNameAndVersion o = new TP_UserNameAndVersion();
+                o.User = App.UserWin8Account;
+                await App.UserAndVersions.AddOrUpdateEncryptedDataRowInXML(o);
+            }
         }
     }
 }

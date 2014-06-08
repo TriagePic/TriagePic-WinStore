@@ -24,7 +24,7 @@
     <MetadataSource Address="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=32" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item1.wsdl" MetadataType="Wsdl" ID="e716a8b0-be5d-4ef3-a925-ab8ddbf5c15f" SourceId="1" SourceUrl="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=32" />
+    <MetadataFile FileName="item1.wsdl" MetadataType="Wsdl" ID="adc6c674-62bf-4c5e-8800-d2220fbf318c" SourceId="1" SourceUrl="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=32" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -154,7 +154,9 @@ namespace TP8.Data // nah .DataModel
                     if (x.User == null ||
                         // was: String.IsNullOrEmpty(x.User) ||   ... but maybe empty string if user doesn't give apps permission to get Win 8 user name.  Changed May, 2014.  
                         // String.IsNullOrEmpty(x.Version) ||
-                        (x.User != "LastCompatibleVersion" && (String.IsNullOrEmpty(x.plUsername) || String.IsNullOrEmpty(x.plPassword))))
+                        (x.User != "LastCompatibleVersion" && (String.IsNullOrEmpty(x.plUsername) || String.IsNullOrEmpty(x.plPassword))) ||
+                        (x.User != null && (String.IsNullOrEmpty(x.plUsername) || String.IsNullOrEmpty(x.plPassword))) // Pathological case if user toggles permission for apps to use user name
+                        )
                     {
                         inner.Remove(x);
                         altered = true;
@@ -190,12 +192,7 @@ namespace TP8.Data // nah .DataModel
             else
             {
                 await ShowStartupWiz();
-                await App.pd.EncryptAndBase64EncodePLCredentialsAsync(); // assigns App.pd.plUserNamePasswordEncryptedAndBase64Encoded, App.pd.plPasswordEncryptedAndBase64Encoded
-                o.plUsername = App.pd.plUserNameEncryptedAndBase64Encoded;
-                o.plPassword = App.pd.plPasswordEncryptedAndBase64Encoded;
-                o.Version = "1.00"; // TO DO - GET VERSION FROM COMPILER
-                Add(o);
-                await WriteXML();
+                await AddEncryptedDataRowInXML(o);
             }
 
         }
@@ -227,6 +224,30 @@ namespace TP8.Data // nah .DataModel
             var results = await sw.ShowAsync();
             if (results == 0)
                 return; // user cancelled.
+        }
+
+        public async Task AddEncryptedDataRowInXML(TP_UserNameAndVersion u)
+        {
+            await App.pd.EncryptAndBase64EncodePLCredentialsAsync(); // assigns App.pd.plUserNamePasswordEncryptedAndBase64Encoded, App.pd.plPasswordEncryptedAndBase64Encoded
+            u.plUsername = App.pd.plUserNameEncryptedAndBase64Encoded;
+            u.plPassword = App.pd.plPasswordEncryptedAndBase64Encoded;
+            u.Version = "1.00"; // TO DO - GET VERSION FROM COMPILER
+            Add(u);
+            await WriteXML();
+        }
+
+        public async Task AddOrUpdateEncryptedDataRowInXML(TP_UserNameAndVersion u)
+        {
+            // A little trickiness of get around IEnumerable restrictions.  Delete then add back:
+            foreach (var x in inner)
+            {
+                if (x.User == u.User)
+                {
+                    inner.Remove(x);
+                    break;
+                }
+            }
+            await AddEncryptedDataRowInXML(u);
         }
 
         //private void Wiz_Click(object sender, RoutedEventArgs e)
