@@ -478,6 +478,7 @@ namespace TP8
         {
             if (clearFirst)
                 Clear();
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_FilterProfile>(filename);
             if (LocalStorage.Data != null)
@@ -487,6 +488,7 @@ namespace TP8
                     inner.Add(item as TP_FilterProfile);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -496,11 +498,13 @@ namespace TP8
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_FilterProfile);
 
             await LocalStorage.Save<TP_FilterProfile>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task<TP_FilterProfile> GetDefaultForCurrentOrg()

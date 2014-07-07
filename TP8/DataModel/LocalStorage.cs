@@ -88,7 +88,6 @@ Additionally the call to Save was changed to no longer await it:
                 {
                     errMsg = "Error, couldn't read expected contents of cache file\n" + filename + "\n";
                     await ReportError("During LocalStorage.Restore", errMsg);
-                    return;
                 }
             }
             else
@@ -114,6 +113,8 @@ Additionally the call to Save was changed to no longer await it:
             };
             App.ErrorLog.Add(eli);
             await App.ErrorLog.WriteXML();
+            // Hack here to let caller (e.g., requesting xml file read) know that there was a problem:
+            _data.Clear();
         }
 
         static async public Task<bool> DoesFileExistAsync(string fileName) 
@@ -129,7 +130,7 @@ Additionally the call to Save was changed to no longer await it:
 	        }
         }
 
-        static async private Task SaveAsync<T>(string filename)
+        static async private Task SaveAsync<T>(string filename) // maybe to do: add return bool.  false only if file error (e.g., xml parse error)
         {
                 StorageFile sessionFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
                 IRandomAccessStream sessionRandomAccess = await sessionFile.OpenAsync(FileAccessMode.ReadWrite);
@@ -157,6 +158,7 @@ Additionally the call to Save was changed to no longer await it:
                 sessionRandomAccess.Dispose();
                 await sessionOutputStream.FlushAsync();
                 sessionOutputStream.Dispose();
+                
         }
 
         static async private Task RestoreAsync<T>(string filename)
@@ -187,11 +189,11 @@ Additionally the call to Save was changed to no longer await it:
                 errMsg += ex.Message + "\n\nDetails:\n";
                 errMsg += ex.InnerException;
             }
+            sessionInputStream.Dispose();
             if (errMsg != "")
             {
                 await ReportError("During LocalStorage.RestoreAsync", errMsg);
             }
-            sessionInputStream.Dispose();
         }
     }
 }

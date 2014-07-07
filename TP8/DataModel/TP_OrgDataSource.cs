@@ -187,6 +187,7 @@ namespace TP8.Data // nah: .DataModel
 
         private async Task GenerateDefaultOrgData()
         {
+            /* This causes problems later; dropped July 7, 2014.  Just initialize file, empty except for root XML, instead
             inner.Add(new TP_OrgData() {
                 OrgUuid = "1",
                 OrgNPI = "1234567890",
@@ -195,7 +196,7 @@ namespace TP8.Data // nah: .DataModel
                 OrgLatitude = "38.99523",
                 OrgLongitude = "-77.096597"
                 // NOT NEEDED YET:  , OrgSelected = true
-            });
+            }); */
             await WriteXML();
         }
 
@@ -203,9 +204,11 @@ namespace TP8.Data // nah: .DataModel
         {
             // This is similar to a section of code in Win 7 FormTriagePic
             // However, avoiding use of hospitalUuids = new Dictionary
+#if MAYBENOT
             if (App.OrgDataList.Count() != 0)
-                return; // anticipating fresh install wizard
-
+                return; // anticipating fresh install wizard.  This return solves 1 problem, but doesn't make refresh of org list possible,
+                        //unless app is terminated and OrgDataList.xml deleted (or app uninstalled/reinstalled, which accomplishes same)
+#endif
             // equivalent jsonHospitalList is global in Win 7
             string jsonOrgList = await App.service.GetHospitalList();
             if ((jsonOrgList.StartsWith("ERROR:")) || (jsonOrgList.StartsWith("COMMUNICATION ERROR:")) || jsonOrgList.Length == 0)
@@ -307,6 +310,7 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task ReadXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_OrgData>(filename);
             if (LocalStorage.Data != null)
@@ -314,6 +318,7 @@ namespace TP8.Data // nah: .DataModel
                 {
                     inner.Add(item as TP_OrgData); // if there's more than 1 we're going to ignore them.
                 }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -323,11 +328,13 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_OrgData);
 
             await LocalStorage.Save<TP_OrgData>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 
     }

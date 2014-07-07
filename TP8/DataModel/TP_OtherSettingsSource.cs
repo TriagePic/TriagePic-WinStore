@@ -179,6 +179,7 @@ namespace TP8.Data
 
         private async Task GenerateDefaultOtherSettings()
         {
+            /* Default data dropped July 7, 2014.  More likely to cause problems than be helpful.  Just initialize file, empty except for root XML, instead.
             inner.Add(new TP_OtherSettings()
             {
                 CurrentEventName = "Test with TriagePic",
@@ -186,7 +187,7 @@ namespace TP8.Data
                 CurrentNewPatientNumber = "0001",
                 CurrentNewPracticePatientNumber = "0",
                 PLEndPointAddress = "" // Empty means no over-ride
-            });
+            }); */
             await WriteXML();
         }
 
@@ -221,13 +222,15 @@ namespace TP8.Data
             {
                 if (i.EventName == os.CurrentEventName || i.EventShortName == os.CurrentEventShortName)
                 {
-                    App.CurrentDisaster = i;
+                    //BAD, caused much grief by referencing list object in 2 places: App.CurrentDisaster = i;
+                    App.CurrentDisaster.CopyFrom(i);
                     break;
                 }
             }
             if (App.CurrentDisaster == null || String.IsNullOrEmpty(App.CurrentDisaster.EventName)) // couldn't find match
             {
-                App.CurrentDisaster = App.CurrentDisasterList.First();
+                //BAD: App.CurrentDisaster = App.CurrentDisasterList.First();
+                App.CurrentDisaster.CopyFrom(App.CurrentDisasterList.First());
             }
         }
 
@@ -238,6 +241,7 @@ namespace TP8.Data
 
         public async Task ReadXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_OtherSettings>(filename);
             if (LocalStorage.Data != null)
@@ -245,6 +249,7 @@ namespace TP8.Data
                 {
                     inner.Add(item as TP_OtherSettings); // if there's more than 1 we're going to ignore them.
                 }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -254,11 +259,13 @@ namespace TP8.Data
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_OtherSettings);
 
             await LocalStorage.Save<TP_OtherSettings>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 
 

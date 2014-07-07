@@ -297,6 +297,7 @@ namespace TP8.Data // nah: .DataModel
 
         private async Task GenerateDefaultOrgContactInfo()
         {
+            /* Default data dropped July 7, 2014.  More likely to cause problems than be helpful.  Just initialize file, empty except for root XML, instead.
             inner.Add(new TP_OrgContactInfo()
             {
                 OrgName = "NLM (testing)",
@@ -315,7 +316,7 @@ namespace TP8.Data // nah: .DataModel
                 OrgLatitude = "38.99523",
                 OrgLongitude = "-77.096597",
                 OrgCountry = "USA"
-            });
+            }); */
             await WriteXML();
         }
 
@@ -369,6 +370,7 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task ReadXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_OrgContactInfo>(filename);
             if (LocalStorage.Data != null)
@@ -376,6 +378,7 @@ namespace TP8.Data // nah: .DataModel
                 {
                     inner.Add(item as TP_OrgContactInfo); // if there's more than 1 we're going to ignore them.
                 }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -385,11 +388,13 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_OrgContactInfo);
 
             await LocalStorage.Save<TP_OrgContactInfo>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 
 

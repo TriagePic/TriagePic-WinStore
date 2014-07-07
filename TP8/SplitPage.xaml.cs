@@ -467,6 +467,29 @@ namespace TP8
                 SampleDataItem selectedItem = (SampleDataItem)this.itemsViewSource.View.CurrentItem;
                 if (selectedItem != null)
                 {
+                    // Temporary restriction, until we can do a better job of allowing edit of other items not originated at this station.
+                    // See also ItemDetailFlipViewPage for this restriction.
+                    bool foundPatient = false;
+                    foreach (var pr_ in App.PatientDataGroups.GetOutbox())
+                    {
+                        if (pr_.WhenLocalTime == selectedItem.UniqueId)
+                        {
+                            foundPatient = true;
+                            break;
+                        }
+                    }
+                    if (!foundPatient)
+                    {
+                        string msg =
+                            "Sorry, can't edit this report, or any report not in the Outbox list.\n" +
+                            "Only reports that were created here (and not deleted from here) can be edited here.\n" +
+                            "This is a temporary restriction of this release of TriagePic for Windows Store.\n" +
+                            "For now, consider editing such reports at the TriageTrak web site.";
+                        var dialog1 = new MessageDialog(msg);
+                        var t1 = dialog1.ShowAsync(); // Assign to t1 to suppress compiler warning
+                        return;
+                    }
+
                     this.Frame.Navigate(typeof(BasicPageViewEdit), selectedItem.UniqueId); // "pageViewEdit");  //UniqueId is WhenLocalTime
                     return;
                 }

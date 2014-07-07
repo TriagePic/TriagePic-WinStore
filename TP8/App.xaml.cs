@@ -33,6 +33,7 @@ using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
 using Windows.System.UserProfile;
 using Windows.Storage;
+using System.Threading;
 
 
 
@@ -71,7 +72,8 @@ namespace TP8
         // Access globals everywhere through, e.g., App.CurrentResultsGroup
         // These are data globals.  Styles are better defined in Resources
         public static TP_EventsDataList CurrentDisasterList = new TP_EventsDataList();
-        public static ObservableCollection<TP_EventsDataItem> CurrentDisasterListForCombo = new ObservableCollection<TP_EventsDataItem>();
+        // NO LONGER NEEDED AFTER BUG FIXED, but we may bring this back in the future if we add event filtering to event-choice control:
+        // public static ObservableCollection<TP_EventsDataItem> CurrentDisasterListForCombo = new ObservableCollection<TP_EventsDataItem>();
         public static TP_EventsDataList CurrentDisasterListFilters = new TP_EventsDataList();
         public static TP_EventsDataItem CurrentDisaster = new TP_EventsDataItem();
         public static string RosterNames = "";
@@ -151,6 +153,8 @@ namespace TP8
         public const string NO_OR_BAD_WEB_SERVICE_PREFIX =
             "Could not connect to TriageTrak web service.  Using previous information, cached locally, instead for:\n"; // Often used with delayed message
         public static bool AppFinishedLaunching = false; // set to true during home page launch
+        public static bool ProcessingAllStationsList = false;
+        public static SemaphoreSlim LocalStorageDataSemaphore = new SemaphoreSlim(1); // LocalStorage.Data is a static shared resource; serialize read/write access to it.
 
         public static App Instance
         {
@@ -272,8 +276,7 @@ namespace TP8
             await CurrentDisasterList.Init();
             CurrentDisaster.CopyFrom(CurrentDisasterList.FirstOrDefault());
             await CurrentDisasterListFilters.InitAsFilters();
-            foreach (TP_EventsDataItem i in CurrentDisasterList)
-                CurrentDisasterListForCombo.Add(i);
+            // NO LONGER NEEDED ONCE BUG FIXED: CloneDisasterListForCombo();
 
             // Moved earlier: await OrgDataList.Init(); // get list of all hospitals/organizations defined at our PL/Vesuvius
 
@@ -300,6 +303,18 @@ namespace TP8
             // Moved to later in call sequence: sendQueue.StartWork(); // DON'T await
             await App.ErrorLog.ReportToErrorLog("FYI: Ending App.Launch", "", false);
         }
+
+/* NO LONGER NEEDED ONCE BUG FIXED:
+        public static void CloneDisasterListForCombo()
+        {
+            CurrentDisasterListForCombo.Clear(); // not needed during startup, but when called from checklist page
+            foreach (TP_EventsDataItem i in CurrentDisasterList)
+            {
+                TP_EventsDataItem j = new TP_EventsDataItem { };
+                j.CopyFrom(i);
+                CurrentDisasterListForCombo.Add(j);
+            }
+        } */
 
         private static void DoSaveOnTermination()
         {
@@ -354,6 +369,7 @@ namespace TP8
             // Probably not: goodWebServiceConnectivity = false; // Determined by pings.  Don't bother with stale data:
             //   (bool)SuspensionManager.SessionState["goodWebServiceConnectivity"];
             SuspensionManager.SessionState["AppFinishedLaunching"] = AppFinishedLaunching;
+            SuspensionManager.SessionState["ProcessingAllStationsList"] = ProcessingAllStationsList;
 
             // followed by SuspensionManager.SaveAsync();
         }
@@ -382,6 +398,7 @@ namespace TP8
             BlockWebServices = (bool)SuspensionManager.SessionState["BlockWebServices"];
             // Probably not: goodWebServiceConnectivity = false; // Determined by pings.  Don't bother with stale data: (bool)SuspensionManager.SessionState["goodWebServiceConnectivity"];
             AppFinishedLaunching = (bool)SuspensionManager.SessionState["AppFinishedLaunching"];
+            ProcessingAllStationsList = (bool)SuspensionManager.SessionState["ProcessingAllStationsList"];
 
             // Complex types:
             // Most of restoration of these is handled in DoStartup, but we'll see what's needed here.
@@ -493,6 +510,14 @@ namespace TP8
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            if(App.LocalStorageDataSemaphore.CurrentCount == 0) // awaiting read/write xml competion
+            {
+                bool done = await App.LocalStorageDataSemaphore.WaitAsync(500); // wait 1/2 second for completion.  If didn't (and timedout) will get back false
+                if (done)
+                    App.LocalStorageDataSemaphore.Release(); // cleanup
+                // TO DO: else case, maybe put semaphore in suspension manager... but localStorage.Data is likely bunged on resume
+            }
+
             DoSaveOnTermination();
             await SuspensionManager.SaveAsync();
             // Generally, we are saving everything as we go along, so shouldn't have to do this here...

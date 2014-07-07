@@ -1377,7 +1377,7 @@ INSTEAD: */
             sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
             sarin.filterHasImage = false;  // true would return ONLY reports with images
             sarin.pageStart = "0";
-            sarin.perPage = "250"; // "1000";
+            sarin.perPage = "250"; // "1000";  If you change this, change it too in TP_PatientReportsSource.cs
             sarin.sortBy = ""; // = updated desc, score desc
             sarin.searchTerm = "";
             try

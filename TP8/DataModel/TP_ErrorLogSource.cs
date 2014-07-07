@@ -200,6 +200,7 @@ namespace TP8.Data
 
         public async Task ReadXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_ErrorLogItem>(filename);
             if (LocalStorage.Data != null)
@@ -209,6 +210,7 @@ namespace TP8.Data
                     inner.Add(item as TP_ErrorLogItem);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -218,11 +220,18 @@ namespace TP8.Data
 
         public async Task WriteXML(string filename)
         {
+            // NO: await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
+            // If reporting error during read/write, we need to be able get access to do so.
+            bool done = await App.LocalStorageDataSemaphore.WaitAsync(1000); // wait at most 1 second
+            // done is for benefit of debug here.  Will be true if other read/write finished, but false if timeout, which is the case when there's a read of bad xml file
+
+            // TO DO: Come up with error reporting code that doesn't share LocalStorage.Data to do it.
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_ErrorLogItem);
 
             await LocalStorage.Save<TP_ErrorLogItem>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
     }
 

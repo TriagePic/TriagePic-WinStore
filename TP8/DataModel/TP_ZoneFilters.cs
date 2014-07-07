@@ -268,6 +268,7 @@ namespace TP8.Data // nah .DataModel
         {
             if (clearFirst)
                 Clear();
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_ZoneFilterItem>(filename);
             if (LocalStorage.Data != null)
@@ -277,6 +278,7 @@ namespace TP8.Data // nah .DataModel
                     _zoneFilterList.Add(item as TP_ZoneFilterItem);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -286,11 +288,13 @@ namespace TP8.Data // nah .DataModel
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in _zoneFilterList)
                 LocalStorage.Add(item as TP_ZoneFilterItem);
 
             await LocalStorage.Save<TP_ZoneFilterItem>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 #endif
     }

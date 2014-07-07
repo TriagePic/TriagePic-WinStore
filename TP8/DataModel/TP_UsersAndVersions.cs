@@ -264,6 +264,7 @@ namespace TP8.Data // nah .DataModel
         {
             if (clearFirst)
                 Clear();
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_UserNameAndVersion>(filename);
             if (LocalStorage.Data != null)
@@ -273,6 +274,7 @@ namespace TP8.Data // nah .DataModel
                     inner.Add(item as TP_UserNameAndVersion);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -282,11 +284,13 @@ namespace TP8.Data // nah .DataModel
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_UserNameAndVersion);
 
             await LocalStorage.Save<TP_UserNameAndVersion>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
     }
 

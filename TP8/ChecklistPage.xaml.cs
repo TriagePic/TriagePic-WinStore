@@ -25,12 +25,17 @@ namespace TP8
     /// </summary>
     public sealed partial class BasicPageChecklist : TP8.Common.LayoutAwarePage
     {
+        public static ProgressBar staticProgressBarChangedEvent; // kludge to access progressBarChangeEvent from other pages... in absence of MVVM with Message Bus or Event Aggregator and subscribe/publish
+        public static TextBlock staticGettingAllStationsReports; // more kludge
         public BasicPageChecklist()
         {
             this.InitializeComponent();
+            staticProgressBarChangedEvent = progressBarChangedEvent;
+            staticGettingAllStationsReports = gettingAllStationsReports;
             //crash: EventComboBox.DataContext = App.CurrentDisasterListForCombo;
-            EventComboBox.ItemsSource = App.CurrentDisasterListForCombo;
-            EventComboBox.DataContext = App.CurrentDisasterListForCombo;
+            // NO LONGER SEPARATE LIST NEEDED ONCE BUG FIXED: EventListView.ItemsSource = App.CurrentDisasterListForCombo;
+            EventListView.ItemsSource = App.CurrentDisasterList;
+            //EventComboBox.DataContext = App.CurrentDisasterListForCombo;
         }
 
         /// <summary>
@@ -82,7 +87,7 @@ namespace TP8
             {
                 if (i.EventName == App.CurrentDisaster.EventName)  // Could match instead throughout on EventShortName or EventNumericID
                 {
-                    EventComboBox.SelectedIndex = count; //EventComboBox.SelectedItem = i;
+                    EventListView.SelectedIndex = count; //EventComboBox.SelectedItem = i;
                     break;
                 }
                 count++;
@@ -150,29 +155,90 @@ namespace TP8
         }
         #endregion
 
-        private async void EventComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void EventListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (EventComboBox.SelectedItem != null)
+            if (EventListView.SelectedItem != null)
             {
-                TP8.Data.TP_EventsDataItem tpEvent = (TP_EventsDataItem)EventComboBox.SelectedItem;
-                if (App.CurrentDisaster.EventName == tpEvent.EventName)
+                //EventListViewDebug();
+                //DebugEventsList.Text = "";
+                TP8.Data.TP_EventsDataItem tpEvent = (TP_EventsDataItem)EventListView.SelectedItem;
+                // This was put in to prevent multiple calls to ProcessAllStationsList, which can cause file lockups.
+                // But "return" causes its own problems, if App.ProcessingAllStationsList isn't reset to false (e.g., if abnormally terminated during debugging
+                if (App.ProcessingAllStationsList)
+                {
+                    progressBarChangedEvent.Visibility = Visibility.Visible;
+                    gettingAllStationsReports.Visibility = Visibility.Visible;
+                    //return;
+                }
+
+                if (App.CurrentDisaster.EventName == tpEvent.EventName) //...  && this.EventComboBox.SelectionBoxItemTemplate.)
                     return; // no real work to do.  May be the case when we begin visit to checklist page.  New May 2014
 
+
+                progressBarChangedEvent.Visibility = Visibility.Visible;
+                gettingAllStationsReports.Visibility = Visibility.Visible;
+
+                //EventListViewDebug();
+                App.CurrentDisaster.CopyFrom(tpEvent);
+                //EventListViewDebug();
+
+                /* WAS:
                 App.CurrentDisaster.TypeIconUri = tpEvent.TypeIconUri;
                 App.CurrentDisaster.EventName = tpEvent.EventName;
                 App.CurrentDisaster.EventType = tpEvent.EventType; // will this work?  instead of TP_EventsDataItem.GetEventTypeFromIconUri(tpEvent.TypeIconUri);
-                App.CurrentDisaster.EventShortName = tpEvent.EventShortName; // will this work?
+                App.CurrentDisaster.EventShortName = tpEvent.EventShortName; // will this work? */
+                // was: this.EventComboBox.UpdateLayout(); // There is a race condition between the combo box selection of an item, and getting CurrentDisaster updated, which is the binding source. 
+                // So do an update layout in case we got here too late.
                 // Persist it:
                 App.CurrentOtherSettings.CurrentEventName = tpEvent.EventName;
                 App.CurrentOtherSettings.CurrentEventShortName = tpEvent.EventShortName;
                 App.CurrentOtherSettingsList.UpdateOrAdd(App.CurrentOtherSettings);
                 await App.CurrentOtherSettingsList.WriteXML();
+                //EventListViewDebug();
 
                 // Invalid cache data when current event changes
                 // WAS, but this now included in next step: await App.PatientDataGroups.PurgeCachedAllStationsList();
+                //DebugEventsList.Text = "Processing all stations list";
                 await App.PatientDataGroups.ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, false, true); // = on startup; invalidate cache first
+                //DebugEventsList.Text = "";
+                progressBarChangedEvent.Visibility = Visibility.Collapsed;
+                gettingAllStationsReports.Visibility = Visibility.Collapsed;
+                // if DEBUGGING:
+                //EventListViewDebug();
             }
         }
+
+/* NO LONGER NEEDED:
+        private void EventListViewDebug()
+        {
+            // kludge to re-initialize list every time, because selection itself seems to add things to this list (presumably due to binding) in spite of many efforts to prevent it.
+            //App.CloneDisasterListForCombo();
+            // For debugging
+            string s = "source: ";
+            foreach (var k in App.CurrentDisasterList)
+                s += k.EventName + ";";
+            s +="\ntarget: ";
+            foreach (var i in App.CurrentDisasterListForCombo)
+                s += i.EventName + ";";
+            DebugEventsList.Text = s;
+        }
+ */
+
+/* WAS during last failed attempt to debug EventComboBox:
+        private void EventComboBox_DropDownOpened(object sender, object e)
+        {
+            // kludge to re-initialize list every time, because selection itself seems to add things to this list (presumably due to binding) in spite of many efforts to prevent it.
+            App.CloneDisasterListForCombo();
+            // For debugging
+            string source = "";
+            foreach (var k in App.CurrentDisasterList)
+                source += k.EventName + ";";
+            string target = "";
+            foreach (var i in App.CurrentDisasterListForCombo)
+                target += i.EventName + ";";
+            return;
+        }
+ */
 
     }
 }

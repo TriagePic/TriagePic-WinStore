@@ -277,11 +277,12 @@ namespace TP8.Data // nah: .DataModel
 
         private async Task GenerateDefaultOrgPolicy()
         {
+            /* Default data dropped July 7, 2014.  More likely to cause problems than be helpful.  Just initialize file, empty except for root XML, instead.
             inner.Add(new TP_OrgPolicy()
             {
                 OrgPatientIdFixedDigits = 4,
                 OrgPatientIdPrefixText = "911-"
-            });
+            }); */
             await WriteXML();
         }
 
@@ -320,6 +321,7 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task ReadXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_OrgPolicy>(filename);
             if (LocalStorage.Data != null)
@@ -327,6 +329,7 @@ namespace TP8.Data // nah: .DataModel
                 {
                     inner.Add(item as TP_OrgPolicy); // if there's more than 1 we're going to ignore them.
                 }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -336,11 +339,13 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_OrgPolicy);
 
             await LocalStorage.Save<TP_OrgPolicy>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 
 

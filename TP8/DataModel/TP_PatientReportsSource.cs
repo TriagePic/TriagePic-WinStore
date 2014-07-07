@@ -25,7 +25,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using LPF_SOAP;
 using Newtonsoft.Json;
-using System.Runtime.Serialization; // needed for WriteableBitmap.PixelBuffer.ToStream()
+using System.Runtime.Serialization;
+using Windows.UI.Xaml; // needed for WriteableBitmap.PixelBuffer.ToStream()
 
 // This is the underlying TP data model, which is mapped to the SampleDataItem of the SampleDataSource model with its data bindings in the standard item templates.
 namespace TP8.Data
@@ -82,6 +83,7 @@ namespace TP8.Data
         public async Task ReadXML(string filename)
         {
             Clear();
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_PatientReport>(filename);
             if (LocalStorage.Data != null)
@@ -97,6 +99,7 @@ namespace TP8.Data
                     inner.Add(pdi__);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -106,6 +109,7 @@ namespace TP8.Data
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             TP_PatientReport pdi__;
             foreach (var patient in inner)
@@ -119,6 +123,7 @@ namespace TP8.Data
             }
 
             await LocalStorage.Save<TP_PatientReport>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
 
         // Not right at compile time...
@@ -326,12 +331,35 @@ namespace TP8.Data
            await ProcessAllStationsList(plname, plpass, false, false);
         }
 
-        public async Task ProcessAllStationsList(string plname, string plpass, bool onStartup, bool invalidateCacheFirst) 
+        public async Task ProcessAllStationsList(string plname, string plpass, bool onStartup, bool invalidateCacheFirst)
         {
+            App.ProcessingAllStationsList = true;
+            await ProcessAllStationsListImpl(plname, plpass, onStartup, invalidateCacheFirst);
+            App.ProcessingAllStationsList = false;
+
+            if (TP8.BasicPageChecklist.staticProgressBarChangedEvent != null)
+                TP8.BasicPageChecklist.staticProgressBarChangedEvent.Visibility = Visibility.Collapsed;
+            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+            {
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = ""; // cleanup
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async Task ProcessAllStationsListImpl(string plname, string plpass, bool onStartup, bool invalidateCacheFirst) 
+        {
+
             // Compare Win 7 FormTriagePic.ProcessEventList(...)
             MessageDialog ImmediateDlg = new MessageDialog("");
             if (invalidateCacheFirst) // do this only if current event has changed
+            {
+                if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 1 of 4]"; //"Purging cache";
                 await PurgeCachedAllStationsList();
+            }
+
+            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 2 of 4]"; //"Calling web service";
 
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
@@ -363,6 +391,8 @@ namespace TP8.Data
                 return;
             }
 
+            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 3 of 4]";// "Reading web service results into memory";
             responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
             // Hopefully don't have to add more filtering here... we'll see.
             if (responseRows == null) // Assume this is an error, not just zero reports
@@ -376,13 +406,22 @@ namespace TP8.Data
                     ImmediateDlg.Content = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - Valid ist of reports from all stations, for the current event\n";
                     await ImmediateDlg.ShowAsync();
                 }
-
                 return;
             }
 
             _allstations.Clear(); // throw away stale data
+            int i = 0;
+            App.MyAssert(responseRows.Count <= 250);// Limit set in LPF_SOAP
+            string count = (responseRows.Count).ToString();
+            if (responseRows.Count == 250) 
+                count = "250 (max)";
             foreach (var item in responseRows)
             {
+                i++;
+                if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 3 of 4; report " +
+                        i.ToString() + " of " + count + "]";// "Reading web service results into memory";
+
                 // TO DO:  In future version, support Practice.  For now, skip any records so labeled
                 if (item.edxl != null && item.edxl.Count() > 0 && item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
                     continue;
@@ -424,6 +463,8 @@ namespace TP8.Data
                     await LoadNewPatientReportImage(p);
             }
 #endif
+            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 4 of 4]"; //"Also caching results to file";
             await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             // Caller will take care of _allstationssorted, _allstationssortedandfiltered
         }

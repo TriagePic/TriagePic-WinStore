@@ -27,7 +27,7 @@ using Newtonsoft.Json;
 namespace TP8.Data
 {
     // Code here based on style of http jesseliberty.com/2012/08/21/windows-8-data-binding-part5binding-to-lists/
-    public class TP_EventsDataItem : INotifyPropertyChanged
+    public class TP_EventsDataItem //BEFORE JUNE 2014: INotifyPropertyChanged
     {
     // WORKS_WITH_PNG_BUT_NOT_BMP:
         private string _typeIconUri;
@@ -37,7 +37,7 @@ namespace TP8.Data
             set
             {
                 _typeIconUri = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -83,7 +83,7 @@ namespace TP8.Data
             set
             {
                 _eventNumericID = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -94,7 +94,7 @@ namespace TP8.Data
             set
             {
                 _parentEventID = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -105,7 +105,7 @@ namespace TP8.Data
             set
             {
                 _eventShortName = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -116,7 +116,7 @@ namespace TP8.Data
             set
             {
                 _eventDate = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -127,7 +127,7 @@ namespace TP8.Data
             set
             {
                 _eventLatitude = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -138,7 +138,7 @@ namespace TP8.Data
             set
             {
                 _eventLongitude = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -149,7 +149,7 @@ namespace TP8.Data
             set
             {
                 _eventStreet = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -162,7 +162,7 @@ namespace TP8.Data
             set
             {
                 _eventForPublic = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -173,7 +173,7 @@ namespace TP8.Data
             set
             {
                 _eventForAdmins = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -184,7 +184,7 @@ namespace TP8.Data
             set
             {
                 _eventForHospitalUsers = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -195,7 +195,7 @@ namespace TP8.Data
             set
             {
                 _eventForResearchers = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -206,7 +206,7 @@ namespace TP8.Data
             set
             {
                 _eventClosed = value;
-                RaisePropertyChanged();
+                //BEFORE JUNE 2014: RaisePropertyChanged();
             }
         }
 
@@ -228,15 +228,15 @@ namespace TP8.Data
                     // Zero means open, 1 is closed to all reporting, 2 means reporting is only allowed to happend externally (like Google PF).
                 } */
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //BEFORE JUNE 2014: public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged([CallerMemberName] string caller = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(caller));
-            }
-        }
+        //BEFORE JUNE 2014: private void RaisePropertyChanged([CallerMemberName] string caller = "")
+        //BEFORE JUNE 2014: {
+        //BEFORE JUNE 2014:     if (PropertyChanged != null)
+        //BEFORE JUNE 2014:     {
+        //BEFORE JUNE 2014:         PropertyChanged(this, new PropertyChangedEventArgs(caller));
+        //BEFORE JUNE 2014:     }
+        //BEFORE JUNE 2014: }
 
         /// <summary>
         /// Helpful for App.CurrentEvent.  Like clone, except receiving object already exists.
@@ -432,6 +432,7 @@ namespace TP8.Data
 
         private async Task GenerateDefaultEventsList()
         {
+            /* Default data dropped July 7, 2014.  More likely to cause problems than be helpful.  Just initialize file, empty except for root XML, instead.
             inner.Add(new TP_EventsDataItem() { EventName = "Test with TriagePic", EventType = "TEST/DEMO/DRILL", EventShortName = "testtp" });
             inner.Add(new TP_EventsDataItem() { EventName = "Test event #2", EventType = "TEST/DEMO/DRILL", EventShortName = "t2" });
             inner.Add(new TP_EventsDataItem() { EventName = "Rockville earthquake", EventType = "TEST/DEMO/DRILL", EventShortName = "rockville" });
@@ -451,6 +452,7 @@ namespace TP8.Data
                 item.EventForHospitalUsers = true;
                 item.EventForResearchers = false;
             }
+             */
             await WriteXML();
         }
 
@@ -557,6 +559,7 @@ namespace TP8.Data
         {
             if (clearFirst)
                 Clear();
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_EventsDataItem>(filename);
             if (LocalStorage.Data != null)
@@ -566,6 +569,7 @@ namespace TP8.Data
                     inner.Add(item as TP_EventsDataItem);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -575,11 +579,13 @@ namespace TP8.Data
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in inner)
                 LocalStorage.Add(item as TP_EventsDataItem);
 
             await LocalStorage.Save<TP_EventsDataItem>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
     }
 

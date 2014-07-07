@@ -158,6 +158,8 @@ namespace TP8.Data // nah .DataModel
 
         private async Task GenerateDefaultChoices()
         {
+#if DROPPED
+// Default data dropped July 7, 2014.  More likely to cause problems than be helpful.  Just initialize file, empty except for root XML, instead.
             // Clear() and Add() will initialize both _zoneChoices and _zoneChoiceList
             // Includes "", zone not yet chosen
             Clear(); // just in case
@@ -167,7 +169,7 @@ namespace TP8.Data // nah .DataModel
             Add(new TP_ZoneChoiceItem("Red", "Treat immediately"/*"Immediate"*/, "Red", Colors.Red));
             Add(new TP_ZoneChoiceItem("Gray", "Cannot be saved", "Gray", Colors.Gray));
             Add(new TP_ZoneChoiceItem("Black", "Deceased", "Black", Colors.Black));
-
+#endif
             await WriteXML();
         }
 
@@ -276,6 +278,7 @@ namespace TP8.Data // nah .DataModel
         {
             if (clearFirst)
                 Clear();
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             await LocalStorage.Restore<TP_ZoneChoiceItem>(filename);
             if (LocalStorage.Data != null)
@@ -285,6 +288,7 @@ namespace TP8.Data // nah .DataModel
                     _zoneChoiceList.Add(item as TP_ZoneChoiceItem);
                 }
             }
+            App.LocalStorageDataSemaphore.Release();
         }
 
         public async Task WriteXML()
@@ -294,11 +298,13 @@ namespace TP8.Data // nah .DataModel
 
         public async Task WriteXML(string filename)
         {
+            await App.LocalStorageDataSemaphore.WaitAsync(); // Data buffer shared with other read/writes, so serialize access
             LocalStorage.Data.Clear();
             foreach (var item in _zoneChoiceList)
                 LocalStorage.Add(item as TP_ZoneChoiceItem);
 
             await LocalStorage.Save<TP_ZoneChoiceItem>(filename);
+            App.LocalStorageDataSemaphore.Release();
         }
     }
 
