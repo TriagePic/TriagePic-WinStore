@@ -217,7 +217,7 @@
     <None Include="Common\ReadMe.txt" />
     <None Include="packages.config" />
     <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
-    <None Include="Service References\PLWS\item1.wsdl" />
+    <None Include="Service References\PLWS\item.wsdl" />
     <None Include="TP8_StoreKey.pfx" />
     <None Include="TP8_TemporaryKey.pfx" />
   </ItemGroup>

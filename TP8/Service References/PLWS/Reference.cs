@@ -18,266 +18,328 @@ namespace TP8.PLWS {
     [System.ServiceModel.ServiceContractAttribute(Namespace="soap/plusWebServices", ConfigurationName="PLWS.plusWebServicesPortType")]
     public interface plusWebServicesPortType {
         
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#ping", ReplyAction="*")]
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#requestUserToken", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.pingResponse> pingAsync(TP8.PLWS.pingRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#pingWithEcho", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.pingWithEchoResponse> pingWithEchoAsync(TP8.PLWS.pingWithEchoRequest request);
+        System.Threading.Tasks.Task<TP8.PLWS.requestUserTokenResponse> requestUserTokenAsync(TP8.PLWS.requestUserTokenRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getEventList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#requestAnonToken", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.requestAnonTokenResponse> requestAnonTokenAsync(TP8.PLWS.requestAnonTokenRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#purgeUserTokens", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.purgeUserTokensResponse> purgeUserTokensAsync(TP8.PLWS.purgeUserTokensRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#pingEcho", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.pingEchoResponse> pingEchoAsync(TP8.PLWS.pingEchoRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getEventList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getEventListResponse> getEventListAsync(TP8.PLWS.getEventListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getEventListUser", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getEventListUserResponse> getEventListUserAsync(TP8.PLWS.getEventListUserRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getGroupList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getGroupList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getGroupListResponse> getGroupListAsync(TP8.PLWS.getGroupListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalList", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getHospitalListResponse> getHospitalListAsync(TP8.PLWS.getHospitalListRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalData", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getHospitalDataResponse> getHospitalDataAsync(TP8.PLWS.getHospitalDataRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalPolicy", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getHospitalPolicyResponse> getHospitalPolicyAsync(TP8.PLWS.getHospitalPolicyRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalLegalese", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseResponse> getHospitalLegaleseAsync(TP8.PLWS.getHospitalLegaleseRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalLegaleseAnon", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseAnonResponse> getHospitalLegaleseAnonAsync(TP8.PLWS.getHospitalLegaleseAnonRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getHospitalLegaleseTimestamps", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseTimestampsResponse> getHospitalLegaleseTimestampsAsync(TP8.PLWS.getHospitalLegaleseTimestampsRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#appCheck", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#registerPushToken", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.registerPushTokenResponse> registerPushTokenAsync(TP8.PLWS.registerPushTokenRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#registerUser", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#registerUser", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerUserResponse> registerUserAsync(TP8.PLWS.registerUserRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#registerUserActive", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.registerUserActiveResponse> registerUserActiveAsync(TP8.PLWS.registerUserActiveRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#changeUserPassword", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#changeUserPassword", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.changeUserPasswordResponse> changeUserPasswordAsync(TP8.PLWS.changeUserPasswordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#resetUserPassword", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#resetUserPassword", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.resetUserPasswordResponse> resetUserPasswordAsync(TP8.PLWS.resetUserPasswordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#forgotUsername", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#forgotUsername", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.forgotUsernameResponse> forgotUsernameAsync(TP8.PLWS.forgotUsernameRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#checkUserAuth", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.checkUserAuthResponse> checkUserAuthAsync(TP8.PLWS.checkUserAuthRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#checkUserAuthHospital", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.checkUserAuthHospitalResponse> checkUserAuthHospitalAsync(TP8.PLWS.checkUserAuthHospitalRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getUserStatus", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getUserStatusResponse> getUserStatusAsync(TP8.PLWS.getUserStatusRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getUserGroup", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getUserGroup", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getUserGroupResponse> getUserGroupAsync(TP8.PLWS.getUserGroupRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#search", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getSessionCookie", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getSessionCookieResponse> getSessionCookieAsync(TP8.PLWS.getSessionCookieRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#search", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchResponse> searchAsync(TP8.PLWS.searchRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#searchWithAuth", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.searchWithAuthResponse> searchWithAuthAsync(TP8.PLWS.searchWithAuthRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#searchCount", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#searchCount", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchCountResponse> searchCountAsync(TP8.PLWS.searchCountRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#searchCountWithAuth", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.searchCountWithAuthResponse> searchCountWithAuthAsync(TP8.PLWS.searchCountWithAuthRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#findMostRecentReportAsFiltered", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.findMostRecentReportAsFilteredResponse> findMostRecentReportAsFilteredAsync(TP8.PLWS.findMostRecentReportAsFilteredRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#reportPerson", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#reportPerson", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reportPersonResponse> reportPersonAsync(TP8.PLWS.reportPersonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#reReportPerson", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#reReportPerson", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reReportPersonResponse> reReportPersonAsync(TP8.PLWS.reReportPersonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#expirePerson", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#expirePerson", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.expirePersonResponse> expirePersonAsync(TP8.PLWS.expirePersonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#reportAbuse", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#reportAbuse", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reportAbuseResponse> reportAbuseAsync(TP8.PLWS.reportAbuseRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getPersonExpiryDate", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getPersonExpiryDateResponse> getPersonExpiryDateAsync(TP8.PLWS.getPersonExpiryDateRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#setPersonExpiryDate", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.setPersonExpiryDateResponse> setPersonExpiryDateAsync(TP8.PLWS.setPersonExpiryDateRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#setPersonExpiryDateOneYear", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.setPersonExpiryDateOneYearResponse> setPersonExpiryDateOneYearAsync(TP8.PLWS.setPersonExpiryDateOneYearRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getUuidByMassCasualtyId", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#changeMassCasualtyId", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.changeMassCasualtyIdResponse> changeMassCasualtyIdAsync(TP8.PLWS.changeMassCasualtyIdRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#hasRecordBeenRevised", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.hasRecordBeenRevisedResponse> hasRecordBeenRevisedAsync(TP8.PLWS.hasRecordBeenRevisedRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#addComment", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#addComment", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.addCommentResponse> addCommentAsync(TP8.PLWS.addCommentRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getPersonPermissions", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getPersonPermissionsResponse> getPersonPermissionsAsync(TP8.PLWS.getPersonPermissionsRequest request);
-        
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getImageCountsAndTokens", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getImageCountsAndTokens", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageCountsAndTokensResponse> getImageCountsAndTokensAsync(TP8.PLWS.getImageCountsAndTokensRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getImageList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getImageList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageListResponse> getImageListAsync(TP8.PLWS.getImageListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getImageListBlock", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getImageListBlock", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageListBlockResponse> getImageListBlockAsync(TP8.PLWS.getImageListBlockRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=32#getNullTokenList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getNullTokenList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getNullTokenListResponse> getNullTokenListAsync(TP8.PLWS.getNullTokenListRequest request);
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="ping", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class pingRequest {
         
-        public pingRequest() {
-        }
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#appCheck", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#registerApplePushToken", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.registerApplePushTokenResponse> registerApplePushTokenAsync(TP8.PLWS.registerApplePushTokenRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getHospitalList", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getHospitalListResponse> getHospitalListAsync(TP8.PLWS.getHospitalListRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getHospitalData", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getHospitalDataResponse> getHospitalDataAsync(TP8.PLWS.getHospitalDataRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getHospitalPolicy", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getHospitalPolicyResponse> getHospitalPolicyAsync(TP8.PLWS.getHospitalPolicyRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getHospitalLegalese", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseResponse> getHospitalLegaleseAsync(TP8.PLWS.getHospitalLegaleseRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getHospitalLegaleseAnon", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseAnonResponse> getHospitalLegaleseAnonAsync(TP8.PLWS.getHospitalLegaleseAnonRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getHospitalLegaleseTimestamps", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseTimestampsResponse> getHospitalLegaleseTimestampsAsync(TP8.PLWS.getHospitalLegaleseTimestampsRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#getUuidByMassCasualtyId", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=33#changeMassCasualtyId", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.changeMassCasualtyIdResponse> changeMassCasualtyIdAsync(TP8.PLWS.changeMassCasualtyIdRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="pingResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class pingResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestUserToken", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class requestUserTokenRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string time;
+        public string username;
         
-        public pingResponse() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string password;
+        
+        public requestUserTokenRequest() {
         }
         
-        public pingResponse(string time) {
-            this.time = time;
+        public requestUserTokenRequest(string username, string password) {
+            this.username = username;
+            this.password = password;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="pingWithEcho", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class pingWithEchoRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestUserTokenResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class requestUserTokenResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string pingString;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string latency;
+        public string errorCode;
         
-        public pingWithEchoRequest() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public requestUserTokenResponse() {
         }
         
-        public pingWithEchoRequest(string pingString, string latency) {
+        public requestUserTokenResponse(string token, string errorCode, string errorMessage) {
+            this.token = token;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestAnonToken", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class requestAnonTokenRequest {
+        
+        public requestAnonTokenRequest() {
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestAnonTokenResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class requestAnonTokenResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public requestAnonTokenResponse() {
+        }
+        
+        public requestAnonTokenResponse(string token, string errorCode, string errorMessage) {
+            this.token = token;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="purgeUserTokens", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class purgeUserTokensRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string username;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string password;
+        
+        public purgeUserTokensRequest() {
+        }
+        
+        public purgeUserTokensRequest(string token, string username, string password) {
+            this.token = token;
+            this.username = username;
+            this.password = password;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="purgeUserTokensResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class purgeUserTokensResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public purgeUserTokensResponse() {
+        }
+        
+        public purgeUserTokensResponse(string errorCode, string errorMessage) {
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="pingEcho", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class pingEchoRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string pingString;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string latency;
+        
+        public pingEchoRequest() {
+        }
+        
+        public pingEchoRequest(string token, string pingString, string latency) {
+            this.token = token;
             this.pingString = pingString;
             this.latency = latency;
         }
@@ -285,19 +347,28 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="pingWithEchoResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class pingWithEchoResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="pingEchoResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class pingEchoResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string time;
         
-        public pingWithEchoResponse() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public pingEchoResponse() {
         }
         
-        public pingWithEchoResponse(string time) {
+        public pingEchoResponse(string time, string errorCode, string errorMessage) {
             this.time = time;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
         }
     }
     
@@ -306,7 +377,15 @@ namespace TP8.PLWS {
     [System.ServiceModel.MessageContractAttribute(WrapperName="getEventList", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class getEventListRequest {
         
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
         public getEventListRequest() {
+        }
+        
+        public getEventListRequest(string token) {
+            this.token = token;
         }
     }
     
@@ -339,59 +418,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getEventListUser", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getEventListUserRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public getEventListUserRequest() {
-        }
-        
-        public getEventListUserRequest(string username, string password) {
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getEventListUserResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getEventListUserResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventList;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getEventListUserResponse() {
-        }
-        
-        public getEventListUserResponse(string eventList, string errorCode, string errorMessage) {
-            this.eventList = eventList;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="getGroupList", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class getGroupListRequest {
         
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
         public getGroupListRequest() {
+        }
+        
+        public getGroupListRequest(string token) {
+            this.token = token;
         }
     }
     
@@ -424,520 +462,38 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalList", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalListRequest {
-        
-        public getHospitalListRequest() {
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalListResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalListResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string hospitalList;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getHospitalListResponse() {
-        }
-        
-        public getHospitalListResponse(string hospitalList, string errorCode, string errorMessage) {
-            this.hospitalList = hospitalList;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalData", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalDataRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string hospital_uuid;
-        
-        public getHospitalDataRequest() {
-        }
-        
-        public getHospitalDataRequest(string hospital_uuid) {
-            this.hospital_uuid = hospital_uuid;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalDataResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalDataResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string name;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string shortname;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string street1;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string street2;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string city;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string county;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string state;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string country;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string zip;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string phone;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string fax;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string email;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=12)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string www;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=13)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string npi;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=14)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string latitude;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string longitude;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getHospitalDataResponse() {
-        }
-        
-        public getHospitalDataResponse(
-                    string name, 
-                    string shortname, 
-                    string street1, 
-                    string street2, 
-                    string city, 
-                    string county, 
-                    string state, 
-                    string country, 
-                    string zip, 
-                    string phone, 
-                    string fax, 
-                    string email, 
-                    string www, 
-                    string npi, 
-                    string latitude, 
-                    string longitude, 
-                    string errorCode, 
-                    string errorMessage) {
-            this.name = name;
-            this.shortname = shortname;
-            this.street1 = street1;
-            this.street2 = street2;
-            this.city = city;
-            this.county = county;
-            this.state = state;
-            this.country = country;
-            this.zip = zip;
-            this.phone = phone;
-            this.fax = fax;
-            this.email = email;
-            this.www = www;
-            this.npi = npi;
-            this.latitude = latitude;
-            this.longitude = longitude;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicy", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalPolicyRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string hospital_uuid;
-        
-        public getHospitalPolicyRequest() {
-        }
-        
-        public getHospitalPolicyRequest(string hospital_uuid) {
-            this.hospital_uuid = hospital_uuid;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicyResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalPolicyResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string patientIdPrefix;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool patientIdSuffixVariable;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string patientIdSuffixFixedLength;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string triageZoneList;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool photoRequired;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool honorNoPhotoRequest;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool photographerNameRequired;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getHospitalPolicyResponse() {
-        }
-        
-        public getHospitalPolicyResponse(string patientIdPrefix, bool patientIdSuffixVariable, string patientIdSuffixFixedLength, string triageZoneList, bool photoRequired, bool honorNoPhotoRequest, bool photographerNameRequired, string errorCode, string errorMessage) {
-            this.patientIdPrefix = patientIdPrefix;
-            this.patientIdSuffixVariable = patientIdSuffixVariable;
-            this.patientIdSuffixFixedLength = patientIdSuffixFixedLength;
-            this.triageZoneList = triageZoneList;
-            this.photoRequired = photoRequired;
-            this.honorNoPhotoRequest = honorNoPhotoRequest;
-            this.photographerNameRequired = photographerNameRequired;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegalese", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalLegaleseRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string hospital_uuid;
-        
-        public getHospitalLegaleseRequest() {
-        }
-        
-        public getHospitalLegaleseRequest(string hospital_uuid) {
-            this.hospital_uuid = hospital_uuid;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalLegaleseResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string legalese;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getHospitalLegaleseResponse() {
-        }
-        
-        public getHospitalLegaleseResponse(string legalese, string errorCode, string errorMessage) {
-            this.legalese = legalese;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnon", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalLegaleseAnonRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string hospital_uuid;
-        
-        public getHospitalLegaleseAnonRequest() {
-        }
-        
-        public getHospitalLegaleseAnonRequest(string hospital_uuid) {
-            this.hospital_uuid = hospital_uuid;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnonResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalLegaleseAnonResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string legaleseAnon;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getHospitalLegaleseAnonResponse() {
-        }
-        
-        public getHospitalLegaleseAnonResponse(string legaleseAnon, string errorCode, string errorMessage) {
-            this.legaleseAnon = legaleseAnon;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestamps", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalLegaleseTimestampsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string hospital_uuid;
-        
-        public getHospitalLegaleseTimestampsRequest() {
-        }
-        
-        public getHospitalLegaleseTimestampsRequest(string hospital_uuid) {
-            this.hospital_uuid = hospital_uuid;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestampsResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getHospitalLegaleseTimestampsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string legaleseTimestamp;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string legaleseAnonTimestamp;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getHospitalLegaleseTimestampsResponse() {
-        }
-        
-        public getHospitalLegaleseTimestampsResponse(string legaleseTimestamp, string legaleseAnonTimestamp, string errorCode, string errorMessage) {
-            this.legaleseTimestamp = legaleseTimestamp;
-            this.legaleseAnonTimestamp = legaleseAnonTimestamp;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheck", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class appCheckRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string query_string;
-        
-        public appCheckRequest() {
-        }
-        
-        public appCheckRequest(string query_string) {
-            this.query_string = query_string;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheckResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class appCheckResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string url;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string text;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public appCheckResponse() {
-        }
-        
-        public appCheckResponse(string url, string text, string errorCode, string errorMessage) {
-            this.url = url;
-            this.text = text;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerPushToken", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class registerPushTokenRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string deviceID;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string pushToken;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string deviceName;
-        
-        public registerPushTokenRequest() {
-        }
-        
-        public registerPushTokenRequest(string deviceID, string pushToken, string username, string deviceName) {
-            this.deviceID = deviceID;
-            this.pushToken = pushToken;
-            this.username = username;
-            this.deviceName = deviceName;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerPushTokenResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class registerPushTokenResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public registerPushTokenResponse() {
-        }
-        
-        public registerPushTokenResponse(string errorCode, string errorMessage) {
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="registerUser", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class registerUserRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string emailAddress;
+        public string username;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
+        public string emailAddress;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string givenName;
+        public string password;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string givenName;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string familyName;
         
         public registerUserRequest() {
         }
         
-        public registerUserRequest(string username, string emailAddress, string password, string givenName, string familyName) {
+        public registerUserRequest(string token, string username, string emailAddress, string password, string givenName, string familyName) {
+            this.token = token;
             this.username = username;
             this.emailAddress = emailAddress;
             this.password = password;
@@ -975,89 +531,30 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserActive", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class registerUserActiveRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string emailAddress;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string givenName;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string familyName;
-        
-        public registerUserActiveRequest() {
-        }
-        
-        public registerUserActiveRequest(string username, string emailAddress, string password, string givenName, string familyName) {
-            this.username = username;
-            this.emailAddress = emailAddress;
-            this.password = password;
-            this.givenName = givenName;
-            this.familyName = familyName;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserActiveResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class registerUserActiveResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool registered;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public registerUserActiveResponse() {
-        }
-        
-        public registerUserActiveResponse(bool registered, string errorCode, string errorMessage) {
-            this.registered = registered;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="changeUserPassword", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class changeUserPasswordRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string oldPassword;
+        public string username;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string oldPassword;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string newPassword;
         
         public changeUserPasswordRequest() {
         }
         
-        public changeUserPasswordRequest(string username, string oldPassword, string newPassword) {
+        public changeUserPasswordRequest(string token, string username, string oldPassword, string newPassword) {
+            this.token = token;
             this.username = username;
             this.oldPassword = oldPassword;
             this.newPassword = newPassword;
@@ -1098,12 +595,17 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string email;
         
         public resetUserPasswordRequest() {
         }
         
-        public resetUserPasswordRequest(string email) {
+        public resetUserPasswordRequest(string token, string email) {
+            this.token = token;
             this.email = email;
         }
     }
@@ -1142,12 +644,17 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string email;
         
         public forgotUsernameRequest() {
         }
         
-        public forgotUsernameRequest(string email) {
+        public forgotUsernameRequest(string token, string email) {
+            this.token = token;
             this.email = email;
         }
     }
@@ -1181,174 +688,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="checkUserAuth", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class checkUserAuthRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public checkUserAuthRequest() {
-        }
-        
-        public checkUserAuthRequest(string username, string password) {
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="checkUserAuthResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class checkUserAuthResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool valid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public checkUserAuthResponse() {
-        }
-        
-        public checkUserAuthResponse(bool valid, string errorCode, string errorMessage) {
-            this.valid = valid;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="checkUserAuthHospital", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class checkUserAuthHospitalRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public checkUserAuthHospitalRequest() {
-        }
-        
-        public checkUserAuthHospitalRequest(string username, string password) {
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="checkUserAuthHospitalResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class checkUserAuthHospitalResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool valid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public checkUserAuthHospitalResponse() {
-        }
-        
-        public checkUserAuthHospitalResponse(bool valid, string errorCode, string errorMessage) {
-            this.valid = valid;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUserStatus", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getUserStatusRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        public getUserStatusRequest() {
-        }
-        
-        public getUserStatusRequest(string username) {
-            this.username = username;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUserStatusResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getUserStatusResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool pending;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool active;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool locked;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool banned;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getUserStatusResponse() {
-        }
-        
-        public getUserStatusResponse(bool pending, bool active, bool locked, bool banned, string errorCode, string errorMessage) {
-            this.pending = pending;
-            this.active = active;
-            this.locked = locked;
-            this.banned = banned;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="getUserGroup", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class getUserGroupRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
         public getUserGroupRequest() {
         }
         
-        public getUserGroupRequest(string username) {
+        public getUserGroupRequest(string token, string username) {
+            this.token = token;
             this.username = username;
         }
     }
@@ -1387,86 +742,139 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getSessionCookie", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getSessionCookieRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        public getSessionCookieRequest() {
+        }
+        
+        public getSessionCookieRequest(string token) {
+            this.token = token;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getSessionCookieResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getSessionCookieResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string SESSION_ID;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string SESS_KEY;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getSessionCookieResponse() {
+        }
+        
+        public getSessionCookieResponse(string SESSION_ID, string SESS_KEY, string errorCode, string errorMessage) {
+            this.SESSION_ID = SESSION_ID;
+            this.SESS_KEY = SESS_KEY;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="search", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class searchRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortname;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string searchTerm;
+        public string eventShortname;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusMissing;
+        public string searchTerm;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusAlive;
+        public bool filterStatusMissing;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusInjured;
+        public bool filterStatusAlive;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusDeceased;
+        public bool filterStatusInjured;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusUnknown;
+        public bool filterStatusDeceased;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusFound;
+        public bool filterStatusUnknown;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderComplex;
+        public bool filterStatusFound;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderMale;
+        public bool filterGenderComplex;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=10)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderFemale;
+        public bool filterGenderMale;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=11)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderUnknown;
+        public bool filterGenderFemale;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=12)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeChild;
+        public bool filterGenderUnknown;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=13)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeAdult;
+        public bool filterAgeChild;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=14)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeUnknown;
+        public bool filterAgeAdult;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string filterHospital;
+        public bool filterAgeUnknown;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHasImage;
+        public string filterHospital;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int pageStart;
+        public bool filterHasImage;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int perPage;
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string pageStart;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string perPage;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
@@ -1474,6 +882,7 @@ namespace TP8.PLWS {
         }
         
         public searchRequest(
+                    string token, 
                     string eventShortname, 
                     string searchTerm, 
                     bool filterStatusMissing, 
@@ -1491,9 +900,10 @@ namespace TP8.PLWS {
                     bool filterAgeUnknown, 
                     string filterHospital, 
                     bool filterHasImage, 
-                    int pageStart, 
-                    int perPage, 
+                    string pageStart, 
+                    string perPage, 
                     string sortBy) {
+            this.token = token;
             this.eventShortname = eventShortname;
             this.searchTerm = searchTerm;
             this.filterStatusMissing = filterStatusMissing;
@@ -1556,267 +966,90 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="searchWithAuth", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class searchWithAuthRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortname;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string searchTerm;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusMissing;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusAlive;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusInjured;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusDeceased;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusUnknown;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusFound;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderComplex;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderMale;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderFemale;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderUnknown;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=12)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeChild;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=13)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeAdult;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=14)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeUnknown;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string filterHospital;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHasImage;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string pageStart;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string perPage;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string sortBy;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=21)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public searchWithAuthRequest() {
-        }
-        
-        public searchWithAuthRequest(
-                    string eventShortname, 
-                    string searchTerm, 
-                    bool filterStatusMissing, 
-                    bool filterStatusAlive, 
-                    bool filterStatusInjured, 
-                    bool filterStatusDeceased, 
-                    bool filterStatusUnknown, 
-                    bool filterStatusFound, 
-                    bool filterGenderComplex, 
-                    bool filterGenderMale, 
-                    bool filterGenderFemale, 
-                    bool filterGenderUnknown, 
-                    bool filterAgeChild, 
-                    bool filterAgeAdult, 
-                    bool filterAgeUnknown, 
-                    string filterHospital, 
-                    bool filterHasImage, 
-                    string pageStart, 
-                    string perPage, 
-                    string sortBy, 
-                    string username, 
-                    string password) {
-            this.eventShortname = eventShortname;
-            this.searchTerm = searchTerm;
-            this.filterStatusMissing = filterStatusMissing;
-            this.filterStatusAlive = filterStatusAlive;
-            this.filterStatusInjured = filterStatusInjured;
-            this.filterStatusDeceased = filterStatusDeceased;
-            this.filterStatusUnknown = filterStatusUnknown;
-            this.filterStatusFound = filterStatusFound;
-            this.filterGenderComplex = filterGenderComplex;
-            this.filterGenderMale = filterGenderMale;
-            this.filterGenderFemale = filterGenderFemale;
-            this.filterGenderUnknown = filterGenderUnknown;
-            this.filterAgeChild = filterAgeChild;
-            this.filterAgeAdult = filterAgeAdult;
-            this.filterAgeUnknown = filterAgeUnknown;
-            this.filterHospital = filterHospital;
-            this.filterHasImage = filterHasImage;
-            this.pageStart = pageStart;
-            this.perPage = perPage;
-            this.sortBy = sortBy;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="searchWithAuthResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class searchWithAuthResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string resultSet;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string recordsFound;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public double timeElapsed;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public searchWithAuthResponse() {
-        }
-        
-        public searchWithAuthResponse(string resultSet, string recordsFound, double timeElapsed, string errorCode, string errorMessage) {
-            this.resultSet = resultSet;
-            this.recordsFound = recordsFound;
-            this.timeElapsed = timeElapsed;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="searchCount", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class searchCountRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortname;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string searchTerm;
+        public string eventShortname;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusMissing;
+        public string searchTerm;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusAlive;
+        public bool filterStatusMissing;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusInjured;
+        public bool filterStatusAlive;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusDeceased;
+        public bool filterStatusInjured;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusUnknown;
+        public bool filterStatusDeceased;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusFound;
+        public bool filterStatusUnknown;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderComplex;
+        public bool filterStatusFound;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderMale;
+        public bool filterGenderComplex;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=10)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderFemale;
+        public bool filterGenderMale;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=11)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderUnknown;
+        public bool filterGenderFemale;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=12)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeChild;
+        public bool filterGenderUnknown;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=13)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeAdult;
+        public bool filterAgeChild;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=14)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeUnknown;
+        public bool filterAgeAdult;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string filterHospital;
+        public bool filterAgeUnknown;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHasImage;
+        public string filterHospital;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string pageStart;
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool filterHasImage;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string perPage;
+        public string pageStart;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string perPage;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
@@ -1824,6 +1057,7 @@ namespace TP8.PLWS {
         }
         
         public searchCountRequest(
+                    string token, 
                     string eventShortname, 
                     string searchTerm, 
                     bool filterStatusMissing, 
@@ -1844,6 +1078,7 @@ namespace TP8.PLWS {
                     string pageStart, 
                     string perPage, 
                     string sortBy) {
+            this.token = token;
             this.eventShortname = eventShortname;
             this.searchTerm = searchTerm;
             this.filterStatusMissing = filterStatusMissing;
@@ -1901,323 +1136,33 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="searchCountWithAuth", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class searchCountWithAuthRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortname;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string searchTerm;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusMissing;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusAlive;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusInjured;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusDeceased;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusUnknown;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterStatusFound;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderComplex;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderMale;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=10)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderFemale;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=11)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterGenderUnknown;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=12)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeChild;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=13)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeAdult;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=14)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterAgeUnknown;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string filterHospital;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool filterHasImage;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string pageStart;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=18)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string perPage;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=19)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string sortBy;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=20)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=21)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public searchCountWithAuthRequest() {
-        }
-        
-        public searchCountWithAuthRequest(
-                    string eventShortname, 
-                    string searchTerm, 
-                    bool filterStatusMissing, 
-                    bool filterStatusAlive, 
-                    bool filterStatusInjured, 
-                    bool filterStatusDeceased, 
-                    bool filterStatusUnknown, 
-                    bool filterStatusFound, 
-                    bool filterGenderComplex, 
-                    bool filterGenderMale, 
-                    bool filterGenderFemale, 
-                    bool filterGenderUnknown, 
-                    bool filterAgeChild, 
-                    bool filterAgeAdult, 
-                    bool filterAgeUnknown, 
-                    string filterHospital, 
-                    bool filterHasImage, 
-                    string pageStart, 
-                    string perPage, 
-                    string sortBy, 
-                    string username, 
-                    string password) {
-            this.eventShortname = eventShortname;
-            this.searchTerm = searchTerm;
-            this.filterStatusMissing = filterStatusMissing;
-            this.filterStatusAlive = filterStatusAlive;
-            this.filterStatusInjured = filterStatusInjured;
-            this.filterStatusDeceased = filterStatusDeceased;
-            this.filterStatusUnknown = filterStatusUnknown;
-            this.filterStatusFound = filterStatusFound;
-            this.filterGenderComplex = filterGenderComplex;
-            this.filterGenderMale = filterGenderMale;
-            this.filterGenderFemale = filterGenderFemale;
-            this.filterGenderUnknown = filterGenderUnknown;
-            this.filterAgeChild = filterAgeChild;
-            this.filterAgeAdult = filterAgeAdult;
-            this.filterAgeUnknown = filterAgeUnknown;
-            this.filterHospital = filterHospital;
-            this.filterHasImage = filterHasImage;
-            this.pageStart = pageStart;
-            this.perPage = perPage;
-            this.sortBy = sortBy;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="searchCountWithAuthResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class searchCountWithAuthResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string recordsFound;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public double timeElapsed;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public searchCountWithAuthResponse() {
-        }
-        
-        public searchCountWithAuthResponse(string recordsFound, double timeElapsed, string errorCode, string errorMessage) {
-            this.recordsFound = recordsFound;
-            this.timeElapsed = timeElapsed;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="findMostRecentReportAsFiltered", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class findMostRecentReportAsFilteredRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string machine;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string login;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string hospitalShortName;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortName;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string closedEventsIncl;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string hospitalEventsIncl;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string publicEventsIncl;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string practiceMode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string expiredIncl;
-        
-        public findMostRecentReportAsFilteredRequest() {
-        }
-        
-        public findMostRecentReportAsFilteredRequest(string machine, string login, string username, string hospitalShortName, string eventShortName, string closedEventsIncl, string hospitalEventsIncl, string publicEventsIncl, string practiceMode, string expiredIncl) {
-            this.machine = machine;
-            this.login = login;
-            this.username = username;
-            this.hospitalShortName = hospitalShortName;
-            this.eventShortName = eventShortName;
-            this.closedEventsIncl = closedEventsIncl;
-            this.hospitalEventsIncl = hospitalEventsIncl;
-            this.publicEventsIncl = publicEventsIncl;
-            this.practiceMode = practiceMode;
-            this.expiredIncl = expiredIncl;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="findMostRecentReportAsFilteredResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class findMostRecentReportAsFilteredResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string machine;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string login;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string hospitalShortName;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortName;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string mcID;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string creationDate;
-        
-        public findMostRecentReportAsFilteredResponse() {
-        }
-        
-        public findMostRecentReportAsFilteredResponse(string machine, string login, string username, string hospitalShortName, string eventShortName, string mcID, string creationDate) {
-            this.machine = machine;
-            this.login = login;
-            this.username = username;
-            this.hospitalShortName = hospitalShortName;
-            this.eventShortName = eventShortName;
-            this.mcID = mcID;
-            this.creationDate = creationDate;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="reportPerson", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class reportPersonRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string personXML;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortName;
+        public string payload;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string xmlFormat;
+        public string payloadFormat;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
+        public string shortname;
         
         public reportPersonRequest() {
         }
         
-        public reportPersonRequest(string personXML, string eventShortName, string xmlFormat, string username, string password) {
-            this.personXML = personXML;
-            this.eventShortName = eventShortName;
-            this.xmlFormat = xmlFormat;
-            this.username = username;
-            this.password = password;
+        public reportPersonRequest(string token, string payload, string payloadFormat, string shortname) {
+            this.token = token;
+            this.payload = payload;
+            this.payloadFormat = payloadFormat;
+            this.shortname = shortname;
         }
     }
     
@@ -2228,7 +1173,7 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string url;
+        public string uuid;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
@@ -2241,8 +1186,8 @@ namespace TP8.PLWS {
         public reportPersonResponse() {
         }
         
-        public reportPersonResponse(string url, string errorCode, string errorMessage) {
-            this.url = url;
+        public reportPersonResponse(string uuid, string errorCode, string errorMessage) {
+            this.uuid = uuid;
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
         }
@@ -2255,38 +1200,33 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string personXML;
+        public string payload;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string eventShortname;
+        public string payloadFormat;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string xmlFormat;
+        public string shortname;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
+        public string uuid;
         
         public reReportPersonRequest() {
         }
         
-        public reReportPersonRequest(string uuid, string personXML, string eventShortname, string xmlFormat, string username, string password) {
+        public reReportPersonRequest(string token, string payload, string payloadFormat, string shortname, string uuid) {
+            this.token = token;
+            this.payload = payload;
+            this.payloadFormat = payloadFormat;
+            this.shortname = shortname;
             this.uuid = uuid;
-            this.personXML = personXML;
-            this.eventShortname = eventShortname;
-            this.xmlFormat = xmlFormat;
-            this.username = username;
-            this.password = password;
         }
     }
     
@@ -2319,28 +1259,23 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string explanation;
+        public string uuid;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
+        public string explanation;
         
         public expirePersonRequest() {
         }
         
-        public expirePersonRequest(string uuid, string explanation, string username, string password) {
+        public expirePersonRequest(string token, string uuid, string explanation) {
+            this.token = token;
             this.uuid = uuid;
             this.explanation = explanation;
-            this.username = username;
-            this.password = password;
         }
     }
     
@@ -2378,18 +1313,23 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string identifier;
+        public string uuid;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string explanation;
         
         public reportAbuseRequest() {
         }
         
-        public reportAbuseRequest(string uuid, string identifier) {
+        public reportAbuseRequest(string token, string uuid, string explanation) {
+            this.token = token;
             this.uuid = uuid;
-            this.identifier = identifier;
+            this.explanation = explanation;
         }
     }
     
@@ -2417,372 +1357,43 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getPersonExpiryDate", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getPersonExpiryDateRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        public getPersonExpiryDateRequest() {
-        }
-        
-        public getPersonExpiryDateRequest(string uuid) {
-            this.uuid = uuid;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getPersonExpiryDateResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getPersonExpiryDateResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string expiryDate;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getPersonExpiryDateResponse() {
-        }
-        
-        public getPersonExpiryDateResponse(string expiryDate, string errorCode, string errorMessage) {
-            this.expiryDate = expiryDate;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setPersonExpiryDate", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class setPersonExpiryDateRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string expiryDate;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public setPersonExpiryDateRequest() {
-        }
-        
-        public setPersonExpiryDateRequest(string uuid, string expiryDate, string username, string password) {
-            this.uuid = uuid;
-            this.expiryDate = expiryDate;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setPersonExpiryDateResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class setPersonExpiryDateResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool queued;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public setPersonExpiryDateResponse() {
-        }
-        
-        public setPersonExpiryDateResponse(bool queued, string errorCode, string errorMessage) {
-            this.queued = queued;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setPersonExpiryDateOneYear", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class setPersonExpiryDateOneYearRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public setPersonExpiryDateOneYearRequest() {
-        }
-        
-        public setPersonExpiryDateOneYearRequest(string uuid, string username, string password) {
-            this.uuid = uuid;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="setPersonExpiryDateOneYearResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class setPersonExpiryDateOneYearResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool queued;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public setPersonExpiryDateOneYearResponse() {
-        }
-        
-        public setPersonExpiryDateOneYearResponse(bool queued, string errorCode, string errorMessage) {
-            this.queued = queued;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyId", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getUuidByMassCasualtyIdRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string mcid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string shortname;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public getUuidByMassCasualtyIdRequest() {
-        }
-        
-        public getUuidByMassCasualtyIdRequest(string mcid, string shortname, string username, string password) {
-            this.mcid = mcid;
-            this.shortname = shortname;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyIdResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getUuidByMassCasualtyIdResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getUuidByMassCasualtyIdResponse() {
-        }
-        
-        public getUuidByMassCasualtyIdResponse(string uuid, string errorCode, string errorMessage) {
-            this.uuid = uuid;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="changeMassCasualtyId", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class changeMassCasualtyIdRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string newMcid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public changeMassCasualtyIdRequest() {
-        }
-        
-        public changeMassCasualtyIdRequest(string newMcid, string uuid, string username, string password) {
-            this.newMcid = newMcid;
-            this.uuid = uuid;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="changeMassCasualtyIdResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class changeMassCasualtyIdResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public changeMassCasualtyIdResponse() {
-        }
-        
-        public changeMassCasualtyIdResponse(string errorCode, string errorMessage) {
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="hasRecordBeenRevised", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class hasRecordBeenRevisedRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public hasRecordBeenRevisedRequest() {
-        }
-        
-        public hasRecordBeenRevisedRequest(string uuid, string username, string password) {
-            this.uuid = uuid;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="hasRecordBeenRevisedResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class hasRecordBeenRevisedResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string revisionsMade;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public hasRecordBeenRevisedResponse() {
-        }
-        
-        public hasRecordBeenRevisedResponse(string revisionsMade, string errorCode, string errorMessage) {
-            this.revisionsMade = revisionsMade;
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="addComment", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
     public partial class addCommentRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
+        public string token;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string comment;
+        public string uuid;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string suggested_status;
+        public string comment;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string suggested_location;
+        public string suggested_status;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string suggested_image;
+        public string suggested_location;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
+        public string suggested_image;
         
         public addCommentRequest() {
         }
         
-        public addCommentRequest(string uuid, string comment, string suggested_status, string suggested_location, string suggested_image, string username, string password) {
+        public addCommentRequest(string token, string uuid, string comment, string suggested_status, string suggested_location, string suggested_image) {
+            this.token = token;
             this.uuid = uuid;
             this.comment = comment;
             this.suggested_status = suggested_status;
             this.suggested_location = suggested_location;
             this.suggested_image = suggested_image;
-            this.username = username;
-            this.password = password;
         }
     }
     
@@ -2803,65 +1414,6 @@ namespace TP8.PLWS {
         }
         
         public addCommentResponse(string errorCode, string errorMessage) {
-            this.errorCode = errorCode;
-            this.errorMessage = errorMessage;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getPersonPermissions", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getPersonPermissionsRequest {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string password;
-        
-        public getPersonPermissionsRequest() {
-        }
-        
-        public getPersonPermissionsRequest(string uuid, string username, string password) {
-            this.uuid = uuid;
-            this.username = username;
-            this.password = password;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getPersonPermissionsResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
-    public partial class getPersonPermissionsResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string owner;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string groupIDs;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
-        public string errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string errorMessage;
-        
-        public getPersonPermissionsResponse() {
-        }
-        
-        public getPersonPermissionsResponse(string owner, string groupIDs, string errorCode, string errorMessage) {
-            this.owner = owner;
-            this.groupIDs = groupIDs;
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
         }
@@ -3088,6 +1640,639 @@ namespace TP8.PLWS {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheck", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class appCheckRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string query_string;
+        
+        public appCheckRequest() {
+        }
+        
+        public appCheckRequest(string token, string query_string) {
+            this.token = token;
+            this.query_string = query_string;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheckResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class appCheckResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string url;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string text;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public appCheckResponse() {
+        }
+        
+        public appCheckResponse(string url, string text, string errorCode, string errorMessage) {
+            this.url = url;
+            this.text = text;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushToken", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class registerApplePushTokenRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string deviceID;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string pushToken;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string username;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string deviceName;
+        
+        public registerApplePushTokenRequest() {
+        }
+        
+        public registerApplePushTokenRequest(string token, string deviceID, string pushToken, string username, string deviceName) {
+            this.token = token;
+            this.deviceID = deviceID;
+            this.pushToken = pushToken;
+            this.username = username;
+            this.deviceName = deviceName;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushTokenResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class registerApplePushTokenResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public registerApplePushTokenResponse() {
+        }
+        
+        public registerApplePushTokenResponse(string errorCode, string errorMessage) {
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalList", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalListRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        public getHospitalListRequest() {
+        }
+        
+        public getHospitalListRequest(string token) {
+            this.token = token;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalListResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalListResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string hospitalList;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getHospitalListResponse() {
+        }
+        
+        public getHospitalListResponse(string hospitalList, string errorCode, string errorMessage) {
+            this.hospitalList = hospitalList;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalData", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalDataRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string hospital_uuid;
+        
+        public getHospitalDataRequest() {
+        }
+        
+        public getHospitalDataRequest(string token, string hospital_uuid) {
+            this.token = token;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalDataResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalDataResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string name;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string shortname;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string street1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string street2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string city;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string county;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string state;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string country;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string zip;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string phone;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string fax;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string email;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=12)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string www;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=13)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string npi;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=14)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string latitude;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=15)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string longitude;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=16)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=17)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getHospitalDataResponse() {
+        }
+        
+        public getHospitalDataResponse(
+                    string name, 
+                    string shortname, 
+                    string street1, 
+                    string street2, 
+                    string city, 
+                    string county, 
+                    string state, 
+                    string country, 
+                    string zip, 
+                    string phone, 
+                    string fax, 
+                    string email, 
+                    string www, 
+                    string npi, 
+                    string latitude, 
+                    string longitude, 
+                    string errorCode, 
+                    string errorMessage) {
+            this.name = name;
+            this.shortname = shortname;
+            this.street1 = street1;
+            this.street2 = street2;
+            this.city = city;
+            this.county = county;
+            this.state = state;
+            this.country = country;
+            this.zip = zip;
+            this.phone = phone;
+            this.fax = fax;
+            this.email = email;
+            this.www = www;
+            this.npi = npi;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicy", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalPolicyRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string hospital_uuid;
+        
+        public getHospitalPolicyRequest() {
+        }
+        
+        public getHospitalPolicyRequest(string token, string hospital_uuid) {
+            this.token = token;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicyResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalPolicyResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string patientIdPrefix;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool patientIdSuffixVariable;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string patientIdSuffixFixedLength;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string triageZoneList;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool photoRequired;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool honorNoPhotoRequest;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool photographerNameRequired;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getHospitalPolicyResponse() {
+        }
+        
+        public getHospitalPolicyResponse(string patientIdPrefix, bool patientIdSuffixVariable, string patientIdSuffixFixedLength, string triageZoneList, bool photoRequired, bool honorNoPhotoRequest, bool photographerNameRequired, string errorCode, string errorMessage) {
+            this.patientIdPrefix = patientIdPrefix;
+            this.patientIdSuffixVariable = patientIdSuffixVariable;
+            this.patientIdSuffixFixedLength = patientIdSuffixFixedLength;
+            this.triageZoneList = triageZoneList;
+            this.photoRequired = photoRequired;
+            this.honorNoPhotoRequest = honorNoPhotoRequest;
+            this.photographerNameRequired = photographerNameRequired;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegalese", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalLegaleseRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string hospital_uuid;
+        
+        public getHospitalLegaleseRequest() {
+        }
+        
+        public getHospitalLegaleseRequest(string token, string hospital_uuid) {
+            this.token = token;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalLegaleseResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string legalese;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getHospitalLegaleseResponse() {
+        }
+        
+        public getHospitalLegaleseResponse(string legalese, string errorCode, string errorMessage) {
+            this.legalese = legalese;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnon", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalLegaleseAnonRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string hospital_uuid;
+        
+        public getHospitalLegaleseAnonRequest() {
+        }
+        
+        public getHospitalLegaleseAnonRequest(string token, string hospital_uuid) {
+            this.token = token;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnonResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalLegaleseAnonResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string legaleseAnon;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getHospitalLegaleseAnonResponse() {
+        }
+        
+        public getHospitalLegaleseAnonResponse(string legaleseAnon, string errorCode, string errorMessage) {
+            this.legaleseAnon = legaleseAnon;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestamps", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalLegaleseTimestampsRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string hospital_uuid;
+        
+        public getHospitalLegaleseTimestampsRequest() {
+        }
+        
+        public getHospitalLegaleseTimestampsRequest(string token, string hospital_uuid) {
+            this.token = token;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestampsResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getHospitalLegaleseTimestampsResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string legaleseTimestamp;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string legaleseAnonTimestamp;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getHospitalLegaleseTimestampsResponse() {
+        }
+        
+        public getHospitalLegaleseTimestampsResponse(string legaleseTimestamp, string legaleseAnonTimestamp, string errorCode, string errorMessage) {
+            this.legaleseTimestamp = legaleseTimestamp;
+            this.legaleseAnonTimestamp = legaleseAnonTimestamp;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyId", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getUuidByMassCasualtyIdRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string mcid;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string shortname;
+        
+        public getUuidByMassCasualtyIdRequest() {
+        }
+        
+        public getUuidByMassCasualtyIdRequest(string token, string mcid, string shortname) {
+            this.token = token;
+            this.mcid = mcid;
+            this.shortname = shortname;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyIdResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class getUuidByMassCasualtyIdResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string uuid;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public getUuidByMassCasualtyIdResponse() {
+        }
+        
+        public getUuidByMassCasualtyIdResponse(string uuid, string errorCode, string errorMessage) {
+            this.uuid = uuid;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="changeMassCasualtyId", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class changeMassCasualtyIdRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string newMcid;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string uuid;
+        
+        public changeMassCasualtyIdRequest() {
+        }
+        
+        public changeMassCasualtyIdRequest(string token, string newMcid, string uuid) {
+            this.token = token;
+            this.newMcid = newMcid;
+            this.uuid = uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="changeMassCasualtyIdResponse", WrapperNamespace="soap/plusWebServices", IsWrapped=true)]
+    public partial class changeMassCasualtyIdResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="integer")]
+        public string errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="soap/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public changeMassCasualtyIdResponse() {
+        }
+        
+        public changeMassCasualtyIdResponse(string errorCode, string errorMessage) {
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface plusWebServicesPortTypeChannel : TP8.PLWS.plusWebServicesPortType, System.ServiceModel.IClientChannel {
     }
@@ -3131,38 +2316,104 @@ namespace TP8.PLWS {
                 base(binding, remoteAddress) {
         }
         
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<TP8.PLWS.pingResponse> TP8.PLWS.plusWebServicesPortType.pingAsync(TP8.PLWS.pingRequest request) {
-            return base.Channel.pingAsync(request);
+        public System.Threading.Tasks.Task<TP8.PLWS.requestUserTokenResponse> requestUserTokenAsync(TP8.PLWS.requestUserTokenRequest request) {
+            return base.Channel.requestUserTokenAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.pingResponse> pingAsync() {
-            TP8.PLWS.pingRequest inValue = new TP8.PLWS.pingRequest();
-            return ((TP8.PLWS.plusWebServicesPortType)(this)).pingAsync(inValue);
+        public System.Threading.Tasks.Task<TP8.PLWS.requestAnonTokenResponse> requestAnonTokenAsync(TP8.PLWS.requestAnonTokenRequest request) {
+            return base.Channel.requestAnonTokenAsync(request);
         }
         
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<TP8.PLWS.pingWithEchoResponse> TP8.PLWS.plusWebServicesPortType.pingWithEchoAsync(TP8.PLWS.pingWithEchoRequest request) {
-            return base.Channel.pingWithEchoAsync(request);
+        public System.Threading.Tasks.Task<TP8.PLWS.purgeUserTokensResponse> purgeUserTokensAsync(TP8.PLWS.purgeUserTokensRequest request) {
+            return base.Channel.purgeUserTokensAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.pingWithEchoResponse> pingWithEchoAsync(string pingString, string latency) {
-            TP8.PLWS.pingWithEchoRequest inValue = new TP8.PLWS.pingWithEchoRequest();
-            inValue.pingString = pingString;
-            inValue.latency = latency;
-            return ((TP8.PLWS.plusWebServicesPortType)(this)).pingWithEchoAsync(inValue);
+        public System.Threading.Tasks.Task<TP8.PLWS.pingEchoResponse> pingEchoAsync(TP8.PLWS.pingEchoRequest request) {
+            return base.Channel.pingEchoAsync(request);
         }
         
         public System.Threading.Tasks.Task<TP8.PLWS.getEventListResponse> getEventListAsync(TP8.PLWS.getEventListRequest request) {
             return base.Channel.getEventListAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.getEventListUserResponse> getEventListUserAsync(TP8.PLWS.getEventListUserRequest request) {
-            return base.Channel.getEventListUserAsync(request);
-        }
-        
         public System.Threading.Tasks.Task<TP8.PLWS.getGroupListResponse> getGroupListAsync(TP8.PLWS.getGroupListRequest request) {
             return base.Channel.getGroupListAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.registerUserResponse> registerUserAsync(TP8.PLWS.registerUserRequest request) {
+            return base.Channel.registerUserAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.changeUserPasswordResponse> changeUserPasswordAsync(TP8.PLWS.changeUserPasswordRequest request) {
+            return base.Channel.changeUserPasswordAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.resetUserPasswordResponse> resetUserPasswordAsync(TP8.PLWS.resetUserPasswordRequest request) {
+            return base.Channel.resetUserPasswordAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.forgotUsernameResponse> forgotUsernameAsync(TP8.PLWS.forgotUsernameRequest request) {
+            return base.Channel.forgotUsernameAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.getUserGroupResponse> getUserGroupAsync(TP8.PLWS.getUserGroupRequest request) {
+            return base.Channel.getUserGroupAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.getSessionCookieResponse> getSessionCookieAsync(TP8.PLWS.getSessionCookieRequest request) {
+            return base.Channel.getSessionCookieAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.searchResponse> searchAsync(TP8.PLWS.searchRequest request) {
+            return base.Channel.searchAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.searchCountResponse> searchCountAsync(TP8.PLWS.searchCountRequest request) {
+            return base.Channel.searchCountAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.reportPersonResponse> reportPersonAsync(TP8.PLWS.reportPersonRequest request) {
+            return base.Channel.reportPersonAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.reReportPersonResponse> reReportPersonAsync(TP8.PLWS.reReportPersonRequest request) {
+            return base.Channel.reReportPersonAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.expirePersonResponse> expirePersonAsync(TP8.PLWS.expirePersonRequest request) {
+            return base.Channel.expirePersonAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.reportAbuseResponse> reportAbuseAsync(TP8.PLWS.reportAbuseRequest request) {
+            return base.Channel.reportAbuseAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.addCommentResponse> addCommentAsync(TP8.PLWS.addCommentRequest request) {
+            return base.Channel.addCommentAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.getImageCountsAndTokensResponse> getImageCountsAndTokensAsync(TP8.PLWS.getImageCountsAndTokensRequest request) {
+            return base.Channel.getImageCountsAndTokensAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.getImageListResponse> getImageListAsync(TP8.PLWS.getImageListRequest request) {
+            return base.Channel.getImageListAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.getImageListBlockResponse> getImageListBlockAsync(TP8.PLWS.getImageListBlockRequest request) {
+            return base.Channel.getImageListBlockAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.getNullTokenListResponse> getNullTokenListAsync(TP8.PLWS.getNullTokenListRequest request) {
+            return base.Channel.getNullTokenListAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request) {
+            return base.Channel.appCheckAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.registerApplePushTokenResponse> registerApplePushTokenAsync(TP8.PLWS.registerApplePushTokenRequest request) {
+            return base.Channel.registerApplePushTokenAsync(request);
         }
         
         public System.Threading.Tasks.Task<TP8.PLWS.getHospitalListResponse> getHospitalListAsync(TP8.PLWS.getHospitalListRequest request) {
@@ -3189,132 +2440,12 @@ namespace TP8.PLWS {
             return base.Channel.getHospitalLegaleseTimestampsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request) {
-            return base.Channel.appCheckAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.registerPushTokenResponse> registerPushTokenAsync(TP8.PLWS.registerPushTokenRequest request) {
-            return base.Channel.registerPushTokenAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.registerUserResponse> registerUserAsync(TP8.PLWS.registerUserRequest request) {
-            return base.Channel.registerUserAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.registerUserActiveResponse> registerUserActiveAsync(TP8.PLWS.registerUserActiveRequest request) {
-            return base.Channel.registerUserActiveAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.changeUserPasswordResponse> changeUserPasswordAsync(TP8.PLWS.changeUserPasswordRequest request) {
-            return base.Channel.changeUserPasswordAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.resetUserPasswordResponse> resetUserPasswordAsync(TP8.PLWS.resetUserPasswordRequest request) {
-            return base.Channel.resetUserPasswordAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.forgotUsernameResponse> forgotUsernameAsync(TP8.PLWS.forgotUsernameRequest request) {
-            return base.Channel.forgotUsernameAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.checkUserAuthResponse> checkUserAuthAsync(TP8.PLWS.checkUserAuthRequest request) {
-            return base.Channel.checkUserAuthAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.checkUserAuthHospitalResponse> checkUserAuthHospitalAsync(TP8.PLWS.checkUserAuthHospitalRequest request) {
-            return base.Channel.checkUserAuthHospitalAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getUserStatusResponse> getUserStatusAsync(TP8.PLWS.getUserStatusRequest request) {
-            return base.Channel.getUserStatusAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getUserGroupResponse> getUserGroupAsync(TP8.PLWS.getUserGroupRequest request) {
-            return base.Channel.getUserGroupAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.searchResponse> searchAsync(TP8.PLWS.searchRequest request) {
-            return base.Channel.searchAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.searchWithAuthResponse> searchWithAuthAsync(TP8.PLWS.searchWithAuthRequest request) {
-            return base.Channel.searchWithAuthAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.searchCountResponse> searchCountAsync(TP8.PLWS.searchCountRequest request) {
-            return base.Channel.searchCountAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.searchCountWithAuthResponse> searchCountWithAuthAsync(TP8.PLWS.searchCountWithAuthRequest request) {
-            return base.Channel.searchCountWithAuthAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.findMostRecentReportAsFilteredResponse> findMostRecentReportAsFilteredAsync(TP8.PLWS.findMostRecentReportAsFilteredRequest request) {
-            return base.Channel.findMostRecentReportAsFilteredAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.reportPersonResponse> reportPersonAsync(TP8.PLWS.reportPersonRequest request) {
-            return base.Channel.reportPersonAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.reReportPersonResponse> reReportPersonAsync(TP8.PLWS.reReportPersonRequest request) {
-            return base.Channel.reReportPersonAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.expirePersonResponse> expirePersonAsync(TP8.PLWS.expirePersonRequest request) {
-            return base.Channel.expirePersonAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.reportAbuseResponse> reportAbuseAsync(TP8.PLWS.reportAbuseRequest request) {
-            return base.Channel.reportAbuseAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getPersonExpiryDateResponse> getPersonExpiryDateAsync(TP8.PLWS.getPersonExpiryDateRequest request) {
-            return base.Channel.getPersonExpiryDateAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.setPersonExpiryDateResponse> setPersonExpiryDateAsync(TP8.PLWS.setPersonExpiryDateRequest request) {
-            return base.Channel.setPersonExpiryDateAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.setPersonExpiryDateOneYearResponse> setPersonExpiryDateOneYearAsync(TP8.PLWS.setPersonExpiryDateOneYearRequest request) {
-            return base.Channel.setPersonExpiryDateOneYearAsync(request);
-        }
-        
         public System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request) {
             return base.Channel.getUuidByMassCasualtyIdAsync(request);
         }
         
         public System.Threading.Tasks.Task<TP8.PLWS.changeMassCasualtyIdResponse> changeMassCasualtyIdAsync(TP8.PLWS.changeMassCasualtyIdRequest request) {
             return base.Channel.changeMassCasualtyIdAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.hasRecordBeenRevisedResponse> hasRecordBeenRevisedAsync(TP8.PLWS.hasRecordBeenRevisedRequest request) {
-            return base.Channel.hasRecordBeenRevisedAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.addCommentResponse> addCommentAsync(TP8.PLWS.addCommentRequest request) {
-            return base.Channel.addCommentAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getPersonPermissionsResponse> getPersonPermissionsAsync(TP8.PLWS.getPersonPermissionsRequest request) {
-            return base.Channel.getPersonPermissionsAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getImageCountsAndTokensResponse> getImageCountsAndTokensAsync(TP8.PLWS.getImageCountsAndTokensRequest request) {
-            return base.Channel.getImageCountsAndTokensAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getImageListResponse> getImageListAsync(TP8.PLWS.getImageListRequest request) {
-            return base.Channel.getImageListAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getImageListBlockResponse> getImageListBlockAsync(TP8.PLWS.getImageListBlockRequest request) {
-            return base.Channel.getImageListBlockAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<TP8.PLWS.getNullTokenListResponse> getNullTokenListAsync(TP8.PLWS.getNullTokenListRequest request) {
-            return base.Channel.getNullTokenListAsync(request);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {
@@ -3340,7 +2471,7 @@ namespace TP8.PLWS {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.plusWebServicesPort)) {
-                return new System.ServiceModel.EndpointAddress("https://triagetrak.nlm.nih.gov/?wsdl&api=32");
+                return new System.ServiceModel.EndpointAddress("https://triagetrak.nlm.nih.gov/?wsdl&api=33");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

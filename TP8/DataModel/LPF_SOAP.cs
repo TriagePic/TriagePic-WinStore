@@ -66,13 +66,13 @@ namespace LPF_SOAP
             {
 
                 SetPLEndpointAddress(App.pl); //(App.pl); //read the configured endpoint address
-
                 if(App.BlockWebServices)
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
                 //Win 7: responseData = App.pl.getEventList(out errorCode, out errorMessage);
                 elout = await App.pl.getEventListAsync(elin);
             }
+
             catch (Exception e)
             {
                 return "ERROR: " + e.Message;  // Win 7: responseData = "ERROR: " + e.Message;
@@ -87,10 +87,13 @@ namespace LPF_SOAP
         public async Task<string> GetIncidentList(string userPL, string passwordPL)
         {
             // Win 7: string errorCode = ""; string errorMessage = ""; string responseData = "";
-            getEventListUserRequest elin = new getEventListUserRequest();
-            elin.username = userPL;
-            elin.password = passwordPL;
-            getEventListUserResponse elout = new getEventListUserResponse();
+            //getEventListUserRequest elin = new getEventListUserRequest();
+            getEventListRequest elin = new getEventListRequest();
+            //elin.username = userPL;
+            //elin.password = passwordPL;
+            elin.token = App.TokenPL;
+            //getEventListUserResponse elout = new getEventListUserResponse();
+            getEventListResponse elout = new getEventListResponse();
             try
             {
 
@@ -100,7 +103,7 @@ namespace LPF_SOAP
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
                 // Win 7: responseData = App.pl.getEventListUser(userPL, passwordPL, out errorCode, out errorMessage);
-                elout = await App.pl.getEventListUserAsync(elin);
+                elout = await App.pl.getEventListAsync(elin); // App.pl.getEventListUserAsync(elin);
             }
             catch (Exception e)
             {
@@ -237,6 +240,8 @@ namespace LPF_SOAP
  */
         }
 
+#if OLD_v32
+        // Sorta converted to v33, but can no longer return server time stamp... don't bother.
         /// <summary>
         /// Returns the ping with server time stamp
         /// </summary>
@@ -245,7 +250,8 @@ namespace LPF_SOAP
             string serverTime = ""; // Format:  2012:0209 18:02:31.000000 America/New_York
 
             //pingRequest pin = new pingRequest();
-            pingResponse pout = new pingResponse();
+            //pingResponse pout = new pingResponse();
+            pingEchoResponse pout = new pingEchoResponse();
 
             try
             {
@@ -254,7 +260,7 @@ namespace LPF_SOAP
                 if(App.BlockWebServices)
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
-                pout = await App.pl.pingAsync(); // No error messages from server.  From framework?
+                pout = await App.pl.pingEchoAsync(pin);//App.pl.pingAsync(); // No error messages from server.  From framework?
                 serverTime = pout.time;
             }
             catch (Exception e)
@@ -264,6 +270,7 @@ namespace LPF_SOAP
 
             return ChangeToErrorIfNull(serverTime);
         }
+#endif
 
         /// <summary>
         /// Returns the ping with server time stamp, passes in elapsed time of previous ping.
@@ -275,9 +282,15 @@ namespace LPF_SOAP
             string serverTime = ""; // Format:  2012:0209 18:02:31.000000 America/New_York
 
             // pingWithEchoRequest pin = new pingWithEchoRequest();
+            pingEchoRequest pin = new pingEchoRequest();
             // pin.pingString = App.DeviceName;
             // pin.latency = pingLatencyInTenthsOfSeconds.ToString();
-            pingWithEchoResponse pout = new pingWithEchoResponse();
+            pin.token = App.TokenPL;
+            pin.latency = pingLatencyInTenthsOfSeconds.ToString();
+            pin.pingString = App.DeviceName + ";TriagePic-Win8.1";
+                // Ideal format: "machinename;device id;app name;app version;operating system;device username;pl username"
+            //pingWithEchoResponse pout = new pingWithEchoResponse();
+            pingEchoResponse pout = new pingEchoResponse();
 
             try
             {
@@ -287,7 +300,7 @@ namespace LPF_SOAP
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
                 //pout = await App.pl.pingWithEchoAsync(pin);
-                pout = await App.pl.pingWithEchoAsync(App.DeviceName, pingLatencyInTenthsOfSeconds.ToString());
+                pout = await App.pl.pingEchoAsync(pin); //App.pl.pingWithEchoAsync(App.DeviceName, pingLatencyInTenthsOfSeconds.ToString());
                 serverTime = pout.time;
             }
             catch (Exception e)
@@ -722,11 +735,16 @@ INSTEAD: */
                     plpass,
                     out errorCode,
                     out errorMessage);*/
+                /* v32:
                 rpin.username = App.pd.plUserName; // await App.pd.DecryptPL_Username();
                 rpin.password = App.pd.plPassword; // await App.pd.DecryptPL_Password();
                 rpin.xmlFormat = "TRIAGEPIC1";
                 rpin.eventShortName = App.CurrentDisaster.EventShortName;
-                rpin.personXML = content;
+                rpin.personXML = content; */
+                rpin.token = App.TokenPL;
+                rpin.payload = content;
+                rpin.payloadFormat = "TRIAGEPIC1";
+                rpin.shortname = App.CurrentDisaster.EventShortName;
                 rpout = await App.pl.reportPersonAsync(rpin);
             }
             catch (Exception e)
@@ -772,12 +790,16 @@ INSTEAD: */
                     plname,
                     plpass,
                     out errorMessage);  */
-                rrpin.username = await App.pd.DecryptPL_Username();
-                rrpin.password = await App.pd.DecryptPL_Password();
+                //rrpin.username = await App.pd.DecryptPL_Username();
+                //rrpin.password = await App.pd.DecryptPL_Password();
+                rrpin.token = App.TokenPL;
                 rrpin.uuid = uuid;
-                rrpin.xmlFormat = "TRIAGEPIC1";
-                rrpin.eventShortname = App.CurrentDisaster.EventShortName;
-                rrpin.personXML = content;
+                //rrpin.xmlFormat = "TRIAGEPIC1";
+                rrpin.payloadFormat = "TRIAGEPIC1";
+                //rrpin.eventShortname = App.CurrentDisaster.EventShortName;
+                rrpin.shortname = App.CurrentDisaster.EventShortName;
+                //rrpin.personXML = content;
+                rrpin.payload = content;
                 rrpout = await App.pl.reReportPersonAsync(rrpin);                 
             }
             catch (Exception e)
@@ -809,8 +831,9 @@ INSTEAD: */
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
                 guin.mcid = mcid;
                 guin.shortname = shortEventName;
-                guin.username = await App.pd.DecryptPL_Username();
-                guin.password = await App.pd.DecryptPL_Password();
+                //guin.username = await App.pd.DecryptPL_Username();
+                //guin.password = await App.pd.DecryptPL_Password();
+                guin.token = App.TokenPL;
 
                 guout = await App.pl.getUuidByMassCasualtyIdAsync(guin);
                  
@@ -902,8 +925,9 @@ INSTEAD: */
 
                 epin.uuid = uuid;
                 epin.explanation = explanation;
-                epin.username = await App.pd.DecryptPL_Username();
-                epin.password = await App.pd.DecryptPL_Password();
+                //epin.username = await App.pd.DecryptPL_Username();
+                //epin.password = await App.pd.DecryptPL_Password();
+                epin.token = App.TokenPL;
 
                 epout = await App.pl.expirePersonAsync(epin);
             }
@@ -964,10 +988,12 @@ INSTEAD: */
             string errorCode = "";
             string errorMessage = "";
             string exceptionMessage = "";
-            checkUserAuthHospitalRequest cuahin = new checkUserAuthHospitalRequest();
-            checkUserAuthHospitalResponse cuahout = new checkUserAuthHospitalResponse();
-            checkUserAuthRequest cuain = new checkUserAuthRequest();
-            checkUserAuthResponse cuaout = new checkUserAuthResponse();
+            //checkUserAuthHospitalRequest cuahin = new checkUserAuthHospitalRequest();
+            //checkUserAuthHospitalResponse cuahout = new checkUserAuthHospitalResponse();
+            //checkUserAuthRequest cuain = new checkUserAuthRequest();
+            //checkUserAuthResponse cuaout = new checkUserAuthResponse();
+            requestUserTokenRequest rutin = new requestUserTokenRequest();
+            requestUserTokenResponse rutout = new requestUserTokenResponse();
 
             try
             {
@@ -976,6 +1002,7 @@ INSTEAD: */
                 if(App.BlockWebServices)
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
+#if v32_OR_EARLIER
                 if (hospitalStaffOrAdminOnly)
                 {
                     cuahin.username = username;
@@ -994,7 +1021,14 @@ INSTEAD: */
                     errorCode = cuaout.errorCode;
                     errorMessage = cuaout.errorMessage;
                 }
-
+#endif
+                rutin.username = username;
+                rutin.password = password;
+                rutout = await App.pl.requestUserTokenAsync(rutin);
+                App.TokenPL = rutout.token;
+                //MAYBE TO DO AS NEEDED: groupIdPL = rutout.groupIdPL;
+                errorCode = rutout.errorCode;
+                errorMessage = rutout.errorMessage;
             }
 
             catch (Exception e)
@@ -1299,13 +1333,18 @@ INSTEAD: */
         /// </summary>
         public async Task<string> GetReportsFromAllStationsCurrentEvent(string userPL, string passwordPL)
         {
-            searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
-            searchWithAuthResponse sarout = new searchWithAuthResponse();
-            sarin.username = userPL;
-            sarin.password = passwordPL;
-            sarin.eventShortname = App.CurrentDisaster.EventShortName;
-            sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
-            sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
+            //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
+            //searchWithAuthResponse sarout = new searchWithAuthResponse();
+            searchRequest srin = new searchRequest();
+            searchResponse srout = new searchResponse();
+            //sarin.username = userPL;
+            //sarin.password = passwordPL;
+            srin.token = App.TokenPL;
+            //sarin.eventShortname = App.CurrentDisaster.EventShortName;
+            // v33, replace "sarin" with "srin" many times below
+            srin.eventShortname = App.CurrentDisaster.EventShortName;
+            srin.filterAgeAdult = srin.filterAgeChild = srin.filterAgeUnknown = true;
+            srin.filterGenderMale = srin.filterGenderFemale = srin.filterGenderComplex = srin.filterGenderUnknown = true;
 /* NO.  Always get all records here.  Filter later
             if(App.OutboxCheckBoxMyOrgOnly)
             {
@@ -1323,15 +1362,15 @@ INSTEAD: */
             {
                 // spec says: sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, [but not implemeneted] comma-separated org shortnames
                 // What Greg chose to implement instead is single hospital uuid  */
-                sarin.filterHospital = "all"; // temporary workaround
+                srin.filterHospital = "all"; // temporary workaround
             //}
             // WAS before V32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
-            sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
-            sarin.filterHasImage = false; // true would return ONLY reports with images
-            sarin.pageStart = "0";
-            sarin.perPage = "250"; // 1000 gave out of memory problems
-            sarin.sortBy = ""; // = updated desc, score desc
-            sarin.searchTerm = "";
+            srin.filterStatusAlive = srin.filterStatusInjured = srin.filterStatusDeceased = srin.filterStatusMissing = srin.filterStatusUnknown = srin.filterStatusFound = true;
+            srin.filterHasImage = false; // true would return ONLY reports with images
+            srin.pageStart = "0";
+            srin.perPage = "250"; // 1000 gave out of memory problems
+            srin.sortBy = ""; // = updated desc, score desc
+            srin.searchTerm = "";
             try
             {
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
@@ -1340,14 +1379,16 @@ INSTEAD: */
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
                 // Win 7: responseData = App.pl.getEventListUser(userPL, passwordPL, out errorCode, out errorMessage);
-                sarout = await App.pl.searchWithAuthAsync(sarin);
+                //sarout = await App.pl.searchWithAuthAsync(sarin);
+                srout = await App.pl.searchAsync(srin);
             }
             catch (Exception e)
             {
-                sarout.resultSet = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;
+                // WAS: sarout
+                srout.resultSet = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;
             }
 
-            return ChangeToErrorIfNull(sarout.resultSet);
+            return ChangeToErrorIfNull(srout.resultSet); // WAS before v33: sarout
         }
 
 
@@ -1357,13 +1398,17 @@ INSTEAD: */
         /// </summary>
         public async Task<string> GetReportsForOutbox(string userPL, string passwordPL)
         {
-            searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
-            searchWithAuthResponse sarout = new searchWithAuthResponse();
-            sarin.username = userPL;
-            sarin.password = passwordPL;
-            sarin.eventShortname = App.CurrentDisaster.EventShortName;
-            sarin.filterAgeAdult = sarin.filterAgeChild = sarin.filterAgeUnknown = true;
-            sarin.filterGenderMale = sarin.filterGenderFemale = sarin.filterGenderComplex = sarin.filterGenderUnknown = true;
+            //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
+            //searchWithAuthResponse sarout = new searchWithAuthResponse();
+            searchRequest srin = new searchRequest();
+            searchResponse srout = new searchResponse();
+            srin.token = App.TokenPL;
+            //sarin.username = userPL;
+            //sarin.password = passwordPL;
+            // "sarin" replaced by "srin", "sarout" replaced by "srout" many places below
+            srin.eventShortname = App.CurrentDisaster.EventShortName;
+            srin.filterAgeAdult = srin.filterAgeChild = srin.filterAgeUnknown = true;
+            srin.filterGenderMale = srin.filterGenderFemale = srin.filterGenderComplex = srin.filterGenderUnknown = true;
             string Name = App.CurrentOrgContactInfo.OrgName;
             string Uuid = App.OrgDataList.GetOrgUuidFromOrgName(Name);
             if (Uuid == "") // couldn't find match
@@ -1372,14 +1417,14 @@ INSTEAD: */
                 //Uuid = App.OrgDataList.First().OrgUuid;
                 //Name = App.OrgDataList.First().OrgName;
             }
-            sarin.filterHospital = Uuid; // instead of "" or "all" = don't filter on orgs.
+            srin.filterHospital = Uuid; // instead of "" or "all" = don't filter on orgs.
             // WAS before v32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
-            sarin.filterStatusAlive = sarin.filterStatusInjured = sarin.filterStatusDeceased = sarin.filterStatusMissing = sarin.filterStatusUnknown = sarin.filterStatusFound = true;
-            sarin.filterHasImage = false;  // true would return ONLY reports with images
-            sarin.pageStart = "0";
-            sarin.perPage = "250"; // "1000";  If you change this, change it too in TP_PatientReportsSource.cs
-            sarin.sortBy = ""; // = updated desc, score desc
-            sarin.searchTerm = "";
+            srin.filterStatusAlive = srin.filterStatusInjured = srin.filterStatusDeceased = srin.filterStatusMissing = srin.filterStatusUnknown = srin.filterStatusFound = true;
+            srin.filterHasImage = false;  // true would return ONLY reports with images
+            srin.pageStart = "0";
+            srin.perPage = "250"; // "1000";  If you change this, change it too in TP_PatientReportsSource.cs
+            srin.sortBy = ""; // = updated desc, score desc
+            srin.searchTerm = "";
             try
             {
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
@@ -1388,14 +1433,15 @@ INSTEAD: */
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
                 // Win 7: responseData = App.pl.getEventListUser(userPL, passwordPL, out errorCode, out errorMessage);
-                sarout = await App.pl.searchWithAuthAsync(sarin);
+                //sarout = await App.pl.searchWithAuthAsync(sarin);
+                srout = await App.pl.searchAsync(srin);
             }
             catch (Exception e)
             {
-                sarout.resultSet = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;
+                srout.resultSet = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;
             }
 
-            return ChangeToErrorIfNull(sarout.resultSet);
+            return ChangeToErrorIfNull(srout.resultSet);
         }
     }
 

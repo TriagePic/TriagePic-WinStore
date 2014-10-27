@@ -21,10 +21,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=32" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=33" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item1.wsdl" MetadataType="Wsdl" ID="adc6c674-62bf-4c5e-8800-d2220fbf318c" SourceId="1" SourceUrl="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=32" />
+    <MetadataFile FileName="item.wsdl" MetadataType="Wsdl" ID="13d148fe-8fa0-4dbc-b71b-66566617a181" SourceId="1" SourceUrl="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=33" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
