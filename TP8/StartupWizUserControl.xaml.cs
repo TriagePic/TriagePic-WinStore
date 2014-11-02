@@ -25,7 +25,13 @@ namespace TP8
         {
             this.InitializeComponent();
 
+            // Oct 2014/v33 redo: Turned on property to password status to allow user to ask to reveal password (an "eye" button in right of field)
             StartupPasswordStatus.Text = "";
+            StartupOrgChoice.Visibility = Visibility.Collapsed; // enclose in grid of min height to reserve space
+            StartupOrgComboBox.IsEnabled = false; // new v33
+            StartupContinue.IsEnabled = false; // new v33
+            // Move to on_loaded to get this to work: StartupTextBoxUserNamePLUS.Focus(FocusState.Programmatic);
+#if BEFORE_PLUS_v33
             StartupOrgComboBox.ItemsSource = App.OrgDataList;
             // Compare with similar code in SettingsMyOrg
             // No, don't trigger handler here: StartupOrgComboBox.SelectedIndex = 0; // Until we know otherwise
@@ -45,6 +51,7 @@ namespace TP8
                 // if no match, then remain with first item selected
             }
             StartupOrgComboBox.SelectedIndex = choice; // trigger handler
+#endif
         }
 
 		private StartupWiz m_startupWiz;
@@ -101,15 +108,73 @@ namespace TP8
 
         }
 
-        private void StartupValidateAndContinueButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Allow user press of keyboard Enter in password box to in effect tap "Validate and Continue" button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void StartupPasswordBoxPLUS_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-            var t = Validate(); // assign to t to suppress compiler warning
-            if (StartupPasswordStatus.Text == "User name and/or password INVALID")
+            // Tried this with KeyDown instead of KeyUp at first but known problem with double-event-firing with Enter, see:
+            // https://social.msdn.microsoft.com/Forums/windowsapps/en-US/734d6c7a-8da2-48c6-9b3d-fa868b4dfb1d/c-textbox-keydown-triggered-twice-in-metro-applications?forum=winappswithcsharp
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                await StartupValidateAndContinueButtonImpl();
+            }
+        }
+
+        private async void StartupValidateAndContinueButton_Click(object sender, RoutedEventArgs e)
+        {
+            await StartupValidateAndContinueButtonImpl();
+        }
+
+        private async Task StartupValidateAndContinueButtonImpl()
+        {
+            await Validate();
+            if (StartupPasswordStatus.Text != "User name and password are valid") // may instead be INVALID, or some other message if Enter hit
                 return;
+
+            // App.TokenPL was set by Validate() above
+            StartupCancel.IsEnabled = false; // new PLUS v33
+            StartupValidateAndContinue.IsEnabled = false; // new PLUS v33
             App.pd.plUserName = StartupTextBoxUserNamePLUS.Text;
             App.pd.plPassword = StartupPasswordBoxPLUS.Password;
-            m_startupWiz.Result = 1;  
-            m_startupWiz.CloseAsync();
+            // Before PLUS v33, then moved:
+            //m_startupWiz.Result = 1;  
+            //m_startupWiz.CloseAsync();
+            // Rest of function is new with PLUS v33:
+#if REDUNDANT
+            string results = await App.service.GetUserToken();
+            if (results.Contains("ERROR") || results.Length != 128) // token is 128 char long SHA-512
+                App.TokenPL = "";
+            else
+                App.TokenPL = results;
+#endif
+            await App.OrgDataList.Init(); // uses TokenPL
+            StartupOrgChoice.Visibility = Visibility.Visible;
+            StartupOrgComboBox.IsEnabled = true;
+            StartupContinue.IsEnabled = true;
+            // code below was moved from .Init, where it lived prior to v33:
+            StartupOrgComboBox.ItemsSource = App.OrgDataList;
+            // Compare with similar code in SettingsMyOrg
+            // No, don't trigger handler here: StartupOrgComboBox.SelectedIndex = 0; // Until we know otherwise
+            int choice = 0;
+            if (!String.IsNullOrEmpty(App.CurrentOrgContactInfo.OrgName))
+            {
+                int count = 0;
+                foreach (var i in App.OrgDataList) //TP_EventsDataList.GetEvents())
+                {
+                    if (i.OrgName == App.CurrentOrgContactInfo.OrgName)  // Could match instead throughout on EventShortName
+                    {
+                        choice = count;// StartupOrgComboBox.SelectedIndex = count;
+                        break;
+                    }
+                    count++;
+                }
+                // if no match, then remain with first item selected
+            }
+            StartupOrgComboBox.SelectedIndex = choice; // trigger handler
+
         }
 
         private async Task Validate()
@@ -140,6 +205,16 @@ namespace TP8
         }
 #endif
 
+        /// <summary>
+        /// Set focus to user name box initially
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StartupTextBoxUserNamePLUS_Loaded(object sender, RoutedEventArgs e)
+        {
+            StartupTextBoxUserNamePLUS.Focus(FocusState.Programmatic);
+        }
+        
         private void StartupTextBoxUserNamePLUS_TextChanged(object sender, Windows.UI.Xaml.Controls.TextChangedEventArgs e)
         {
             UpdateCredentialsAndCheckSyntax();
@@ -241,5 +316,27 @@ namespace TP8
             // The big gun would be, but this might fail Store certification:
             Application.Current.Exit();
         }
+
+        // New button with PLUS v33, organization choice moved to AFTER user login:
+        private void StartupContinue_Click(object sender, RoutedEventArgs e)
+        {
+            m_startupWiz.Result = 1;
+            m_startupWiz.CloseAsync();
+        }
+
+        /// <summary>
+        /// Allow user press of keyboard Enter in username box to signal move to password box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StartupTextBoxUserNamePLUS_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // See comment in StartupPasswordBoxPLUS_KeyUp as to why we're using key up, not key down.
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                StartupPasswordBoxPLUS.Focus(FocusState.Programmatic);
+            }
+        }
+
     }
 }

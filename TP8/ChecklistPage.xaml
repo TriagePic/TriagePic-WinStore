@@ -87,7 +87,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageChecklist}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="✅  Checklist" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="✔  Checklist" Style="{StaticResource PageHeaderTextStyle}"/>
+            <!-- was: "✅  Checklist, but color not helpful" -->
         </Grid>
         <StackPanel x:Name="mainBox" Grid.Row="1" Width="566" Margin="0,50">
             <TextBlock x:Name="DisasterEvent" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Disaster Event:" VerticalAlignment="Top" Width="240" FontSize="30"/>

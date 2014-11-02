@@ -253,13 +253,15 @@ namespace TP8
             await ErrorLog.Init();
             await App.ErrorLog.ReportToErrorLog("FYI: Beginning App.Launch", "", false);
 
-            UserWin8Account = await GetUserWin8Account();  // May be empty string if PC Settings/Prvacy/"Let apps use my name and account picture" is false
+            UserWin8Account = await GetUserWin8Account();  // May be empty string if PC Settings/Privacy/"Let apps use my name and account picture" is false
             DeviceName = GetDeviceName();
 
-            await OrgDataList.Init(); // get list of all hospitals/organizations defined at our TriageTrak.  Don't need username/password for this.
-            // Do this early so startup wizard has info it needs.
+            // WAS BEFORE v33, but no longer have web service to allow get list without password:
+              // await OrgDataList.Init(); // get list of all hospitals/organizations defined at our TriageTrak.  Don't need username/password for this.
+              // Do this early so startup wizard has info it needs.
 
             await UserAndVersions.Init(); // Need PL password for web services to work.  Also init's pd.  Startup wiz called here.
+            // Also called within, after v32: OrgDataList.Init()
             // Initialize app model before navigating to home page, so groups will be set up
 #if MAYBE_NOT_ANY_MORE
             //DefaultFilterProfile.ResetFilterProfileToDefault();

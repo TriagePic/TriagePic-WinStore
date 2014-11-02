@@ -187,14 +187,20 @@ namespace TP8.Data // nah .DataModel
                     await App.pd.DecryptPL_Username();
                     await App.pd.DecryptPL_Password();
                     // TO DO - BETTER ERROR RECOVERY
+                    // FIRST PASS:
+                    string results = await App.service.GetUserToken();
+                    if (results.Contains("ERROR") || results.Length != 128) // token is 128 char long SHA-512
+                        App.TokenPL = "";
+                    else
+                        App.TokenPL = results;
+                    await App.OrgDataList.Init(); // uses TokenPL
                 }
             }
             else
             {
-                await ShowStartupWiz();
+                await ShowStartupWiz();  // This should set App.TokenPL, call OrgDataList.Init()
                 await AddEncryptedDataRowInXML(o);
             }
-
         }
 
         private async Task ShowStartupWiz()

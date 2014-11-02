@@ -40,6 +40,60 @@ namespace LPF_SOAP
 
         public LPF_JSON() {}
 
+        // New v33
+        public async Task<string> GetUserToken()
+        {
+            requestUserTokenRequest rutin = new requestUserTokenRequest();
+            rutin.username = App.pd.plUserName;
+            rutin.password = App.pd.plPassword;
+            requestUserTokenResponse rutout = new requestUserTokenResponse();
+            try
+            {
+                SetPLEndpointAddress(App.pl); //read the configured endpoint address
+
+                if(App.BlockWebServices)
+                    throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
+
+                rutout = await App.pl.requestUserTokenAsync(rutin);
+            }
+
+            catch (Exception e)
+            {
+                return "ERROR: " + e.Message;
+            }
+
+            if (rutout.errorCode != "0")
+                return PackageErrorString(rutout.errorCode, rutout.errorMessage);
+
+            return ChangeToErrorIfNull(rutout.token);
+        }
+
+        // New v33... may not use this
+        public async Task<string> GetAnonToken()
+        {
+            requestAnonTokenRequest ratin = new requestAnonTokenRequest();
+            requestAnonTokenResponse ratout = new requestAnonTokenResponse();
+            try
+            {
+                SetPLEndpointAddress(App.pl); //read the configured endpoint address
+
+                if (App.BlockWebServices)
+                    throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
+
+                ratout = await App.pl.requestAnonTokenAsync(ratin);
+            }
+
+            catch (Exception e)
+            {
+                return "ERROR: " + e.Message;
+            }
+
+            if (ratout.errorCode != "0")
+                return PackageErrorString(ratout.errorCode, ratout.errorMessage);
+
+            return ChangeToErrorIfNull(ratout.token);
+        }
+
 #if SETASIDE
         public LPF_JSON() //(TP.FormTriagePic p)
         {
@@ -53,14 +107,14 @@ namespace LPF_SOAP
             //hospital_list_path = parent.sharedAppDir + "/HospitalList.xml"; // ditto
         }
 #endif
- 
+#if OLD 
         /// <summary>
         /// Returns the incident list 
         /// </summary>
         public async Task<string> GetIncidentList() 
         {
             //Win 7: string errorCode = ""; string errorMessage = ""; string responseData = "";
-            getEventListRequest elin = null;
+            getEventListRequest elin = null;  // NULL INPUT NO LONGER VALID
             getEventListResponse elout = null;
             try
             {
@@ -80,37 +134,37 @@ namespace LPF_SOAP
 
             return ChangeToErrorIfNull(elout.eventList); // Win 7: return ChangeToErrorIfNull(responseData);
         }
+#endif
 
         /// <summary>
         /// Returns the incident list for a given user
         /// </summary>
-        public async Task<string> GetIncidentList(string userPL, string passwordPL)
+        public async Task<string> GetIncidentList() // WAS BEFORE PLUS v33: ...GetIncidentList(string userPL, string passwordPL)
         {
-            // Win 7: string errorCode = ""; string errorMessage = ""; string responseData = "";
-            //getEventListUserRequest elin = new getEventListUserRequest();
+            // Before v33:
+                //getEventListUserRequest elin = new getEventListUserRequest();
+                //elin.username = userPL;
+                //elin.password = passwordPL;
+                //getEventListUserResponse elout = new getEventListUserResponse();
+ 
             getEventListRequest elin = new getEventListRequest();
-            //elin.username = userPL;
-            //elin.password = passwordPL;
             elin.token = App.TokenPL;
-            //getEventListUserResponse elout = new getEventListUserResponse();
             getEventListResponse elout = new getEventListResponse();
             try
             {
-
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
 
                 if(App.BlockWebServices)
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
 
-                // Win 7: responseData = App.pl.getEventListUser(userPL, passwordPL, out errorCode, out errorMessage);
-                elout = await App.pl.getEventListAsync(elin); // App.pl.getEventListUserAsync(elin);
+                elout = await App.pl.getEventListAsync(elin); // Before v33: App.pl.getEventListUserAsync(elin);
             }
             catch (Exception e)
             {
-                elout.eventList = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;
+                elout.eventList = "ERROR: " + e.Message;
             }
 
-            return ChangeToErrorIfNull(elout.eventList); // (responseData);
+            return ChangeToErrorIfNull(elout.eventList);
         }
 
         public class PLUS_URL_Parts
@@ -321,6 +375,7 @@ namespace LPF_SOAP
         {
             // Win 7: string errorCode = ""; string errorMessage = ""; string hospitalList = "";
             getHospitalListRequest hlin = new getHospitalListRequest();
+            hlin.token = App.TokenPL; // new v33
             getHospitalListResponse hlout = new getHospitalListResponse();
             
             try
@@ -374,6 +429,7 @@ namespace LPF_SOAP
             string longitude = ""; */
             getHospitalDataRequest hdin = new getHospitalDataRequest();
             hdin.hospital_uuid = hospital_uuid;
+            hdin.token = App.TokenPL; // new v33
             getHospitalDataResponse hdout = new getHospitalDataResponse();
 
             try
@@ -462,6 +518,7 @@ namespace LPF_SOAP
             bool photographerNameRequired = false; */
             getHospitalPolicyRequest hpin = new getHospitalPolicyRequest();
             hpin.hospital_uuid = hospital_uuid;
+            hpin.token = App.TokenPL; // new v33
             getHospitalPolicyResponse hpout = new getHospitalPolicyResponse();
 
             try
@@ -659,8 +716,8 @@ INSTEAD: */
             if(String.IsNullOrEmpty(errorCode))
             {
                 errorMessage =
-                    "COMMUNICATIONS ERROR: Could not reach PL web service.\n\n" +
-                    "This may be due to a DNS change to the PL machine.\n" +
+                    "COMMUNICATIONS ERROR: Could not reach PL/TriageTrak web service.\n\n" +
+                    "This may be due to a DNS change to the PL/TriageTrak machine.\n" +
                     "Admins: try rebooting machine, or from command line using ipconfig /flushdns\n" +
                     "TriagePic developer: try updating PLWS Service Reference.";
 
@@ -668,7 +725,11 @@ INSTEAD: */
                 return errorMessage;
             }
 
-            return "ERROR: " + errorCode.ToString() + " - " + errorMessage;
+            string errorMessage2 = "";
+            if (errorCode == "1")
+                errorMessage2 = "\n\nTo solve this, go to Settings charm, 'My Credentials', and re-validate your username and password.";
+
+            return "ERROR: " + errorCode.ToString() + " - " + errorMessage + errorMessage2;
         }
 
         private string ChangeToErrorIfNull(string webServiceReturnValue)
@@ -680,9 +741,9 @@ INSTEAD: */
                 return webServiceReturnValue;
             
             string errorMessage =
-                "COMMUNICATIONS ERROR: Could not reach PL web service.\n\n" +
+                "COMMUNICATIONS ERROR: Could not reach PL/TriageTrak web service.\n\n" +
                 "This may be due to a disagreement as to where the service is located.\n\n" +
-                "PL and TriagePic developers: inspect WSDL for service location,\n" +
+                "PL/TriageTrak and TriagePic developers: inspect WSDL for service location,\n" +
                 "try revising WSDL and updating PLWS Service Reference.";
 
             // Caution: code elsewhere looks for "COMMUNICATIONS ERROR:" prefix.
@@ -978,20 +1039,22 @@ INSTEAD: */
             parent.photographerNameRequiredCheckBox.Checked = photographerNameRequired;
         }
 #endif
+        // See also GetUserToken() above
         /// <summary>
-        /// Verifies PL credentials
+        /// Verifies PL credentials.  If successful, also sets App.TokenPL
         /// </summary>
         /// <returns>Error message or empty string</returns>
         public async Task<string> VerifyPLCredentials(string username, string password, bool hospitalStaffOrAdminOnly)
         {
-            bool valid = false;
             string errorCode = "";
             string errorMessage = "";
             string exceptionMessage = "";
-            //checkUserAuthHospitalRequest cuahin = new checkUserAuthHospitalRequest();
-            //checkUserAuthHospitalResponse cuahout = new checkUserAuthHospitalResponse();
-            //checkUserAuthRequest cuain = new checkUserAuthRequest();
-            //checkUserAuthResponse cuaout = new checkUserAuthResponse();
+            // was before PLUS v33:
+                //bool valid = false;
+                //checkUserAuthHospitalRequest cuahin = new checkUserAuthHospitalRequest();
+                //checkUserAuthHospitalResponse cuahout = new checkUserAuthHospitalResponse();
+                //checkUserAuthRequest cuain = new checkUserAuthRequest();
+                //checkUserAuthResponse cuaout = new checkUserAuthResponse();
             requestUserTokenRequest rutin = new requestUserTokenRequest();
             requestUserTokenResponse rutout = new requestUserTokenResponse();
 
@@ -1025,11 +1088,12 @@ INSTEAD: */
                 rutin.username = username;
                 rutin.password = password;
                 rutout = await App.pl.requestUserTokenAsync(rutin);
-                App.TokenPL = rutout.token;
+                // Do below, only if successful: App.TokenPL = rutout.token;
                 //MAYBE TO DO AS NEEDED: groupIdPL = rutout.groupIdPL;
                 errorCode = rutout.errorCode;
                 errorMessage = rutout.errorMessage;
             }
+
 
             catch (Exception e)
             {
@@ -1048,12 +1112,33 @@ INSTEAD: */
             if (exceptionMessage.Length > 0)
             {
                 // Caution: code elsewhere looks for "COMMUNICATIONS ERROR:" prefix.
-                errorMessage =
-                    "COMMUNICATIONS ERROR: When trying to authenticate PL credentials.\n\n" +
-                    "Possible general causes:\n" +
-                    "No wireless/wired network connection, PL web site is down, PL web services are disabled, or\n" +
-                    "there is a wrong value in the OtherSetting.xml file.\n\n" +
-                    "Want to see additional technical details?\n";
+                if (exceptionMessage.Contains("403"))
+                {
+                    // New v33 exception seen -
+                    // Outer exception message: The HTTP request was forbidden with client authentication scheme 'Anonymous'.
+                    // Inner exception message: The remote server returned an error: (403) Forbidden.
+
+                    errorMessage =
+                        "COMMUNICATIONS ERROR: When trying to authenticate TriageTrak credentials.\n\n" +
+                        "You are currently forbidden access to TriageTrak web services.\n" +
+                        "Most likely this is due to too many bad login attempts recently from this device.\n" +
+                        "To regain access in a timely manner, ask your TriageTrak administrator to\n" +
+                        "remove this device's IP address from the 'banned' list.\n\n" +
+                        "Want to see additional technical details?\n";
+                    // We could try to look up the IP address here, using one of techniques as given in:
+                    // http://stackoverflow.com/questions/1069103/how-to-get-my-own-ip-address-in-c
+                    // http://stackoverflow.com/questions/4566403/how-to-get-internet-ip-address-from-c-sharp-windows-app?lq=1
+                    // Or maybe there needs to be a TriageTrak web service for this?
+                }
+                else
+                {
+                    errorMessage =
+                        "COMMUNICATIONS ERROR: When trying to authenticate TriageTrak credentials.\n\n" +
+                        "Possible general causes:\n" +
+                        "No wireless/wired network connection, TriageTrak web site is down, TriageTrak web services are disabled, or\n" +
+                        "there is a wrong value in the OtherSetting.xml file.\n\n" +
+                        "Want to see additional technical details?\n";
+                }
 
                 bool showMore = false;
                 var md = new MessageDialog(errorMessage);
@@ -1070,13 +1155,11 @@ INSTEAD: */
                 return errorMessage + exceptionMessage;
             }
 
-            if (errorCode != "0" || !valid)
+            if (errorCode != "0") // was before v33: || !valid)
                 return PackageErrorString(errorCode, errorMessage);
 
-/* MAYBE:
-            if (valid == null)
-                return ChangeToErrorIfNull(null);
-*/
+            App.TokenPL = rutout.token;
+            //MAYBE TO DO AS NEEDED: groupIdPL = rutout.groupIdPL;
             return "";
         }
 #if SETASIDE

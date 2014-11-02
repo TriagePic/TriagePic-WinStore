@@ -188,6 +188,17 @@ namespace TP8.Data
                 CurrentNewPracticePatientNumber = "0",
                 PLEndPointAddress = "" // Empty means no over-ride
             }); */
+            // Let's try again, make it smarter this time:
+            App.MyAssert(App.CurrentDisaster != null && !String.IsNullOrEmpty(App.CurrentDisaster.EventName));
+            App.MyAssert(App.OrgPolicy != null);
+            inner.Add(new TP_OtherSettings()
+            {
+                CurrentEventName = App.CurrentDisaster.EventName,
+                CurrentEventShortName = App.CurrentDisaster.EventShortName,
+                CurrentNewPatientNumber = App.OrgPolicy.PadPatientIdSuffixWithLeadingZerosIfReqd("1"),
+                CurrentNewPracticePatientNumber = "0",
+                PLEndPointAddress = "" // Empty means no over-ride
+            });
             await WriteXML();
         }
 

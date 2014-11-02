@@ -412,11 +412,11 @@
     </Style>
 
     <!-- Glenn adds AppBarButton Styles less than xE100.  See elsewhere for higher additions. -->
-    <!-- Unicode WHITE HEAVY CHECK MARK character -->
+    <!-- WAS: Unicode WHITE HEAVY CHECK MARK character, &#x2705 ... but in 8.1, that's colored in black, not visible on charcoal background.  Use green check 2714 instead -->
     <Style x:Key="ChecklistAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="ChecklistAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Checklist"/>
-        <Setter Property="Content" Value="&#x2705;"/>
+        <Setter Property="Content" Value="&#x2714;"/>
     </Style>    
     
     

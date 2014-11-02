@@ -395,7 +395,7 @@ namespace TP8.Data
             // Cras posuere, enim a cursus convallis, neque turpis malesuada erat, ut adipiscing neque tortor ac erat.
 
             var group1 = new SampleDataGroup("Checklist",
-                    "✅  Checklist",
+                    "✔  Checklist", //was: "✅  Checklist", but couldn't see with 8.1 multicolor fonts, couldn't see black outline on charcoal background
                     "Specify Disaster Event, Station Roster",//"Group Subtitle: 1",
                     "Assets/Red.png",
                     "Group Description: not used");

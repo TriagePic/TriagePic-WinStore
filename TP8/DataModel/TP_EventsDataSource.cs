@@ -422,7 +422,7 @@ namespace TP8.Data
 
             // ProcessEventList will clear the list in memory, then call the web service.  If successful, memory list is available and also gets written to XML file.
             // If failed, will try to read the XML file instead.
-            await ProcessEventList(App.pd.plUserName, App.pd.plPassword, true);
+            await ProcessEventList(true); // WAS before PLUS v33: ...ProcessEventList(App.pd.plUserName, App.pd.plPassword, true);
         }
 
         private async Task<bool> DoesFileExistAsync()
@@ -465,7 +465,8 @@ namespace TP8.Data
             await ReadXML(EVENTS_DATA_LIST_FILENAME, false); // could do adds from CurrentDisasterList instead...
         }
 
-        public async Task ProcessEventList(string plname, string plpass, bool clearFirst)
+        // WAS BEFORE PLUS v33: public async Task ProcessEventList(string plname, string plpass, bool clearFirst) ... but crdentials now accessed through globals
+        public async Task ProcessEventList(bool clearFirst)
         {
             // Compare Win 7 FormTriagePic.ProcessEventList(...)
             if (clearFirst)
@@ -473,7 +474,7 @@ namespace TP8.Data
             bool useCachedEventList = false; // This was global in Win 7
             List<Pls_Incident_Response_Row> incidentResponseRows = null; // likewise
             string s;
-            s = await App.service.GetIncidentList(plname, plpass);
+            s = await App.service.GetIncidentList(); // WAS BEFORE PLUS v33: ...GetIncidentList(plname, plpass);
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
