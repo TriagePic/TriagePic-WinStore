@@ -141,6 +141,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetIncidentList() // WAS BEFORE PLUS v33: ...GetIncidentList(string userPL, string passwordPL)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             // Before v33:
                 //getEventListUserRequest elin = new getEventListUserRequest();
                 //elin.username = userPL;
@@ -331,6 +332,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetPing(int pingLatencyInTenthsOfSeconds)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             // string errorCode = "";
             // string errorMessage = "";
             string serverTime = ""; // Format:  2012:0209 18:02:31.000000 America/New_York
@@ -373,6 +375,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetHospitalList()
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             // Win 7: string errorCode = ""; string errorMessage = ""; string hospitalList = "";
             getHospitalListRequest hlin = new getHospitalListRequest();
             hlin.token = App.TokenPL; // new v33
@@ -407,6 +410,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetHospitalData(string hospital_uuid, string hospitalName)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             /* Win 7:
             string errorCode;
             string errorMessage = "";
@@ -507,6 +511,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetHospitalPolicy(string hospital_uuid)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             /* Win 7:
             string errorCode;
             string errorMessage = "";
@@ -772,6 +777,7 @@ INSTEAD: */
         /// <returns>Empty string if OK, otherwise error message</returns>
         private async Task<string> ReportPersonFirstTime(string content)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             /* Win 7:
             string errorCode = "";
             string errorMessage = "";
@@ -826,6 +832,7 @@ INSTEAD: */
         /// <returns>Empty string if OK, otherwise error message</returns>
         private async Task<string> ReportPersonAgain(string content, string uuid)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             /* Win 7:
             string errorCode = "";
             string errorMessage = "";
@@ -881,6 +888,7 @@ INSTEAD: */
         // Throws away error reason, just returns empty string if error
         public async Task<string> GetUuidFromPatientID(string mcid, string shortEventName)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             getUuidByMassCasualtyIdRequest guin = new getUuidByMassCasualtyIdRequest();
             getUuidByMassCasualtyIdResponse guout = new getUuidByMassCasualtyIdResponse();
 
@@ -970,6 +978,7 @@ INSTEAD: */
         /// <returns></returns>
         public async Task<string> ExpirePerson(string uuid, string explanation)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             // Owners, admins, and hospital staff admins can immediately expire a record.
             // Everyone else can submit an expiration request to a moderated queue.
             // A flag is set on a record once it is manually expired, stipulating that it
@@ -1416,6 +1425,7 @@ INSTEAD: */
         /// </summary>
         public async Task<string> GetReportsFromAllStationsCurrentEvent(string userPL, string passwordPL)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
             //searchWithAuthResponse sarout = new searchWithAuthResponse();
             searchRequest srin = new searchRequest();
@@ -1481,6 +1491,7 @@ INSTEAD: */
         /// </summary>
         public async Task<string> GetReportsForOutbox(string userPL, string passwordPL)
         {
+            App.MyAssert(App.TokenPL.Length > 0);
             //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
             //searchWithAuthResponse sarout = new searchWithAuthResponse();
             searchRequest srin = new searchRequest();

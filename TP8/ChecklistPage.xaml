@@ -92,6 +92,7 @@
         </Grid>
         <StackPanel x:Name="mainBox" Grid.Row="1" Width="566" Margin="0,50">
             <TextBlock x:Name="DisasterEvent" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Disaster Event:" VerticalAlignment="Top" Width="240" FontSize="30"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Only those open for reporting shown" VerticalAlignment="Top" Width="340" FontSize="15"/>
             <StackPanel Orientation="Horizontal">
                 <Image HorizontalAlignment="Left" Margin="50,5,10,5" Source="Assets/yellow_diamond.png" Stretch="None"/>
                 <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Height="20" Text="Test, demo, or drill" FontSize="15" />

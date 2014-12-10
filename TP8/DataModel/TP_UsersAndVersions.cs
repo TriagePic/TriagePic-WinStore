@@ -190,10 +190,20 @@ namespace TP8.Data // nah .DataModel
                     // FIRST PASS:
                     string results = await App.service.GetUserToken();
                     if (results.Contains("ERROR") || results.Length != 128) // token is 128 char long SHA-512
+                    {
                         App.TokenPL = "";
+                        await ShowStartupWiz();  // This should set App.pd.plUserName, App.pd.plPassword, App.TokenPL, call OrgDataList.Init()
+                        App.MyAssert(App.TokenPL.Length > 0);
+                        App.MyAssert(App.pd.plUserName.Length > 0);
+                        App.MyAssert(App.pd.plPassword.Length > 0);
+                        // TO DO: handling case if user cancels startup wizard
+                        await AddOrUpdateEncryptedDataRowInXML(o);
+                    }
                     else
+                    {
                         App.TokenPL = results;
-                    await App.OrgDataList.Init(); // uses TokenPL
+                        await App.OrgDataList.Init(); // uses TokenPL
+                    }
                 }
             }
             else
