@@ -362,8 +362,6 @@ namespace TP8
             SuspensionManager.SessionState["DelayedMessageToUserOnStartup"] = DelayedMessageToUserOnStartup;
             SuspensionManager.SessionState["TokenPL"] = TokenPL;
 
-
-
             // Globals of type bool:
             SuspensionManager.SessionState["ReportAltered"] = ReportAltered; // used by ViewEditReport
             SuspensionManager.SessionState["ReportDiscared"] = ReportDiscarded; // used by ViewEditReport
