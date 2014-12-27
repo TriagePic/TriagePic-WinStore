@@ -47,8 +47,17 @@
                 <StackPanel x:Name="BottomAppBarLeftPanel" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
                     <Button Style="{StaticResource HomeAppBarButtonStyle}" Tag="Home" Click="Home_Click" Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                 </StackPanel>
+                <!-- Hide discard button here for now, don't know if we can make it work from this location with v33+ services -->
                 <StackPanel x:Name="BottomAppBarRightPanel" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button x:Name="ClearEntry" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" Click="Discard_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                    <!-- <Button x:Name="ClearEntry" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" Click="Discard_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/> -->
+                    <!--<Button Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard">
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="From outbox only" Click="DeleteLocal_Click"/>
+                                <ToggleMenuFlyoutItem Text="From TriageTrak too" Click="DeleteRemoteToo_Click"/>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button> -->
                     <Button x:Name="Edit" Style="{StaticResource EditAppBarButtonStyle}" Tag="Edit" Click="Edit_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                 </StackPanel>
             </Grid>

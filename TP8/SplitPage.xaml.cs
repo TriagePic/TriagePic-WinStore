@@ -29,9 +29,9 @@ namespace TP8
     public sealed partial class SplitPage : TP8.Common.LayoutAwarePage
     {
         // Used with bottom app bar:
-        private Popup discardMenuPopUp = null;
-        private Popup whyDiscardedPopUp = null;
-        private string uuid = "";
+// WAS:        private Popup discardMenuPopUp = null;
+// WAS:        private Popup whyDiscardedPopUp = null;
+// WAS:        private string uuid = "";
 //        DispatcherTimer dt = null;
         private bool isOutbox = true;
 
@@ -200,6 +200,7 @@ namespace TP8
 
         #region BottomAppBar
 
+#if WAS
         // Code in this region is also common to ViewEditReportPage
         private void Discard_Click(object sender, RoutedEventArgs e)
         {
@@ -261,10 +262,45 @@ namespace TP8
             discardMenuPopUp.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - BottomAppBar.ActualHeight - panel.Height - 4;
             discardMenuPopUp.IsOpen = true;
         }
+#endif
+
+#if SETASIDE_DONT_KNOW
+        private bool DiscardOK() // New Dec 2014
+        {
+            SampleDataItem selectedItem = null;
+            if (this.itemsViewSource.View == null || (selectedItem = (SampleDataItem)this.itemsViewSource.View.CurrentItem) == null)
+            {
+                var dialog = new MessageDialog("Edit: No item selected.");
+                var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
+                return false;
+            }
+            App.MyAssert(App.CurrentSearchResultsGroupName.Contains("Outbox") || App.CurrentSearchResultsGroupName.Contains("AllStations"));
+            if(!App.CurrentSearchResultsGroupName.Contains("Outbox"))
+            {
+                var dialog = new MessageDialog("Sorry, discarding a report from the 'All Stations' list is not yet implemented.  Use 'Outbox' instead.");
+                var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
+                return false;
+            }
+            App.MyAssert(App.CurrentSearchResultsGroupName.Contains("Outbox"));
+            int index = App.PatientDataGroups.GetOutbox().FindIndexByWhenLocalTime(selectedItem.UniqueId);  //UniqueId is WhenLocalTime
+            if(index < 0) // desperation:
+                index = App.PatientDataGroups.GetOutbox().FindIndexByPatientIDAndSentCodeVersion(selectedItem.Subtitle,1); // TO DO... handle this way better
+            if(index < 0)
+            {
+                var dialog = new MessageDialog("Sorry, for some reason this report wasn't located.  Internal error.");
+                var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
+                return false;
+            }
+            App.CurrentPatient = App.PatientDataGroups.GetOutbox().Fetch(index);
+            return true;
+        }
 
 
         private async void DeleteLocal_Click(object sender, RoutedEventArgs e)
         {
+            if (!DiscardOK()) // New Dec 2014
+                return;
+
             string pid = App.CurrentPatient.PatientID; // ClearEntryAll will clear these, so remember them for Discard
             int v = App.CurrentPatient.ObjSentCode.GetVersionCount();
             //ClearEntryAll();  // Will indirectly mark as altered
@@ -273,20 +309,23 @@ namespace TP8
             App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind
             await App.PatientDataGroups.GetOutbox().WriteXML();
             App.PatientDataGroups.Init2(); // resort, refilter, refresh
-            discardMenuPopUp.IsOpen = false;
+// WAS:            discardMenuPopUp.IsOpen = false;
             TopAppBar.IsOpen = false;
             BottomAppBar.IsOpen = false;
         }
 
         private async void DeleteRemoteToo_Click(object sender, RoutedEventArgs e)
         {
+            if (!DiscardOK()) // New Dec 2014
+                return;
+
             if (!App.goodWebServiceConnectivity)
             {
                 MessageDialog dlg = new MessageDialog(
                     "Sorry, better communications with TriageTrak is needed to do this.  Discarding was cancelled.  Try again later when the 'traffic light' squares (in the New Report or Edit Report pages) are flashing green or yellow instead of red.");
                 await dlg.ShowAsync();
                 // We don't want to encourage doing a local delete, because that will make it harder to later do a remote delete.  So close popup, app bar.
-                discardMenuPopUp.IsOpen = false;
+// WAS:                discardMenuPopUp.IsOpen = false;
                 TopAppBar.IsOpen = false;
                 BottomAppBar.IsOpen = false;
                 return;
@@ -305,13 +344,13 @@ namespace TP8
                 // bail out:
                 // Maybe not:
                 // await App.PatientDataGroups.UpdateSendHistoryAfterOutbox(App.CurrentPatient.PatientID, ObjSentCode); // see explanation of this below
-                discardMenuPopUp.IsOpen = false;
+// WAS:                discardMenuPopUp.IsOpen = false;
                 TopAppBar.IsOpen = false;
                 BottomAppBar.IsOpen = false;
                 return;
             }
 
-            discardMenuPopUp.IsOpen = false; // take down 1 popup, then put up another
+// WAS:            discardMenuPopUp.IsOpen = false; // take down 1 popup, then put up another
             whyDiscardedPopUp = new Popup();
             whyDiscardedPopUp.IsLightDismissEnabled = true;  // Dismiss popup automatically when user hits other part of app
             StackPanel panel2 = new StackPanel(); // create a panel as the root of the menu
@@ -342,15 +381,43 @@ namespace TP8
         private async void FinishRemoteDiscard_Click(object sender, RoutedEventArgs e) // From OK button in whyDiscardedPopUp
         {
             // Quick hack... call service directly, instead of putting request on send queue
+#if WAS_BUT_FAILS_IN_8_1
             TextBox explanation = (TextBox)whyDiscardedPopUp.FindName("Explanation");
             App.MyAssert(explanation != null);
             await App.service.ExpirePerson(uuid, explanation.Text);
+#endif
+            string text = GetTextFromTextBox(sender, "Explanation");
+            await App.service.ExpirePerson(uuid, text);
             // On to local discard....
             DeleteLocal_Click(sender, e);
             TopAppBar.IsOpen = false;
             BottomAppBar.IsOpen = false;
             whyDiscardedPopUp.IsOpen = false;
         }
+#endif
+        private string GetTextFromTextBox(object sender, string textBoxName) // New Dec 2014
+        {
+            TextBox textBox = null;
+            var parent = VisualTreeHelper.GetParent(sender as Button);
+            var numChildren = VisualTreeHelper.GetChildrenCount(parent);
+            for (var i = 0; i < numChildren; ++i)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
+                if (child != null && child.Name == textBoxName)
+                {
+                    // Found the text box!
+                    textBox = child as TextBox;
+                    break;
+                }
+            }
+            App.MyAssert(textBox != null);
+            if (textBox != null)
+            {
+                return textBox.Text;
+            }
+            return "";
+        }
+
         #endregion
 
         #region Logical page navigation

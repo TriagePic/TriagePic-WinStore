@@ -86,7 +86,7 @@ namespace TP8
         public static TP_PatientReport CurrentPatient = new TP_PatientReport();
         public static TP_OtherSettingsList CurrentOtherSettingsList = new TP_OtherSettingsList(); // mainly helper for other items
         public static TP_OtherSettings CurrentOtherSettings = new TP_OtherSettings(); // ditto
-        public static string TokenPL = ""; // used with PLUS web services v33+
+        // Nah, include as part of App.pd.plToken public static string TokenPL = ""; // used with PLUS web services v33+
         public enum SortByItem
         {
             ArrivalTime,
@@ -360,7 +360,8 @@ namespace TP8
             // Don't need, regenerate instead: SuspensionManager.SessionState["UserWin8Account"] = UserWin8Account;
             SuspensionManager.SessionState["DeviceName"] = DeviceName;
             SuspensionManager.SessionState["DelayedMessageToUserOnStartup"] = DelayedMessageToUserOnStartup;
-            SuspensionManager.SessionState["TokenPL"] = TokenPL;
+            //Bad security: SuspensionManager.SessionState["TokenPL"] = App.pd.plToken; //TokenPL;  Does suspension manager itself encrypt?
+            //Probably don't need, since this is now in UserAndVersions: SuspensionManager.SessionState["TokenSecured"] = App.pd.plTokenEncryptedAndBase64Encoded;
 
             // Globals of type bool:
             SuspensionManager.SessionState["ReportAltered"] = ReportAltered; // used by ViewEditReport
@@ -391,7 +392,7 @@ namespace TP8
             if (String.IsNullOrEmpty(DeviceName))
                 DeviceName = GetDeviceName(); // Regenerate instead of: DeviceName = (string)SuspensionManager.SessionState["DeviceName"];
             DelayedMessageToUserOnStartup = (string)SuspensionManager.SessionState["DelayedMessageToUserOnStartup"];
-            TokenPL = (string)SuspensionManager.SessionState["TokenPL"];
+            // Probably don't need, since this is now in UserAndVersions: App.pd.plToken = (string)SuspensionManager.SessionState["TokenPL"];
 
             // Globals of type bool:
             ReportAltered = (bool)SuspensionManager.SessionState["ReportAltered"]; // used by ViewEditReport

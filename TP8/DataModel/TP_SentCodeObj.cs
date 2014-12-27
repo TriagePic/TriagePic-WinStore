@@ -39,6 +39,7 @@ namespace TP8.Data
             switch(code)
             {
                 case "Q": case "QN":
+                case "QD": // New Dec 2014 queued for delete
                 case "Y": case "N":
                 case "X1": case "X2": case "X3": case "X4": // abnormals
                 case "": // allowed before enqueued
@@ -82,7 +83,7 @@ namespace TP8.Data
         {
             if (String.IsNullOrEmpty(s))
                 return false;
-            return (bool)(s[0] == 'Q');  // Covers "QE", "QN", and updates too
+            return (bool)(s[0] == 'Q');  // Covers "QE", "QN", "QD", and updates too
         }
 
         public bool IsQueuedEmailOnly() { return IsQueuedEmailOnly(stringForm); }
@@ -247,6 +248,7 @@ namespace TP8.Data
                     s = "NOT SENT.  Please retry."; break;
                 case "Q":
                 case "QN":
+                case "QD": // New Dec 2014.  Necessary here?
                 default:
                     //Debug.Assert(false);
                     s = "Internal error " + code; break;

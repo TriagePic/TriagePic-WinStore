@@ -51,7 +51,15 @@
                 <StackPanel x:Name="BottomAppBarRightPanel" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
                     <!-- Probably more confusing than helpful: 
                     <Button x:Name="ClearEntry" Style="{StaticResource DeleteAppBarButtonStyle}" Tag="Clear Entry" Click="Clear_Entry_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/> -->
-                    <Button x:Name="Discard" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" Click="Discard_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates" />
+                    <!-- <Button x:Name="Discard" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" Click="Discard_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates" /> -->
+                    <Button Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard">
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="From outbox only" Click="DeleteLocal_Click"/>
+                                <ToggleMenuFlyoutItem Text="From TriageTrak too" Click="DeleteRemoteToo_Click"/>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
                     <Button x:Name="Webcam" Style="{StaticResource WebcamAppBarButtonStyle}" Tag="New" Click="Webcam_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                 </StackPanel>
             </Grid>
@@ -156,7 +164,7 @@
                     <CheckBox x:Name="CheckBoxAdult" Content="Adult" HorizontalAlignment="Right" Height="33" Margin="0,0,60,0" VerticalAlignment="Top" Width="68" Tapped="AnyCheckBox_Tapped"/>
                     <CheckBox x:Name="CheckBoxPeds" Content="Peds" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top" Width="59" HorizontalContentAlignment="Right" Tapped="AnyCheckBox_Tapped"/>
                 </Grid>
-                <TextBox x:Name="Notes" Margin="0,30,0,0" TextWrapping="Wrap" Text="Optional Notes" Height="130" VerticalAlignment="Top" AcceptsReturn="True" TextChanged="Notes_TextChanged" RenderTransformOrigin="0.491,-1.521" GotFocus="Notes_GotFocus" LostFocus="Notes_LostFocus" Foreground="Gray"/>
+                <TextBox x:Name="Notes" Margin="0,30,0,0" TextWrapping="Wrap" Text="Optional Notes" Height="130" VerticalAlignment="Top" AcceptsReturn="True" TextChanged="Notes_TextChanged" RenderTransformOrigin="0.491,-1.521" GotFocus="Notes_GotFocus" LostFocus="Notes_LostFocus" Foreground="Gray" AllowDrop="True"/>
                 <ItemsControl x:Name="ZoneButtons" Margin="0,20,0,19" Grid.Column="1">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

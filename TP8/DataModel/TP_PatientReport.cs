@@ -59,6 +59,7 @@ namespace TP8.Data
         private String _imageName = string.Empty; // name when decoded, w/o path
         private String _imageEncoded = string.Empty;
         private String _imageCaption = string.Empty;
+        private bool _deleted = false; // Added Dec 2014.  Not stored in XML.
         private String _comments = string.Empty;
         // TO DO: station staff
         private String _whyNoPhotoReason = string.Empty;
@@ -218,6 +219,13 @@ namespace TP8.Data
         {
             get { return this._imageWriteableBitmap; }
             set { this._imageWriteableBitmap = value; }
+        }
+        
+        [XmlIgnore]
+        public bool Deleted
+        {
+            get { return this._deleted; }
+            set { this._deleted = value;  }
         }
 
         public String Comments
@@ -452,6 +460,9 @@ namespace TP8.Data
 
         public async Task DoSendEnqueue(bool newPatientReportObject)
         {
+            if (ObjSentCode.GetCodeWithoutVersion() == "QD")
+                Deleted = true; // will affect generation of "content" below.  New Dec 2014
+
             if (!newPatientReportObject)
             {
                 await App.PatientDataGroups.UpdateSendHistory(this.PatientID, this.ObjSentCode.GetVersionCount(), this.SentCode, true /*superceded*/);
@@ -482,9 +493,12 @@ namespace TP8.Data
         public async Task DequeueAndProcessPatientDataRecord(bool firstSend, string contentEDXL_and_LP2)
         {
             string results = "";
+            bool deleteNow = false;
             //SentCodeObj objSentCodeAsDequeued = new SentCodeObj(SentCode); // helpers
             //SentCodeObj objSentCodeAsRevised = new SentCodeObj(SentCode); // initially the same
             //SentCode = objSentCodeAsRevised.ReplaceCodeKeepSuffix("N");
+            if (ObjSentCode.GetCodeWithoutVersion() == "QD")
+                deleteNow = true;
             ObjSentCode.ReplaceCodeKeepSuffix("N");
             await App.PatientDataGroups.AddSendHistory(this); // This adds a REFERENCE to this report into the _outbox and makes a clone for _allstations
             // So any change to the record below automagically is reflected in _outbox, but needs to be copied to _allstations
@@ -533,12 +547,26 @@ namespace TP8.Data
                 ObjSentCode.ReplaceCodeKeepSuffix("Y");
                 // TO DO: delete lp2 file if not persisting for debug
             }
-            // DON'T DO, BECAUSE WE DON'T NEED TO SEARCH THROUGH OUTBOX LIST:
-            //   await App.PatientDataGroups.UpdateSendHistory(PatientID, ObjSentCode);
-            // (First idea:  await App.PatientDataGroups.WriteSendHistory(true /*allStationsToo*/);  )
-            // Actually, we do need to search through _allstations now, because we've made the pr object
-            // separate from the pr object in _outbox (so keep contents sync'd with this call...)
-            await App.PatientDataGroups.UpdateSendHistoryAfterOutbox(PatientID, ObjSentCode);
+            if(deleteNow) // New Dec 2014          
+            {
+                // Compare ViewEditReportPage's DeleteLocal
+                string pid = PatientID; // ClearEntryAll will clear these, so remember them for Discard
+                int v = ObjSentCode.GetVersionCount();
+                //ClearEntryAll();  // Will indirectly mark as altered
+                //LastSentMsg.Text = "Discard from Outbox: Done.";
+                for (int i = v; i > 0; i-- ) // loop added Dec 2014.  Delete all reports for this pid
+                    App.PatientDataGroups.GetOutbox().Discard(pid, i); // Note that reports previously marked as "superceded" will not be in the Outbox list, and may still be present elsewhere in spite of this loop.
+                App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind
+                await App.PatientDataGroups.GetOutbox().WriteXML();
+                App.PatientDataGroups.UpdateListsAfterReportDelete(true); // = DeletedAtTriageTrakToo
+            }
+            else
+                // DON'T DO, BECAUSE WE DON'T NEED TO SEARCH THROUGH OUTBOX LIST:
+                //   await App.PatientDataGroups.UpdateSendHistory(PatientID, ObjSentCode);
+                // (First idea:  await App.PatientDataGroups.WriteSendHistory(true /*allStationsToo*/);  )
+                // Actually, we do need to search through _allstations now, because we've made the pr object
+                // separate from the pr object in _outbox (so keep contents sync'd with this call...)
+                await App.PatientDataGroups.UpdateSendHistoryAfterOutbox(PatientID, ObjSentCode);
         }
 
 
@@ -790,26 +818,33 @@ namespace TP8.Data
                 WriteableBitmap wb = new WriteableBitmap(1, 1); // dummy values
                 wb.SetSource(fileStream);
                 return wb; */
-            RandomAccessStreamReference streamRef = RandomAccessStreamReference.CreateFromUri(uri);
+            try
+            {
+                RandomAccessStreamReference streamRef = RandomAccessStreamReference.CreateFromUri(uri);
 
-            // Create a buffer for reading the stream:
-            Windows.Storage.Streams.Buffer buffer = null;
-            // Read the entire file:
-            using (IRandomAccessStreamWithContentType fileStream = await streamRef.OpenReadAsync())
-            {
-                buffer = new Windows.Storage.Streams.Buffer((uint)fileStream.Size);
-                await fileStream.ReadAsync(buffer, (uint)fileStream.Size, InputStreamOptions.None);
+                // Create a buffer for reading the stream:
+                Windows.Storage.Streams.Buffer buffer = null;
+                // Read the entire file:
+                using (IRandomAccessStreamWithContentType fileStream = await streamRef.OpenReadAsync())
+                {
+                    buffer = new Windows.Storage.Streams.Buffer((uint)fileStream.Size);
+                    await fileStream.ReadAsync(buffer, (uint)fileStream.Size, InputStreamOptions.None);
+                }
+                WriteableBitmap wb = new WriteableBitmap(1, 1); // dummy values
+                // Create a memory stream for transferring the data
+                using (InMemoryRandomAccessStream memoryStream = new InMemoryRandomAccessStream())
+                {
+                    await memoryStream.WriteAsync(buffer);
+                    memoryStream.Seek(0);
+                    // Use the memory stream as the Bitmap Source
+                    wb.SetSource(memoryStream);
+                }
+                return wb;
             }
-            WriteableBitmap wb = new WriteableBitmap(1, 1); // dummy values
-            // Create a memory stream for transferring the data
-            using (InMemoryRandomAccessStream memoryStream = new InMemoryRandomAccessStream())
+            catch(Exception)
             {
-                await memoryStream.WriteAsync(buffer);
-                memoryStream.Seek(0);
-                // Use the memory stream as the Bitmap Source
-                wb.SetSource(memoryStream);
+                return null; // new Dec 2014.  Probably bad, dangling uri.  Let caller report & handle error.
             }
-            return wb;
         }
 
         // Name to store image under when decoded
@@ -1270,7 +1305,13 @@ namespace TP8.Data
             "        <pedsEnumDesc>Pediatric patient? Yes, No</pedsEnumDesc>" + LF +
             "        <triageCategory>" + /*patientReport.zone*/ this._zone + "</triageCategory>" + LF +
             "        <triageCategoryEnum>Green, BH Green, Yellow, Red, Gray, Black</triageCategoryEnum>" + LF +   //// TO DO <<<
-            "        <triageCategoryEnumDesc>Treat eventually if needed; Treat for behavioral health; Treat soon; Treat immediately; Cannot be saved; Deceased</triageCategoryEnumDesc>" + LF +
+            "        <triageCategoryEnumDesc>Treat eventually if needed; Treat for behavioral health; Treat soon; Treat immediately; Cannot be saved; Deceased</triageCategoryEnumDesc>" + LF;
+            if (_deleted)
+            {
+                results +=
+            "        <expiryDate>" + FormatDeleteNowDate() + "</expiryDate>" + LF; // New Dec 2014.  If not included, expiration defaults to whatever policy TT has at the moment, e.g., 1 year.
+            }
+           results +=
             "        <comments>" + mergeComments() + "</comments>" + LF +
             // Not shown: Patient's home address, personal phone numbers
             // Not shown: Location to which patient is released, transferred, or sent to when deceased
@@ -1279,6 +1320,34 @@ namespace TP8.Data
             "    </lpfContent>" + LF;
             return results;
        }
+
+
+        /// <summary>
+        /// Formats the content of <expiryDate> to be same as WhenLocalTime, except UTC.
+        /// </summary>
+        /// <returns>If problem with WhenLocalTime, uses UtcNow instead as source</returns>
+        private string FormatDeleteNowDate() // New Dec 2014
+        {
+            // Desired format for TriageTrak parsing is 2022-01-01 16:20:00 UTC
+            // The "u" format gets us mostly there, but then replace trailing "Z" with " UTC".
+            string dt;
+            DateTimeOffset dtoIfProblem = DateTimeOffset.UtcNow;
+            if (String.IsNullOrEmpty(WhenLocalTime))
+            {
+                dt = dtoIfProblem.UtcDateTime.ToString("u");
+                dt.Replace("Z"," UTC");
+                return dt;
+            }
+
+            DateTimeOffset dto = ParseWhenLocalTime(WhenLocalTime);
+            if ((dto.DateTime == DateTimeOffset.MinValue) && (dto.Offset == TimeSpan.Zero))
+                dt = dtoIfProblem.UtcDateTime.ToString("u"); // unreadable datetime
+            else
+                dt = dto.UtcDateTime.ToString("u");
+                
+            dt = dt.Replace("Z"," UTC");
+            return dt;
+        }
 
        /// <summary>
        /// EncodePictures takes the synchronized lists of short and full filenames in the passed Patient Report Data,

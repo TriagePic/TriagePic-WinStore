@@ -387,7 +387,7 @@ namespace TP8.Data
             }
  
             //if (objSentCodeDequeuedReport.IsQueuedRetry() || objSentCodeDequeuedReport.GetVersionCount() > 1)
-            if (dequeuedReport.ObjSentCode.IsQueuedRetry() || dequeuedReport.ObjSentCode.GetVersionCount() > 1)
+            if (dequeuedReport.ObjSentCode.IsQueuedRetry() || dequeuedReport.ObjSentCode.GetVersionCount() > 1) // delete requests come here too
             {
                 await dequeuedReport.DequeueAndProcessPatientDataRecord(false /*firstSend*/, contentEDXL_and_LP2);
                 // Win7: parent.formRE.DequeueAndProcessPatientDataRecordAgain(dequeuedReport, contentEDXL_and_LP2);

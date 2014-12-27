@@ -23,6 +23,7 @@ namespace TP8
     {
         private string plUserNameOrig;
         private string plPasswordOrig;
+        private string plTokenOrig;
         public SettingsFlyoutCredentials()
         {
             InitializeComponent();
@@ -41,6 +42,7 @@ namespace TP8
             }
             plUserNameOrig = TextBoxUserNamePLUS.Text = App.pd.plUserName;
             plPasswordOrig = PasswordBoxPLUS.Password = App.pd.plPassword;
+            plTokenOrig = App.pd.plToken;
             PasswordStatus.Text = "";
             // NO, Can cause lockup due to synchronous call:
             //if (UpdateCredentialsAndCheckSyntaxSync())
@@ -68,23 +70,16 @@ namespace TP8
 
         private void TextBoxUserNamePLUS_TextChanged(object sender, Windows.UI.Xaml.Controls.TextChangedEventArgs e)
         {
-            var t = UpdateCredentialsAndCheckSyntax();
+            /* bool t = */ UpdateCredentialsAndCheckSyntax();
         }
 
         private void PasswordBoxPLUS_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            var t = UpdateCredentialsAndCheckSyntax();
+            /* bool t = */ UpdateCredentialsAndCheckSyntax();
         }
 
-// PROBLEMATIC
-//        private bool UpdateCredentialsAndCheckSyntaxSync()
-//        {
-//            // Version to call from constructor
-//            var output = UpdateCredentialsAndCheckSyntax();
-//            return output.Result; // blocks on results
-//        }
-//
-        private async Task<bool> UpdateCredentialsAndCheckSyntax()
+
+        private bool UpdateCredentialsAndCheckSyntax()
         {
             // Would be better to have a settingsFlyout onClose handler, but how to do that not so clear
             // Password:
@@ -100,7 +95,7 @@ namespace TP8
 
             string u = App.pd.plUserName = TextBoxUserNamePLUS.Text;
             string s = App.pd.plPassword = PasswordBoxPLUS.Password;
-            await App.pd.EncryptAndBase64EncodePLCredentialsAsync();
+            // caller does, after token fetch: await App.pd.EncryptAndBase64EncodePLCredentialsAsync();
             if (u.Length == 0  && s.Length == 0)
             {
                 PasswordStatus.Text = "Please enter user name & password"; return false;
@@ -159,8 +154,9 @@ namespace TP8
 
         private async void SettingsFlyout_BackClick(object sender, BackClickEventArgs e)
         {
-            if(plUserNameOrig != App.pd.plUserName || plPasswordOrig != App.pd.plPassword)
+            if(plUserNameOrig != App.pd.plUserName || plPasswordOrig != App.pd.plPassword || plTokenOrig != App.pd.plToken)
             {
+                await App.pd.EncryptAndBase64EncodePLCredentialsAsync();
                 TP_UserNameAndVersion o = new TP_UserNameAndVersion();
                 o.User = App.UserWin8Account;
                 await App.UserAndVersions.AddOrUpdateEncryptedDataRowInXML(o);

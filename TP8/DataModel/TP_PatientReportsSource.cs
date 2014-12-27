@@ -296,6 +296,22 @@ namespace TP8.Data
             SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
         }
 
+        public async void UpdateListsAfterReportDelete(bool DeletedAtTriageTrakToo) // New Dec 2014
+        {
+            if (DeletedAtTriageTrakToo)
+            {
+                // We could do this quickly with existing cached list, e.g.:
+                    //ReSortAndFilter(); // outbox and allstations
+                    //SampleDataSource.RefreshOutboxAndAllStationsItems();
+                // but maybe better to do fresh fetch:
+                await ReloadAllStationsListAsync();
+            }
+            // Caller has already done post-delete outbox list scrub, and save to XML file.
+            // Not necessary to call service for this: await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword, false); // startup is false
+            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
+            SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
+        }
+
         public async Task ReloadAllStationsListAsync()
         {
             await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword); // caches too
@@ -534,7 +550,14 @@ namespace TP8.Data
                 //bmi = new BitmapImage(new Uri(path));
 
                 pr.ImageWriteableBitmap = await pr.LoadImageWriteableBitmapFromWeb(new Uri(path));
-                pr.ImageEncoded = await pr.GetImageAsBase64Encoded(); // overwrite ImageEncoded
+                if (pr.ImageWriteableBitmap == null)
+                {
+                    pr.ImageEncoded = null; // new Dec 2014
+                    await App.ErrorLog.ReportToErrorLog("From TP_PatientReportsSource.LoadNewPatientReportTextAndImage",
+                        "Bad image uri: " + path + "\nPatient ID:" + pr.PatientID, false);
+                }
+                else
+                    pr.ImageEncoded = await pr.GetImageAsBase64Encoded(); // overwrite ImageEncoded
             }
             return pr;
         }
@@ -547,7 +570,14 @@ namespace TP8.Data
             //bmi = new BitmapImage(new Uri(path));
 
             pr.ImageWriteableBitmap = await pr.LoadImageWriteableBitmapFromWeb(new Uri(path));
-            pr.ImageEncoded = await pr.GetImageAsBase64Encoded(); // overwrite ImageEncoded
+            if (pr.ImageWriteableBitmap == null)
+            {
+                pr.ImageEncoded = null; // new Dec 201
+                await App.ErrorLog.ReportToErrorLog("From TP_PatientReportsSource.LoadNewPatientReportImage",
+                    "Bad image uri: " + path + "\nPatient ID:" + pr.PatientID, false);
+            }
+            else
+                pr.ImageEncoded = await pr.GetImageAsBase64Encoded(); // overwrite ImageEncoded
             return pr;
         }
 
@@ -1359,7 +1389,7 @@ namespace TP8.Data
             int index = l.FindIndexByPatientIDAndSentCodeVersion(patientID, targetSentCodeVersion);
             if (index < 0)
             {
-                App.MyAssert(false);
+                // No, all_stations may not have been set to the current event recently: App.MyAssert(false);
                 return false; // no change
             }
 

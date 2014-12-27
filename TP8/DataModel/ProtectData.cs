@@ -18,8 +18,10 @@ namespace TP8
     {
         public string plUserName = "";
         public string plPassword = "";
+        public string plToken = ""; // New Dec 2014
         public string plUserNameEncryptedAndBase64Encoded = "";
         public string plPasswordEncryptedAndBase64Encoded = "";
+        public string plTokenEncryptedAndBase64Encoded = ""; // New Dec 2014.
 
         public ProtectData(/*FormTriagePic p*/)
         {
@@ -58,12 +60,14 @@ namespace TP8
             // Using This version so we can call it from constructor
             plUserNameEncryptedAndBase64Encoded = EncryptAndBase64EncodeString(plUserName).Result; // blocks awaiting results
             plPasswordEncryptedAndBase64Encoded  = EncryptAndBase64EncodeString(plPassword).Result; // blocks awaiting results
+            plTokenEncryptedAndBase64Encoded = EncryptAndBase64EncodeString(plToken).Result; // blocks awaiting results
         }
 
         public async Task EncryptAndBase64EncodePLCredentialsAsync()
         {
             plUserNameEncryptedAndBase64Encoded = await EncryptAndBase64EncodeString(plUserName);
             plPasswordEncryptedAndBase64Encoded = await EncryptAndBase64EncodeString(plPassword);
+            plTokenEncryptedAndBase64Encoded = await EncryptAndBase64EncodeString(plToken);
         }
 
         public async Task<string> EncryptAndBase64EncodeString(string s)
@@ -146,6 +150,28 @@ namespace TP8
                 }
             }
             return plPassword;
+        }
+
+        /// <summary>
+        /// Decodes and decrypts the base64 PL token.  Saves it in member variable and also returns it... empty if problem.
+        /// </summary>
+        public async Task<string> DecryptPL_Token()
+        {
+            //decrypt token
+            if (!String.IsNullOrEmpty(plTokenEncryptedAndBase64Encoded))
+            {
+                plToken = await DecodeAndDecryptString(plTokenEncryptedAndBase64Encoded);
+                if (String.IsNullOrEmpty(plToken))
+                {
+                    string errMsg =
+                        "The saved value of your PL token could not be decrypted.\n" +
+                        "(This can happen if certain TriagePic settings were hand-edited,\n" +
+                        "or copied from another Windows machine.)";
+                    MessageDialog dlg = new MessageDialog(errMsg);
+                    await dlg.ShowAsync();
+                }
+            }
+            return plToken;
         }
 
 

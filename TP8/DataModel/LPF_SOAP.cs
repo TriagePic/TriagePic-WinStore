@@ -141,7 +141,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetIncidentList() // WAS BEFORE PLUS v33: ...GetIncidentList(string userPL, string passwordPL)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             // Before v33:
                 //getEventListUserRequest elin = new getEventListUserRequest();
                 //elin.username = userPL;
@@ -149,7 +149,7 @@ namespace LPF_SOAP
                 //getEventListUserResponse elout = new getEventListUserResponse();
  
             getEventListRequest elin = new getEventListRequest();
-            elin.token = App.TokenPL;
+            elin.token = App.pd.plToken;
             getEventListResponse elout = new getEventListResponse();
             try
             {
@@ -332,7 +332,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetPing(int pingLatencyInTenthsOfSeconds)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             // string errorCode = "";
             // string errorMessage = "";
             string serverTime = ""; // Format:  2012:0209 18:02:31.000000 America/New_York
@@ -341,7 +341,7 @@ namespace LPF_SOAP
             pingEchoRequest pin = new pingEchoRequest();
             // pin.pingString = App.DeviceName;
             // pin.latency = pingLatencyInTenthsOfSeconds.ToString();
-            pin.token = App.TokenPL;
+            pin.token = App.pd.plToken;
             pin.latency = pingLatencyInTenthsOfSeconds.ToString();
             pin.pingString = App.DeviceName + ";TriagePic-Win8.1";
                 // Ideal format: "machinename;device id;app name;app version;operating system;device username;pl username"
@@ -375,10 +375,10 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetHospitalList()
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             // Win 7: string errorCode = ""; string errorMessage = ""; string hospitalList = "";
             getHospitalListRequest hlin = new getHospitalListRequest();
-            hlin.token = App.TokenPL; // new v33
+            hlin.token = App.pd.plToken; // new v33
             getHospitalListResponse hlout = new getHospitalListResponse();
             
             try
@@ -410,7 +410,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetHospitalData(string hospital_uuid, string hospitalName)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             /* Win 7:
             string errorCode;
             string errorMessage = "";
@@ -433,7 +433,7 @@ namespace LPF_SOAP
             string longitude = ""; */
             getHospitalDataRequest hdin = new getHospitalDataRequest();
             hdin.hospital_uuid = hospital_uuid;
-            hdin.token = App.TokenPL; // new v33
+            hdin.token = App.pd.plToken; // new v33
             getHospitalDataResponse hdout = new getHospitalDataResponse();
 
             try
@@ -511,7 +511,7 @@ namespace LPF_SOAP
         /// </summary>
         public async Task<string> GetHospitalPolicy(string hospital_uuid)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             /* Win 7:
             string errorCode;
             string errorMessage = "";
@@ -523,7 +523,7 @@ namespace LPF_SOAP
             bool photographerNameRequired = false; */
             getHospitalPolicyRequest hpin = new getHospitalPolicyRequest();
             hpin.hospital_uuid = hospital_uuid;
-            hpin.token = App.TokenPL; // new v33
+            hpin.token = App.pd.plToken; // new v33
             getHospitalPolicyResponse hpout = new getHospitalPolicyResponse();
 
             try
@@ -777,7 +777,7 @@ INSTEAD: */
         /// <returns>Empty string if OK, otherwise error message</returns>
         private async Task<string> ReportPersonFirstTime(string content)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             /* Win 7:
             string errorCode = "";
             string errorMessage = "";
@@ -808,7 +808,7 @@ INSTEAD: */
                 rpin.xmlFormat = "TRIAGEPIC1";
                 rpin.eventShortName = App.CurrentDisaster.EventShortName;
                 rpin.personXML = content; */
-                rpin.token = App.TokenPL;
+                rpin.token = App.pd.plToken;
                 rpin.payload = content;
                 rpin.payloadFormat = "TRIAGEPIC1";
                 rpin.shortname = App.CurrentDisaster.EventShortName;
@@ -832,7 +832,7 @@ INSTEAD: */
         /// <returns>Empty string if OK, otherwise error message</returns>
         private async Task<string> ReportPersonAgain(string content, string uuid)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             /* Win 7:
             string errorCode = "";
             string errorMessage = "";
@@ -860,7 +860,7 @@ INSTEAD: */
                     out errorMessage);  */
                 //rrpin.username = await App.pd.DecryptPL_Username();
                 //rrpin.password = await App.pd.DecryptPL_Password();
-                rrpin.token = App.TokenPL;
+                rrpin.token = App.pd.plToken;
                 rrpin.uuid = uuid;
                 //rrpin.xmlFormat = "TRIAGEPIC1";
                 rrpin.payloadFormat = "TRIAGEPIC1";
@@ -888,7 +888,7 @@ INSTEAD: */
         // Throws away error reason, just returns empty string if error
         public async Task<string> GetUuidFromPatientID(string mcid, string shortEventName)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             getUuidByMassCasualtyIdRequest guin = new getUuidByMassCasualtyIdRequest();
             getUuidByMassCasualtyIdResponse guout = new getUuidByMassCasualtyIdResponse();
 
@@ -902,7 +902,7 @@ INSTEAD: */
                 guin.shortname = shortEventName;
                 //guin.username = await App.pd.DecryptPL_Username();
                 //guin.password = await App.pd.DecryptPL_Password();
-                guin.token = App.TokenPL;
+                guin.token = App.pd.plToken;
 
                 guout = await App.pl.getUuidByMassCasualtyIdAsync(guin);
                  
@@ -972,13 +972,15 @@ INSTEAD: */
 #endif
 
 
+#if BROKEN_IN_V33
+// Instead, reReport is used with expiration date of Now.
         /// <summary>
         /// ExpirePearson calls PL's expirePerson function
         /// </summary>
         /// <returns></returns>
         public async Task<string> ExpirePerson(string uuid, string explanation)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             // Owners, admins, and hospital staff admins can immediately expire a record.
             // Everyone else can submit an expiration request to a moderated queue.
             // A flag is set on a record once it is manually expired, stipulating that it
@@ -997,7 +999,7 @@ INSTEAD: */
                 epin.explanation = explanation;
                 //epin.username = await App.pd.DecryptPL_Username();
                 //epin.password = await App.pd.DecryptPL_Password();
-                epin.token = App.TokenPL;
+                epin.token = App.pd.plToken;
 
                 epout = await App.pl.expirePersonAsync(epin);
             }
@@ -1015,6 +1017,8 @@ INSTEAD: */
 */
             return "";
         }
+#endif
+
 #if SETASIDE
 
         
@@ -1050,7 +1054,7 @@ INSTEAD: */
 #endif
         // See also GetUserToken() above
         /// <summary>
-        /// Verifies PL credentials.  If successful, also sets App.TokenPL
+        /// Verifies PL credentials.  If successful, also sets App.pd.plToken
         /// </summary>
         /// <returns>Error message or empty string</returns>
         public async Task<string> VerifyPLCredentials(string username, string password, bool hospitalStaffOrAdminOnly)
@@ -1097,7 +1101,7 @@ INSTEAD: */
                 rutin.username = username;
                 rutin.password = password;
                 rutout = await App.pl.requestUserTokenAsync(rutin);
-                // Do below, only if successful: App.TokenPL = rutout.token;
+                // Do below, only if successful: App.pd.plToken = rutout.token;
                 //MAYBE TO DO AS NEEDED: groupIdPL = rutout.groupIdPL;
                 errorCode = rutout.errorCode;
                 errorMessage = rutout.errorMessage;
@@ -1167,7 +1171,8 @@ INSTEAD: */
             if (errorCode != "0") // was before v33: || !valid)
                 return PackageErrorString(errorCode, errorMessage);
 
-            App.TokenPL = rutout.token;
+            App.pd.plToken = rutout.token;
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             //MAYBE TO DO AS NEEDED: groupIdPL = rutout.groupIdPL;
             return "";
         }
@@ -1425,14 +1430,14 @@ INSTEAD: */
         /// </summary>
         public async Task<string> GetReportsFromAllStationsCurrentEvent(string userPL, string passwordPL)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
             //searchWithAuthResponse sarout = new searchWithAuthResponse();
             searchRequest srin = new searchRequest();
             searchResponse srout = new searchResponse();
             //sarin.username = userPL;
             //sarin.password = passwordPL;
-            srin.token = App.TokenPL;
+            srin.token = App.pd.plToken;
             //sarin.eventShortname = App.CurrentDisaster.EventShortName;
             // v33, replace "sarin" with "srin" many times below
             srin.eventShortname = App.CurrentDisaster.EventShortName;
@@ -1491,12 +1496,12 @@ INSTEAD: */
         /// </summary>
         public async Task<string> GetReportsForOutbox(string userPL, string passwordPL)
         {
-            App.MyAssert(App.TokenPL.Length > 0);
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
             //searchWithAuthResponse sarout = new searchWithAuthResponse();
             searchRequest srin = new searchRequest();
             searchResponse srout = new searchResponse();
-            srin.token = App.TokenPL;
+            srin.token = App.pd.plToken;
             //sarin.username = userPL;
             //sarin.password = passwordPL;
             // "sarin" replaced by "srin", "sarout" replaced by "srout" many places below

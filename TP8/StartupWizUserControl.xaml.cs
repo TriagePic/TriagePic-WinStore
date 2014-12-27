@@ -134,23 +134,16 @@ namespace TP8
             if (StartupPasswordStatus.Text != "User name and password are valid") // may instead be INVALID, or some other message if Enter hit
                 return;
 
-            // App.TokenPL was set by Validate() above
+            App.MyAssert(App.pd.plToken.Length == 128); // App.pd.plToken was set by Validate() above
             StartupCancel.IsEnabled = false; // new PLUS v33
             StartupValidateAndContinue.IsEnabled = false; // new PLUS v33
-            App.pd.plUserName = StartupTextBoxUserNamePLUS.Text;
-            App.pd.plPassword = StartupPasswordBoxPLUS.Password;
+            App.MyAssert(App.pd.plUserName == StartupTextBoxUserNamePLUS.Text); // already assigned in UpdateCredentialsAndCheckSyntax()
+            App.MyAssert(App.pd.plPassword == StartupPasswordBoxPLUS.Password); // ditto
             // Before PLUS v33, then moved:
             //m_startupWiz.Result = 1;  
             //m_startupWiz.CloseAsync();
             // Rest of function is new with PLUS v33:
-#if REDUNDANT
-            string results = await App.service.GetUserToken();
-            if (results.Contains("ERROR") || results.Length != 128) // token is 128 char long SHA-512
-                App.TokenPL = "";
-            else
-                App.TokenPL = results;
-#endif
-            await App.OrgDataList.Init(); // uses TokenPL
+            await App.OrgDataList.Init(); // uses App.pd.plToken
             StartupOrgChoice.Visibility = Visibility.Visible;
             StartupOrgComboBox.IsEnabled = true;
             StartupContinue.IsEnabled = true;
@@ -183,27 +176,11 @@ namespace TP8
             if (results == "")
             {
                 StartupPasswordStatus.Text = "User name and password are valid";
-                // TO DO:  Save validated change to App.UserAndVersions.  See TP_UserAndVersions
+                // Caller saves validated change to App.pd and UserAndVersions XML.  See TP_UserAndVersions
             }
             else
                 StartupPasswordStatus.Text = "User name and/or password INVALID";
         }
-
-#if WAS
-        private void StartupDoneButton_Click(object sender, RoutedEventArgs e)
-        {
-            App.pd.plUserName = StartupTextBoxUserNamePLUS.Text;
-            App.pd.plPassword = StartupPasswordBoxPLUS.Password;
-            m_startupWiz.Result = 1;  
-            m_startupWiz.CloseAsync();
-        }
-
-
-        private void StartupValidateButton_Click(object sender, RoutedEventArgs e)
-        {
-            var t = Validate(); // assign to t to suppress compiler warning
-        }
-#endif
 
         /// <summary>
         /// Set focus to user name box initially
@@ -241,7 +218,7 @@ namespace TP8
 
             string u = App.pd.plUserName = StartupTextBoxUserNamePLUS.Text;
             string s = App.pd.plPassword = StartupPasswordBoxPLUS.Password;
-            /// Caller does: App.pd.EncryptAndBase64EncodePLCredentials(); // might be slow
+            // Caller does: App.pd.EncryptAndBase64EncodePLCredentials(); // might be slow
             if (u.Length == 0 && s.Length == 0)
             {
                 StartupPasswordStatus.Text = "Please enter user name & password"; return false;
@@ -302,6 +279,7 @@ namespace TP8
         {
             App.pd.plUserName = ""; // cheap hack
             App.pd.plPassword = "";
+            App.pd.plToken = "";
  
             m_startupWiz.Result = 0; // means cancel
             m_startupWiz.CloseAsync();

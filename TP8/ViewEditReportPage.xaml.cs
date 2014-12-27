@@ -58,9 +58,11 @@ namespace TP8
         // private bool PatientIdAltered;
 
         // Used with bottom app bar:
-        private Popup discardMenuPopUp = null;
-        private Popup whyDiscardedPopUp = null;
-        private string uuid = "";
+// WAS:        private Popup discardMenuPopUp = null;
+// WAS:        private Popup whyDiscardedPopUp = null;
+// WAS:        private string uuid = "";
+
+        private bool deleteRequest = false; // added Dec 2014
 
         public BasicPageViewEdit()
         {
@@ -88,7 +90,7 @@ namespace TP8
             sendQueueTip.Content = "Count of reports queued to send";
             ToolTipService.SetToolTip(CountInSendQueue, sendQueueTip);
 
-            discardMenuPopUp = new Popup();
+// WAS:            discardMenuPopUp = new Popup();
             //discardMenuPopUp.Closed += (o, e) => this.GetParentOfType<AppBar>().IsOpen = false; // When popup closes, close app bar too.
             //discardMenuPopUp.Closed += (o, e) => TopAppBar.IsOpen = false;
             //discardMenuPopUp.Closed += (o, e) => BottomAppBar.IsOpen = false;
@@ -183,10 +185,25 @@ namespace TP8
 
             pageSubtitle.Text = " " + App.ViewedDisaster.EventName; // App.CurrentDisasterEventName; // TO DO: binding in XAML instead of here?  Add space to separate from icon
             ViewedDisasterEventTypeIcon = App.ViewedDisaster.GetIconUriFromEventType();
-            // Momentarily shift focus to notes and caption to force text font to correct color for contents
-            Notes.Focus(FocusState.Programmatic);
+            // Momentarily shift focus to notes and caption to force text font to the correct color (either black or gray) for contents
+            Notes_GotFocusImpl(); // These don't affect the focus, only the content and font color.
+            Notes_LostFocusImpl();
+            Caption_GotFocusImpl(); // These don't affect the focus, only the content and font color.
+            Caption_LostFocusImpl();
+#if WIN80_CODE_NO_LONGER_WORKS
+            // Didn't work in 8.1, returns false.  Maybe because called from LoadState:
+            // bool debug = Notes.Focus(FocusState.Programmatic);
+            // This was suggested in forum as solution, but still didn't work:
+            bool debug = false;
+            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                {
+                    debug = Notes.Focus(FocusState.Programmatic); // or maybe .Keyboard
+                });
+            App.MyAssert(debug);
             GiveCaptionFocus();
-            PatientIdTextBox.Focus(FocusState.Programmatic);
+            PatientIdTextBox.Focus(FocusState.Programmatic); // Didn't work... and for View/Edit makes more sense to put on Comment aka Notes field
+#endif
+
             // In common with NewReport:
             if(ViewedDisasterEventTypeIcon.Length > EMBEDDED_FILE_PREFIX.Length)
             {
@@ -205,6 +222,33 @@ namespace TP8
 
             UpdateImageLoad();
             //suppressMarkingAsAltered = false;
+#if VARIOUS_ATTEMPTS_TRIED_FAILED_TO_SET_FOCUS_IN_NOTES
+            /*await */Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            {
+                //Notes.Focus(FocusState.Programmatic);
+                Notes.Focus(FocusState.Keyboard);
+            });
+
+            Notes.Focus(FocusState.Pointer);
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                {
+                    Notes.Focus(Windows.UI.Xaml.FocusState.Keyboard);
+                });
+#endif
+#if SET_FOCUS_IN_NOTES_WORKED_BUT_MAYBE_NOT_A_GOOD_IDEA_AFTERALL
+// Because we don't really know what field the user might want to edit.
+            // Try with hack of surround XAML with ScrollViewer with IsTabStop="true":
+            // <ScrollViewer x:Name="hackScrollViewerToSetTextBoxFocus" IsTabStop="true"><Textbox x:Name="Notes" ...></ScrollViewer>
+            // Use of ScrollViewer still didn't work by itself, but did with Updatelayout,
+            // suggested by http://stackoverflow.com/questions/18121089/remove-focus-on-first-textbox :
+            hackScrollViewerToSetTextBoxFocus.UpdateLayout();
+            Notes.Focus(FocusState.Programmatic);
+            // However, this sets the focus to the start of the text, if text pre-exists; so we'd have to further move it to end.
+            // Also, if no text except hint, then setting focus likely gets in the way of hint concept.
+            // So ScrollViewer was removed from xaml.
+            // See DeleteRemoteToo_Click() below for actual textbox manipulation.
+#endif
         }
 
         /// <summary>
@@ -563,7 +607,10 @@ namespace TP8
             }
             // else "N" or error.  to do: better treatment for error cases "Xn".
 
-            pr.ObjSentCode.ReplaceCodeKeepSuffix("Q");
+            if(deleteRequest)
+                pr.ObjSentCode.ReplaceCodeKeepSuffix("QD"); // New Dec 2014
+            else
+                pr.ObjSentCode.ReplaceCodeKeepSuffix("Q");
             await SaveReportFieldsToObject(pr);
             await pr.DoSendEnqueue(newPrObject); // cleanup image fields, generate lp2 content, save it as file, then call SendQueue.Add, 
         }
@@ -1052,11 +1099,12 @@ namespace TP8
             MarkAsAltered(); // Manually cleared is an alteration
         } */
 
+#if WAS
         // Code in this region is also common to SplitPage
         private void Discard_Click(object sender, RoutedEventArgs e)
         {
             // This Win 8.0 method is based on sample from http://www.csharpteacher.com/2013/04/how-to-add-menu-to-app-bar-windows-8.html
-            // We'd do it a different way, with a XAML CommandBar, if restricting to 8.1
+            // We'd do it a different way, with a XAML MenuFlyout, if restricting to 8.1
             // More complex version:  http://weblogs.asp.net/broux/archive/2012/07/03/windows-8-application-bar-popup-button.aspx
             /*Popup*/ discardMenuPopUp = new Popup();
             discardMenuPopUp.IsLightDismissEnabled = true;  // Dismiss popup automatically when user hits other part of app
@@ -1083,23 +1131,58 @@ namespace TP8
             discardMenuPopUp.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - BottomAppBar.ActualHeight - panel.Height - 4;
             discardMenuPopUp.IsOpen = true;
         }
+#endif
 
 
         private async void DeleteLocal_Click(object sender, RoutedEventArgs e)
+        {
+            await DeleteLocal(false); // = From TriageTrak too
+        }
+
+        private async Task DeleteLocal(bool FromTriageTrakToo) // broken out as separate function Dec 2014
         {
             string pid = App.CurrentPatient.PatientID; // ClearEntryAll will clear these, so remember them for Discard
             int v = App.CurrentPatient.ObjSentCode.GetVersionCount();
             ClearEntryAll();  // Will indirectly mark as altered
             LastSentMsg.Text = "Discard from Outbox: Done.";
-            App.PatientDataGroups.GetOutbox().Discard(pid, v);
+            for (int i = v; i > 0; i-- ) // loop added Dec 2014.  Delete all reports for this pid
+                App.PatientDataGroups.GetOutbox().Discard(pid, i);
             App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind
             await App.PatientDataGroups.GetOutbox().WriteXML();
-            App.PatientDataGroups.Init2(); // resort, refilter, refresh
-            discardMenuPopUp.IsOpen = false;
+// WAS:     App.PatientDataGroups.Init2(); // resort, refilter, refresh
+            App.PatientDataGroups.UpdateListsAfterReportDelete(true); // = DeletedAtTriageTrakToo
+// WAS:     discardMenuPopUp.IsOpen = false;
             TopAppBar.IsOpen = false;
             BottomAppBar.IsOpen = false;
         }
 
+        private async void DeleteRemoteToo_Click(object sender, RoutedEventArgs e)
+        {
+            TopAppBar.IsOpen = false;
+            BottomAppBar.IsOpen = false;
+            MarkAsAltered();
+            deleteRequest = true;
+            if (Notes.Text == NOTES_TEXT_HINT)
+                Notes.Text = "";
+            else
+                Notes.Text += "\n";
+            Notes.Text += "Deletion requested from " + App.DeviceName; // TO DO: ... on ..."
+            if (!String.IsNullOrEmpty(App.UserWin8Account))
+                Notes.Text += " by " + App.UserWin8Account;
+            Notes.Text += " at " + App.CurrentPatient.WhenLocalTime + " " + App.CurrentPatient.Timezone + "\n" + "Because: ";
+            Notes.Focus(FocusState.Programmatic); // should change font color to black too
+            Notes.SelectionStart = Notes.Text.Length - 1; // Move keyboard carat to end of text
+            Notes.SelectionLength = 0;
+            var md = new MessageDialog(
+                "This record has been marked as 'Deleted', internally and in the 'Notes' field.\n" +
+                "It is suggested you further edit 'Notes' to say why you deleted it.\n" +
+                "Finally, hit 'Send' to tell TriageTrak to delete it.");
+            await md.ShowAsync();
+            // Don't call DeleteLocal here... instead, wait for successful dequeue and send, and then cleanup
+        }
+
+#if FIRST_ATTEMPT_V33
+// But v33 expireReport web service doesn't work
         private async void DeleteRemoteToo_Click(object sender, RoutedEventArgs e)
         {
             if (!App.goodWebServiceConnectivity)
@@ -1108,7 +1191,7 @@ namespace TP8
                     "Sorry, better communications with TriageTrak is needed to do this.  Discarding was cancelled.  Try again later when the 'traffic light' squares are flashing green or yellow instead of red.");
                 await dlg.ShowAsync();
                 // We don't want to encourage doing a local delete, because that will make it harder to later do a remote delete.  So close popup, app bar.
-                discardMenuPopUp.IsOpen = false;
+// WAS:                discardMenuPopUp.IsOpen = false;
                 TopAppBar.IsOpen = false;
                 BottomAppBar.IsOpen = false;
                 return;
@@ -1127,13 +1210,13 @@ namespace TP8
                 // bail out:
                 // Maybe not:
                 // await App.PatientDataGroups.UpdateSendHistoryAfterOutbox(App.CurrentPatient.PatientID, ObjSentCode); // see explanation of this below
-                discardMenuPopUp.IsOpen = false;
+// WAS:                discardMenuPopUp.IsOpen = false;
                 TopAppBar.IsOpen = false;
                 BottomAppBar.IsOpen = false;
                 return;
             }
 
-            discardMenuPopUp.IsOpen = false; // take down 1 popup, then put up another
+// WAS:            discardMenuPopUp.IsOpen = false; // take down 1 popup, then put up another
             whyDiscardedPopUp = new Popup();
             whyDiscardedPopUp.IsLightDismissEnabled = true;  // Dismiss popup automatically when user hits other part of app
             StackPanel panel2 = new StackPanel(); // create a panel as the root of the menu
@@ -1164,15 +1247,44 @@ namespace TP8
         private async void FinishRemoteDiscard_Click(object sender, RoutedEventArgs e) // From OK button in whyDiscardedPopUp
         {
             // Quick hack... call service directly, instead of putting request on send queue
+#if WAS_BUT_FAILS_IN_8_1
             TextBox explanation = (TextBox)whyDiscardedPopUp.FindName("Explanation");
             App.MyAssert(explanation != null);
-            await App.service.ExpirePerson(uuid, explanation.Text); 
+            await App.service.ExpirePerson(uuid, explanation.Text);
+#endif
+            string text = GetTextFromTextBox(sender, "Explanation");
+            await App.service.ExpirePerson(uuid, text);
             // On to local discard....
-            DeleteLocal_Click(sender, e);
+// WAS:     DeleteLocal_Click(sender, e);
+            await DeleteLocal(true); // = From TriageTrak too
             TopAppBar.IsOpen = false;
             BottomAppBar.IsOpen = false;
             whyDiscardedPopUp.IsOpen = false;
         }
+
+        private string GetTextFromTextBox(object sender, string textBoxName) // New Dec 2014
+        {
+            TextBox textBox = null;
+            var parent = VisualTreeHelper.GetParent(sender as Button);
+            var numChildren = VisualTreeHelper.GetChildrenCount(parent);
+            for (var i = 0; i < numChildren; ++i)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
+                if (child != null && child.Name == textBoxName)
+                {
+                    // Found the text box!
+                    textBox = child as TextBox;
+                    break;
+                }
+            }
+            App.MyAssert(textBox != null);
+            if (textBox != null)
+            {
+                return textBox.Text;
+            }
+            return "";
+        }
+#endif
 
         private async void Webcam_Click(object sender, RoutedEventArgs e)
         {
@@ -1195,6 +1307,11 @@ namespace TP8
 
         private void Notes_GotFocus(object sender, RoutedEventArgs e)
         {
+            Notes_GotFocusImpl();
+        }
+
+        private void Notes_GotFocusImpl() // Broken out as separate function Dec 2014, to call from LoadState
+        {
             if (Notes.Text == NOTES_TEXT_HINT)
                 Notes.Text = "";
             SolidColorBrush Brush1 = new SolidColorBrush();
@@ -1203,6 +1320,11 @@ namespace TP8
         }
 
         private void Notes_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Notes_LostFocusImpl();
+        }
+
+        private void Notes_LostFocusImpl()  // Broken out as separate function Dec 2014, to call from LoadState
         {
             if (Notes.Text == String.Empty)
             {
@@ -1221,6 +1343,11 @@ namespace TP8
 
         private void Caption_GotFocus(object sender, RoutedEventArgs e)
         {
+            Caption_GotFocusImpl();
+        }
+
+        private void Caption_GotFocusImpl()  // Broken out as separate function Dec 2014, to call from LoadState
+        {
             if (SyncAndGetCaptionTextBox() == CAPTION_TEXT_HINT)
                 SetCaptionTextBox("");
             SolidColorBrush Brush1 = new SolidColorBrush();
@@ -1229,6 +1356,11 @@ namespace TP8
         }
 
         private void Caption_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Caption_LostFocusImpl();
+        }
+
+        private void Caption_LostFocusImpl()  // Broken out as separate function Dec 2014, to call from LoadState
         {
             if (SyncAndGetCaptionTextBox() == String.Empty)
             {
