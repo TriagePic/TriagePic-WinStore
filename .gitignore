@@ -1,6 +1,8 @@
 bin/
 obj/
 packages/
+AppPackages/
+*.pfx
 *.suo
 *.user
 SettingsAbout.*

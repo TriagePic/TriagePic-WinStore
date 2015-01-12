@@ -535,8 +535,9 @@ namespace TP8.Data
                 if (!firstSend)
                     usrMsg = "On Resend";
                 usrMsg += " - Patient report was not accepted by TriageTrak";
-                MessageDialog dlg = new MessageDialog(usrMsg);
-                await dlg.ShowAsync();
+                //redundant, let ReportToErrorLog do it:
+                //  MessageDialog dlg = new MessageDialog(usrMsg);
+                //  await dlg.ShowAsync();
 
                 await App.ErrorLog.ReportToErrorLog(results, usrMsg, true);
                 // continue for now, but error recovery needs work

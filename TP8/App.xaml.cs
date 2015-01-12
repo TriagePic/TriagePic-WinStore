@@ -339,7 +339,7 @@ namespace TP8
             SuspensionManager.KnownTypes.Add(typeof(TP_PatientReport)); // Added April 28, 2014
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OtherSettings));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_FilterProfile));
-            SuspensionManager.KnownTypes.Add(typeof(TP_PatientDataGroups));
+//PROBLEM FOR STORE:            SuspensionManager.KnownTypes.Add(typeof(TP_PatientDataGroups));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(SortByItem));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OrgPolicy));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OrgContactInfo));
@@ -350,7 +350,7 @@ namespace TP8
 
             // Complex:
             SuspensionManager.SessionState["CurrentPatient"] = CurrentPatient; // Added April 28, 2014
-            SuspensionManager.SessionState["PatientDataGroups"] = PatientDataGroups;
+//PROBLEM FOR STORE APP CERT:            SuspensionManager.SessionState["PatientDataGroups"] = PatientDataGroups;
 
             // Globals of type string:
             SuspensionManager.SessionState["RosterNames"] = RosterNames;
@@ -415,7 +415,7 @@ namespace TP8
             // Probably not: CurrentOtherSettings = (TP_OtherSettings)SuspensionManager.SessionState["CurrentOtherSettings"];
             // Probably not: ViewedDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["ViewedDisaster"];  // used by ViewEditReport
             // Probably not: CurrentFilterProfile = (TP_FilterProfile)SuspensionManager.SessionState["CurrentFilterProfile"];
-            PatientDataGroups = (TP_PatientDataGroups)SuspensionManager.SessionState["PatientDataGroups"];
+//PROBLEM FOR STORE APP CERT:            PatientDataGroups = (TP_PatientDataGroups)SuspensionManager.SessionState["PatientDataGroups"];
             // Probably not: SortFlyoutItem = (SortByItem)SuspensionManager.SessionState["SortFlyoutItem"];
             // Probably not: OrgPolicy = (TP_OrgPolicy)SuspensionManager.SessionState["OrgPolicy"]; // first entry on OrgPolicyList
             // Probably not: CurrentOrgContactInfo = (TP_OrgContactInfo)SuspensionManager.SessionState["CurrentOrgContactInfo"]; // first entry on OrgContactInfoList
