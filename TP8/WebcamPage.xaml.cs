@@ -13,6 +13,7 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
@@ -140,8 +141,16 @@ namespace TP8 //was: ImageHelper2
             this.Frame.Navigate(typeof(SplitPage), "Outbox"); // Defined in SampleDataSource.cs
         }
 
-        private void Statistics_Click(object sender, RoutedEventArgs e)
+        private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
+            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
+            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            {
+                // In 8.1, this replaces 8.0's TryToUnsnap:
+                MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");
+                await dlg.ShowAsync();
+                return;
+            }
             this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts");
         }
 
@@ -154,7 +163,14 @@ namespace TP8 //was: ImageHelper2
         public async void CaptureButton_Click(object sender,
             RoutedEventArgs e)
         {
-            Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since this doesn't work well while snapped
+            // WAS Win 8.0: Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since this doesn't work well while snapped
+            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
+            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            {
+                MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to take a picture.");
+                await dlg.ShowAsync();
+                return;
+            }
             CheckAndClearShareOperation();
             var camera = new CameraCaptureUI();
             //camera.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;

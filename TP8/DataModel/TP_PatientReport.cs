@@ -44,7 +44,7 @@ namespace TP8.Data
         //private String _orgNPI = string.Empty;
         //ditto orgPhone, orgEmail
 //        private String _sentCode = string.Empty; // Sent code
-        private SentCodeObj _objSentCode = new SentCodeObj(); // excluded from xml file.
+        private SentCodeObj _objSentCode = new SentCodeObj(""); // excluded from xml file.  Jan 2015: changed constructor call from () to (""), so resume after termination doesn't assert on null sentcode
         private bool _superceded = false;
         private String _patientID = string.Empty; // includes prefix.  If we implement practice mode, may begin with "Prac"
         private String _zone = string.Empty;

@@ -35,7 +35,8 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
     {
         public ChartsFlipPage()
         {
-            Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since layout for snapped view hasn't been developed
+            // Win 8.1: Check for snapped or narrow visual states moved to caller
+            //WAS Win 8.0: Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since layout for snapped view hasn't been developed
 
             this.InitializeComponent();
 

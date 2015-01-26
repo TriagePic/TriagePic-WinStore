@@ -34,6 +34,7 @@ using Windows.Networking.Connectivity;
 using Windows.System.UserProfile;
 using Windows.Storage;
 using System.Threading;
+using Newtonsoft.Json;
 
 
 
@@ -170,7 +171,83 @@ namespace TP8
             if (!condition)
                 System.Diagnostics.Debugger.Break();
         }
+        /// <summary>
+        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// will be used when the application is launched to open a specific file, to display
+        /// search results, and so forth.
+        /// </summary>
+        /// <param name="args">Details about the launch request and process.</param>
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            // Revised based loosely on simplier approach from http://www.codeguru.com/win_mobile/win_store_apps/building-a-splash-screen-for-your-windows-applications.htm
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page
+                rootFrame = new Frame();
+                //Associate the frame with a SuspensionManager key                                
+                SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
+            }
 
+            if (args.PreviousExecutionState != ApplicationExecutionState.Running)
+            {
+                bool reloadedState = await DoExtendedSplashScreen(args);
+                Window.Current.Content = rootFrame; // restore after splash screen
+                dispatcher = CoreWindow.GetForCurrentThread().Dispatcher; // used to provide separate thread for writing error log
+                sendQueue.StartWork(); // DON'T await.  Needs to be after Window.Current.Content = rootFrame;
+                if (!reloadedState || rootFrame.Content == null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation parameter
+                    if (!rootFrame.Navigate(typeof(HomeItemsPage), "AllGroups"))
+                    {
+                        throw new Exception("Failed to create initial page");
+                    }
+                }
+            }
+ 
+            // Ensure the current window is active
+            Window.Current.Activate();
+        }
+
+        private static async Task<bool> DoExtendedSplashScreen(LaunchActivatedEventArgs args)
+        {
+            // Code associated with DoStartup was here, now separate function, called from ExtendedStartup
+            // See multimedialion.wordpress.com/2012/12/13/adding-an-extended-splash-screen-to-a-windows-8-app-tutorial-c
+            SplashScreen splashScreen = args.SplashScreen;
+            ExtendedSplash eSplash = new ExtendedSplash(splashScreen);
+            // Register an event handler to be executed when the splash screen has been dismissed
+            splashScreen.Dismissed += new TypedEventHandler<SplashScreen, object>(eSplash.onSplashScreenDismissed);
+            //Maybe not...rootFrame.Content = eSplash; // suggested by stackoverflow.com/questions/12743355/screen-flashes-between-splash-and-extended-splash-in-windows-8-app
+            Window.Current.Content = eSplash;
+            // Ensure the current window is active
+            Window.Current.Activate();
+            await DoStartup(); // This requires an active window, in order to put up (if needed) the first-run startup wizard
+            bool loadState = (args.PreviousExecutionState == ApplicationExecutionState.Terminated);
+            bool reloadedState = false; // until we know better
+            if(loadState)
+            {
+                // Restore the saved session state only when appropriate
+                try
+                {
+                    await SuspensionManager.RestoreAsync();
+                    reloadedState = true;
+                }
+                catch (SuspensionManagerException)
+                {
+                    //Something went wrong restoring state.  Assume there is no state and continue
+                }
+                if (reloadedState)
+                {
+                    await DoResumeFromTermination();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+#if SETASIDE
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used when the application is launched to open a specific file, to display
@@ -196,8 +273,9 @@ namespace TP8
                     // Restore the saved session state only when appropriate
                     try
                     {
-                        await SuspensionManager.RestoreAsync();
+                        //was here, but failed on resume, move to 2nd spot: await SuspensionManager.RestoreAsync();
                         await DoStartup();
+                        await SuspensionManager.RestoreAsync();
                         await DoResumeFromTermination();
                     }
                     catch (SuspensionManagerException)
@@ -247,6 +325,96 @@ namespace TP8
                 }
             }
         }
+#endif
+#if setaside
+        /// <summary>
+        /// Invoked when the application is launched normally by the end user.  Other entry points
+        /// will be used when the application is launched to open a specific file, to display
+        /// search results, and so forth.
+        /// </summary>
+        /// <param name="args">Details about the launch request and process.</param>
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            // Do not repeat app initialization when the Window already has content, just ensure that the window is active
+            if (rootFrame != null && rootFrame.Content != null)
+            {
+                Window.Current.Activate(); // app is already running.
+                return;
+            }
+
+            if (rootFrame == null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page
+                rootFrame = new Frame();
+                //Associate the frame with a SuspensionManager key                                
+                SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
+                // Place the frame in the current Window
+                Window.Current.Content = rootFrame; // need to do this before DoStartup, so that message Show will work if needed
+
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    // Restore the saved session state only when appropriate
+                    try
+                    {
+                        //was here, but failed on resume, move to 2nd spot: await SuspensionManager.RestoreAsync();
+                        await DoStartup();
+                        await SuspensionManager.RestoreAsync(); // was before DoStartup, but failed on resume
+                        await DoResumeFromTermination();
+                    }
+                    catch (SuspensionManagerException)
+                    {
+                        //Something went wrong restoring state.
+                        //Assume there is no state and continue
+                    }
+                }
+
+                Window.Current.Content = rootFrame; // Is this necessary?  Can suspension manager change rootFrame? Dunno.
+            }
+            if (rootFrame.Content != null)
+                Window.Current.Activate(); // app is already running, or the navigation state was restored.
+            else
+            {
+                DoExtendedSplashScreen(args);
+                await DoStartup();
+                Window.Current.Content = rootFrame; // restore after splash screen
+                sendQueue.StartWork(); // DON'T await.  Needs to be after Window.Current.Content = rootFrame;
+                //           if (rootFrame.Content == null)
+                //           {
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+                if (!rootFrame.Navigate(typeof(HomeItemsPage), "AllGroups"))
+                {
+                    throw new Exception("Failed to create initial page");
+                }
+            }
+        }
+
+        private static void DoExtendedSplashScreen(LaunchActivatedEventArgs args)
+        {
+            // Code associated with DoStartup was here, now separate function, called from ExtendedStartup
+            // See multimedialion.wordpress.com/2012/12/13/adding-an-extended-splash-screen-to-a-windows-8-app-tutorial-c
+            SplashScreen splashScreen = args.SplashScreen;
+            ExtendedSplash eSplash = new ExtendedSplash(splashScreen);
+            // Register an event handler to be executed when the splash screen has been dismissed
+            splashScreen.Dismissed += new TypedEventHandler<SplashScreen, object>(eSplash.onSplashScreenDismissed);
+            //Maybe not...rootFrame.Content = eSplash; // suggested by stackoverflow.com/questions/12743355/screen-flashes-between-splash-and-extended-splash-in-windows-8-app
+            Window.Current.Content = eSplash;
+
+            // Ensure the current window is active
+            Window.Current.Activate();
+            // THIS HUNG: Do not repeat app initialization when already running, just ensure that
+            // the window is active
+            //if (args.PreviousExecutionState == ApplicationExecutionState.Running)
+            //{
+            //    Window.Current.Activate();
+            //    return;
+            //}
+            dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+        }
+#endif
 
         public static async Task DoStartup()
         {
@@ -271,7 +439,7 @@ namespace TP8
 #endif
             //DelayedMessageToUserOnStartup += "  - TEST OF DELAYED MESSAGE";
             PatientDataGroups = new TP_PatientDataGroups(); // which will use CurrentFilterProfile
-            await PatientDataGroups.Init(); // reads in data.  See Init2 further below
+            await PatientDataGroups.Init(); // reads in outbox data.  See Init2 further below
             App.RegisterSettings(); // Added for settings flyout
             // Initialize from events data model.  Take first disaster event in list as default for now.
             //var evcol = new ObservableCollection<TP_EventsDataItem>();
@@ -336,10 +504,12 @@ namespace TP8
             // Much of this is handled in DoStartup
             // For this to work for non-strings, supposedly "[DataContract]" should preface struct/class declaration, and "[DataMember]" prefix each member var
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_EventsDataItem));
-            SuspensionManager.KnownTypes.Add(typeof(TP_PatientReport)); // Added April 28, 2014
+//PROBLEM FOR STORE APP CERT?:
+//FIRST TRY:            SuspensionManager.KnownTypes.Add(typeof(TP_PatientReport)); // Added April 28, 2014
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OtherSettings));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_FilterProfile));
-//PROBLEM FOR STORE:            SuspensionManager.KnownTypes.Add(typeof(TP_PatientDataGroups));
+//PROBLEM FOR STORE APP CERT?:
+//FIRST TRY:            SuspensionManager.KnownTypes.Add(typeof(TP_PatientDataGroups));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(SortByItem));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OrgPolicy));
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(TP_OrgContactInfo));
@@ -349,9 +519,18 @@ namespace TP8
             // Probably not: SuspensionManager.KnownTypes.Add(typeof(ProtectData));
 
             // Complex:
-            SuspensionManager.SessionState["CurrentPatient"] = CurrentPatient; // Added April 28, 2014
-//PROBLEM FOR STORE APP CERT:            SuspensionManager.SessionState["PatientDataGroups"] = PatientDataGroups;
+            // Some postings claim one can serialize complex types by decorating their classes & members as data contracts.  That was tried, but still some problems.
+            // Instead, try JSON serialization to/from string suggested by http://stackoverflow.com/questions/18859089/windows-8-c-xaml-suspensionmanager-failed
 
+//PROBLEM FOR STORE APP CERT?:
+//FIRST TRY            SuspensionManager.SessionState["CurrentPatient"] = CurrentPatient; // Added April 28, 2014
+            string state = JsonConvert.SerializeObject(CurrentPatient); // should we use SerializeObjectAsync?
+            SuspensionManager.SessionState["CurrentPatient"] = state; // Added April 28, 2014
+//PROBLEM FOR STORE APP CERT?:
+//FIRST TRY            SuspensionManager.SessionState["PatientDataGroups"] = PatientDataGroups;
+//UNNECESSARY AND UNHELPFUL, DoStartup's PatientDataGroups.Init, Init2 covers this:
+//            state = JsonConvert.SerializeObject(PatientDataGroups); // AND DOESN'T WORK AS WRITTEN HERE
+//            SuspensionManager.SessionState["PatientDataGroups"] = state;
             // Globals of type string:
             SuspensionManager.SessionState["RosterNames"] = RosterNames;
             SuspensionManager.SessionState["CurrentSearchQuery"] = CurrentSearchQuery;
@@ -407,15 +586,24 @@ namespace TP8
 
             // Complex types:
             // Most of restoration of these is handled in DoStartup, but we'll see what's needed here.
+            // Some postings claim one can serialize complex types by decorating their classes & members as data contracts.  That was tried, but still some problems.
+            // Instead, try JSON serialization to/from string suggested by http://stackoverflow.com/questions/18859089/windows-8-c-xaml-suspensionmanager-failed
 
             // Probably not: dispatcher = (CoreDispatcher)SuspensionManager.SessionState["dispatcher"];
             // Probably not: CurrentDisasterListForCombo = (ObservableCollection<TP_EventsDataItem>)SuspensionManager.SessionState["CurrentDisasterListForCombo"];
             // Probably not: CurrentDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["CurrentDisaster"];
-            CurrentPatient = (TP_PatientReport)SuspensionManager.SessionState["CurrentPatient"]; // added April 28, 2014.  Current Patient has uncompleted New Report, might be swapped out when taking photo
+//PROBLEM FOR STORE APP CERT?:
+//FIRST TRY            CurrentPatient = (TP_PatientReport)SuspensionManager.SessionState["CurrentPatient"]; // added April 28, 2014.  Current Patient has uncompleted New Report, might be swapped out when taking photo
+            string state = (string)SuspensionManager.SessionState["CurrentPatient"]; // added April 28, 2014.  Current Patient has uncompleted New Report, might be swapped out when taking photo
+            CurrentPatient = JsonConvert.DeserializeObject<TP_PatientReport>(state); // should we use DeserializeObjectAsync here?
             // Probably not: CurrentOtherSettings = (TP_OtherSettings)SuspensionManager.SessionState["CurrentOtherSettings"];
             // Probably not: ViewedDisaster = (TP_EventsDataItem)SuspensionManager.SessionState["ViewedDisaster"];  // used by ViewEditReport
             // Probably not: CurrentFilterProfile = (TP_FilterProfile)SuspensionManager.SessionState["CurrentFilterProfile"];
-//PROBLEM FOR STORE APP CERT:            PatientDataGroups = (TP_PatientDataGroups)SuspensionManager.SessionState["PatientDataGroups"];
+//PROBLEM FOR STORE APP CERT?:
+//FIRST TRY            PatientDataGroups = (TP_PatientDataGroups)SuspensionManager.SessionState["PatientDataGroups"];
+//UNNECESSARY AND UNHELPFUL, DoStartup's PatientDataGroups.Init, Init2 covers this:
+//            state = (string)SuspensionManager.SessionState["PatientDataGroups"];
+//            PatientDataGroups = JsonConvert.DeserializeObject<TP_PatientDataGroups>(state);
             // Probably not: SortFlyoutItem = (SortByItem)SuspensionManager.SessionState["SortFlyoutItem"];
             // Probably not: OrgPolicy = (TP_OrgPolicy)SuspensionManager.SessionState["OrgPolicy"]; // first entry on OrgPolicyList
             // Probably not: CurrentOrgContactInfo = (TP_OrgContactInfo)SuspensionManager.SessionState["CurrentOrgContactInfo"]; // first entry on OrgContactInfoList
@@ -526,8 +714,11 @@ namespace TP8
             DoSaveOnTermination();
             await SuspensionManager.SaveAsync();
             // Generally, we are saving everything as we go along, so shouldn't have to do this here...
-            await PatientDataGroups.GetOutbox().WriteXML();
-            await PatientDataGroups.GetAllStations().WriteXML("PatientReportsAllStations.xml"); // REVISIT WHEN WE HAVE ACTUALLY WEB SERVICES
+            if (PatientDataGroups != null) // null will occur if suspend-and-terminate happens during first-start wizard
+            {
+                await PatientDataGroups.GetOutbox().WriteXML();
+                await PatientDataGroups.GetAllStations().WriteXML("PatientReportsAllStations.xml"); // REVISIT WHEN WE HAVE ACTUALLY WEB SERVICES
+            }
             //   CurrentDisasterList
             //   CurrentDisasterListFilters
             //   CurrentOtherSettingsList

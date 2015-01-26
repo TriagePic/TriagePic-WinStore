@@ -187,8 +187,16 @@ namespace TP8
             this.Frame.Navigate(typeof(SplitPage), "Outbox"); // Defined in SampleDataSource.cs
         }
 
-        private void Statistics_Click(object sender, RoutedEventArgs e)
+        private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
+            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
+            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            {
+                // In 8.1, this replaces 8.0's TryToUnsnap:
+                MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");
+                await dlg.ShowAsync();
+                return;
+            }
             this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
         }
 

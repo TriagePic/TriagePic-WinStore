@@ -241,6 +241,8 @@
     <Content Include="Assets\LightGray.png" />
     <Content Include="Assets\MediumGray.png" />
     <Content Include="Assets\DarkGray.png" />
+    <Content Include="Assets\BigSquareTriagePicLogo%28310x310%29.png" />
+    <Content Include="Assets\WideTriagePicLogo%28310x150%29.png" />
     <None Include="Package.StoreAssociation.xml" />
     <Page Include="ExtendedSplash.xaml">
       <SubType>Designer</SubType>
