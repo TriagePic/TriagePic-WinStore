@@ -262,12 +262,12 @@
         </controls:CustomAppBar>
         <Button
             x:Name="BackButton"
-            Style="{StaticResource BackButtonStyle}"
-            Click="GoBack" />
+            Style="{StaticResource TitleBackButtonStyle}"
+            Click="GoBack"  /> <!-- Before Feb 2015, was Win8.0 BackButtonStyle -->
         <TextBlock
             Text="📊  Statistics"
             Grid.Column="1"
-            Style="{StaticResource PageHeaderTextStyle}" />
+            Style="{StaticResource PageHeaderTextBlockStyle}" /> <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
 
         <FlipView
             Grid.Column="1"

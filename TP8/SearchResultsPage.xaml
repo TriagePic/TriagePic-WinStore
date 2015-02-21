@@ -12,19 +12,51 @@
     mc:Ignorable="d"
     d:ExtensionType="Search">
 
+    <!-- Note that 5 buttons is max in snapped/narrow view (or 10 if using 2 rows) -->
+    <!-- Supposely MS App Labs 8.0 guidance says put the home button in the bottom bar, but for 8.1 we prefer top unless too many, as here -->
+    <!-- Note that for non-standard glyths, just saying Icon="&#x2705" or Icon="✅" will give runtime XAML parsing error -->
+    <!-- CommandBar will handle layout, automagically switch between normal & small size appbarbutton glyths, with & without titles beneath -->
+    <Page.TopAppBar>
+        <CommandBar>
+            <AppBarButton Label="Checklist" Click="Checklist_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="✅" />
+                    <!-- Glyph="&#x2705;" Unicode WHITE HEAVY CHECK MARK character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="New Report" Click="New_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="🚑" />
+                    <!--Glyph="&#x1F691;" Unicode AMBULANCE character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="All Stations" Click="AllStations_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="👪" />
+                    <!-- Glyph="&#x1F46A;" Unicode FAMILY character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Outbox" Click="Outbox_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📮" />
+                    <!-- Glyph="&#x1F4EE;"  Unicode POSTBOX character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Statistics" Click="Statistics_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📊" />
+                    <!-- Glyph="&#x1F4CA;"  Unicode BAR CHART character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </CommandBar>
+    </Page.TopAppBar>
+    <!-- OLD Win 8.0 -->
     <!-- Loaded/Unloaded calls are needed to get auto-resizing (and suppression of text) to work in snapped view. Lets app buttons know about state changes -->
     <!-- but doesn't do design view right -->
-    <!-- Note that 5 buttons is max in snapped view (or 10 if using 2 rows) -->
-    <!-- Supposely MS App Labs says put the home button in the bottom bar -->
+    <!--
     <Page.TopAppBar>
         <AppBar x:Name="TopAppBarSearchResultsPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Top App Bar New Report Page">
             <Grid>
-                <!--
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal"> -->
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Style="{StaticResource ChecklistAppBarButtonStyle}" Tag="Checklist" Click="Checklist_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                     <Button Style="{StaticResource NewReportAppBarButtonStyle}" Tag="New" Click="New_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
@@ -35,7 +67,16 @@
             </Grid>
         </AppBar>
     </Page.TopAppBar>
-
+-->
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Home" Icon="Home" Click="Home_Click"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <!-- OLD Win 8.0 -->
+    <!--
     <Page.BottomAppBar>
         <AppBar x:Name="BottomAppBarSearchResultsPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Bottom App Bar New Report">
             <Grid>
@@ -50,10 +91,75 @@
                 </StackPanel>
             </Grid>
         </AppBar>
-    </Page.BottomAppBar>
+    </Page.BottomAppBar> -->
     <!-- :data definition copied from SplitPage.xaml -->
 
     <Page.Resources>
+        <!-- GroupHeaderTextStyle was originally in Win8.0's StandardStyles.xaml -->
+        <Style x:Key="GroupHeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
+            <Setter Property="TextTrimming" Value="WordEllipsis"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="Typography.StylisticSet20" Value="True"/>
+            <Setter Property="Typography.DiscretionaryLigatures" Value="True"/>
+            <Setter Property="Typography.CaseSensitiveForms" Value="True"/>
+            <Setter Property="FontSize" Value="26.667"/>
+            <Setter Property="LineStackingStrategy" Value="BlockLineHeight"/>
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="LineHeight" Value="30"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform X="-1" Y="6"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- StandardSmallIcon300x70ItemTemplate was originally in Win8.0's StandardStyles.xaml -->
+        <!-- Grid-appropriate 300 by 70 pixel item template as seen in TP8's SearchResultsPage -->
+        <DataTemplate x:Key="StandardSmallIcon300x70ItemTemplate">
+            <Grid Width="294" Margin="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="#C17819" Margin="0,0,0,10" MaxWidth="40" MaxHeight="40"
+                    BorderThickness="3" BorderBrush="{Binding ImageBorderColor}">
+                    <!-- Glenn adds border thickness, color.  Changes sizes to Max, stretch from UniformToFill -->
+                    <!-- Glenn changes Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}  to #C17819 mustard-brown -->
+                    <Image Source="{Binding Image}" Stretch="Uniform"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="10,-10,0,0">
+                    <!-- 3 TextBlocks WERE BEFORE FEB 2015: Style="{StaticResource BodyTextStyle}" -->
+                    <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Subtitle}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <!-- StandardSmallIcon70ItemTemplate was originally in Win8.0's StandardStyles.xaml -->
+        <!-- List-appropriate 70 pixel high item template as seen in TP8's SearchResultsPage when narrow -->
+        <DataTemplate x:Key="StandardSmallIcon70ItemTemplate">
+            <Grid Margin="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="#C17819" Margin="0,0,0,10" Width="40" Height="40"
+                    BorderThickness="3" BorderBrush="{Binding ImageBorderColor}">
+                    <!-- Glenn adds border thickness, color.  Changes stretch from UniformToFill -->
+                    <!-- Glenn changes Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}  to #C17819 mustard-brown -->
+                    <Image Source="{Binding Image}" Stretch="Uniform"/>
+                </Border>
+                <StackPanel Grid.Column="1" Margin="10,-10,0,0">
+                    <!-- 3 TextBlocks WERE BEFORE FEB 2015: Style="{StaticResource BodyTextStyle}" -->
+                    <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Subtitle}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
         <CollectionViewSource x:Name="resultsViewSource" Source="{Binding Results}"/>
         <!-- next line was itemsViewSource in SplitPage.xaml -->
         <!-- Worked for initial Advanced Search & Outbox, but not for real search:CollectionViewSource x:Name="resultsViewSource"
@@ -77,11 +183,15 @@
         </Grid.RowDefinitions>
 
         <Grid x:Name="resultsPanel" Grid.Row="1">
-        <!--
+            <!--
             The body of the page in most view states uses an items controls to create multiple radio buttons
             for filtering above a horizontal scrolling grid of search results
         -->
             <Grid x:Name="typicalPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="26*"/>
+                    <ColumnDefinition Width="657*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -92,7 +202,7 @@
                     Canvas.ZIndex="1"
                     ItemsSource="{Binding Source={StaticResource filtersViewSource}}"
                     Visibility="{Binding ShowFilters, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Margin="120,-3,120,30">
+                    Margin="67.761,-3,120,30" Grid.Column="1">
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -105,7 +215,8 @@
                                 GroupName="Filters"
                                 IsChecked="{Binding Active, Mode=TwoWay}"
                                 Checked="Filter_Checked"
-                                Style="{StaticResource TextRadioButtonStyle}">
+                                Style="{StaticResource TextBlockButtonStyle}" Margin="0,0,30,0">
+                                <!-- was before Feb 2015: Style="{StaticResource TextRadioButtonStyle}", which just added margin setting -->
                                 <TextBlock Text="{Binding Description}"  Margin="3,-7,3,10" Style="{StaticResource GroupHeaderTextStyle}" />
                             </RadioButton>
                         </DataTemplate>
@@ -117,20 +228,19 @@
                     AutomationProperties.AutomationId="ResultsGridView"
                     AutomationProperties.Name="Search Results"
                     TabIndex="1"
-                    Grid.Row="1"
-                    Margin="0,-238,0,0"
+                    Margin="0,-211,0,0"
                     Padding="110,240,110,46"
                     SelectionMode="None"
                     IsSwipeEnabled="false"
                     IsItemClickEnabled="True"
                     ItemsSource="{Binding Source={StaticResource resultsViewSource}}"
-                    ItemTemplate="{StaticResource StandardSmallIcon300x70ItemTemplate}" ItemClick="resultsGridView_ItemClick">
-                    
+                    ItemTemplate="{StaticResource StandardSmallIcon300x70ItemTemplate}" ItemClick="resultsGridView_ItemClick" Grid.ColumnSpan="2" Grid.RowSpan="2">
+
                     <GridView.ItemContainerStyle>
                         <Style TargetType="Control">
                             <Setter Property="Height" Value="70"/>
                             <Setter Property="Margin" Value="0,0,38,8"/>
-                       </Style>
+                        </Style>
                     </GridView.ItemContainerStyle>
                 </GridView>
             </Grid>
@@ -186,20 +296,27 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"  />
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource TitleBackButtonStyle}"/>
+            <!-- Before Feb 2015, was Win8.0 BackButtonStyle -->
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextBlockStyle}" />
+            <!-- was before Feb 2015: PageHeaderTextStyle}"  /> -->
             <!-- WAS: <TextBlock x:Name="resultText" Grid.Column="2" Text="Results for&#x00a0;" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/> -->
-            <Canvas Grid.Column="2"> <!-- WAS 3 -->
-                <TextBlock x:Name="eventText" Canvas.Top="10" Text="[event(s)]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextStyle}"/>
+            <Canvas Grid.Column="2">
+                <!-- WAS 3 -->
+                <TextBlock x:Name="eventText" Canvas.Top="10" Text="[event(s)]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
                 <!-- WAS: <TextBlock x:Name="queryText" Canvas.Top="70" Text="{Binding QueryText}" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/> -->
-                <TextBlock x:Name="queryText" Canvas.Top="50" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextStyle}" TextWrapping="Wrap">
+                <TextBlock x:Name="queryText" Canvas.Top="50" IsHitTestVisible="false" TextWrapping="Wrap" Style="{StaticResource PageSubsubheaderTextBlockStyle}"> <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
                     <Run Text="Results for&#x00a0;" />
                     <Run Text="{Binding QueryText}" />
                 </TextBlock>
-                <TextBlock x:Name="otherFilterText" Canvas.Top="95" Text="[filtering]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextStyle}"/>
+                <TextBlock x:Name="otherFilterText" Canvas.Top="95" Text="[filtering]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
             </Canvas>
-            <Button x:Name="sortFlyout" Grid.Column="3" Click="sortFlyout_Click" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0"/>
-            <Button x:Name="filterFlyout" Grid.Column="4" Click="filterFlyout_Click" Style="{StaticResource FilterAppBarButtonStyle}" Margin="0,42,0,0"/>
+            <!-- was before Feb 2015: <Button x:Name="sortFlyout" Grid.Column="3" Click="sortFlyout_Click" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0"/> -->
+            <AppBarButton x:Name="sortFlyout" Grid.Column="3" Click="sortFlyout_Click" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <!-- was before Feb 2015: <Button x:Name="filterFlyout" Grid.Column="4" Click="filterFlyout_Click" Style="{StaticResource FilterAppBarButtonStyle}" Margin="0,42,0,0"/> -->
+            <AppBarButton x:Name="filterFlyout" Grid.Column="4" Click="filterFlyout_Click" Icon="Filter" Label="Filter"  Margin="0,42,0,0" VerticalAlignment="Stretch"/>
         </Grid>
 
         <TextBlock
@@ -207,8 +324,9 @@
             Grid.Row="1"
             Margin="120,50,0,0"
             Visibility="Collapsed"
-            Style="{StaticResource SubheaderTextStyle}"
+            Style="{StaticResource SubheaderTextBlockStyle}"
             Text="No results match your search." />
+        <!-- WAS BEFORE FEB 2015: Style="{StaticResource SubheaderTextStyle}" -->
 
         <VisualStateManager.VisualStateGroups>
 
@@ -221,7 +339,8 @@
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filtersItemsControl" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="100,-3,90,30"/>
@@ -249,17 +368,26 @@
                 <VisualState x:Name="Snapped">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- WAS BEFORE FEB 2015:
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SortSnappedFlyoutButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource FilterSnappedFlyoutButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames> -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="IsCompact">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="IsCompact">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
@@ -279,7 +407,8 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BaselineTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BaseTextBlockStyle}"/>
+                            <!-- Win 8.0 was BaselineTextStyle}"-->
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -295,7 +424,7 @@
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>						
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

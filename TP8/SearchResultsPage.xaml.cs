@@ -579,7 +579,7 @@ namespace TP8
                 await dlg.ShowAsync();
                 return;
             }
-            this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
+            this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts"); // was: (typeof(SplitPage),"Statistics"); // Defined in SampleDataSource.cs
         }
 
         private void Home_Click(object sender, RoutedEventArgs e)

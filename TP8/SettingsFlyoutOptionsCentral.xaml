@@ -21,11 +21,12 @@
         <!-- Content Section 1-->
         <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
             <TextBlock Text="Options Set Centrally" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" 
                         Text="The information below is read-only here, and will be the same for all my organization's TriagePic devices/stations.  It is set by an administrator of the central web site to which TriagePic reports."
-                        TextWrapping="Wrap"/>
+                        TextWrapping="Wrap"/> <!-- Win 8.0 was BodyTextStyle-->
             <!-- could add in future: Some options are specific to particular disaster events or hospital/organization locations.) -->
-            <TextBlock x:Name="SomeText" Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap" Margin="0,10,0,0" MinHeight="100" />
+            <TextBlock x:Name="SomeText" Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" TextWrapping="Wrap" Margin="0,10,0,0" MinHeight="100" />
+            <!-- Win 8.0 was BodyTextStyle-->
         </StackPanel>
         <!-- Define more Content Sections below as necessary -->
     </StackPanel>

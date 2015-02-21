@@ -11,21 +11,94 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <!-- This page form is used for Statistics currently, but that may change.  -->
+    <!-- This page form is used for Outbox & All Stations Search Results  -->
+    <!-- (and at one time Statistics, but no longer). -->
 
+    <Page.Resources>
+        <!-- Standard130ItemTemplate originally from Win8.0's StandardStyles.xaml-->
+        <!-- List-appropriate 130 pixel high item template as seen in the SplitPage -->
+        <!-- Glenn adds 3rd column to make background of each item go all away across -->
+        <DataTemplate x:Key="Standard130ItemTemplate">
+            <Grid Height="110" Margin="6" Background="SaddleBrown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Standard130ItemTemplateBorder" Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Height="110" MinWidth="40"
+                    BorderThickness="3" BorderBrush="{Binding ImageBorderColor}">
+                    <!-- Glenn adds border thickness, color.  Specify Height only (was Width="110"), change stretch from UniformToFill -->
+                    <Image Source="{Binding Image}" Stretch="Uniform" AutomationProperties.Name="{Binding Title}"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
+                    <!-- Subtitle WAS BEFORE FEB 2015: Style="{StaticResource CaptionTextStyle}" -->
+                    <!-- Description WAS BEFORE FEB 2015: Style="{StaticResource BodyTextStyle}" -->
+                    <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Subtitle}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"/>
+                    <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextBlockStyle}" MaxHeight="60"/>
+                </StackPanel>
+                <Rectangle Grid.Column="2" Fill="SaddleBrown" Height="2" Stretch="UniformToFill"/>
+            </Grid>
+        </DataTemplate>
+        
+        <!-- Collection of items displayed by this page -->
+        <CollectionViewSource
+            x:Name="itemsViewSource"
+            Source="{Binding Items}" />
+        <!-- d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}" /> -->
+
+        <!-- SOON MAYBE
+        <MenuFlyout x:Key="DiscardFlyoutSearch">
+            <MenuFlyoutItem Text="From outbox only" Click="DeleteLocal_Click" Tag="outbox only"/>
+            <MenuFlyoutItem Text="From TriageTrak too" Click="DeleteRemoteToo_Click" Tag="triagetrak too"/>
+        </MenuFlyout>  -->
+    </Page.Resources>
+
+    <!-- Note that 5 buttons is max in snapped/narrow view (or 10 if using 2 rows) -->
+    <!-- Supposely MS App Labs 8.0 guidance says put the home button in the bottom bar, but for 8.1 we prefer top unless too many, as here -->
+    <!-- Note that for non-standard glyths, just saying Icon="&#x2705" or Icon="✅" will give runtime XAML parsing error -->
+    <!-- CommandBar will handle layout, automagically switch between normal & small size appbarbutton glyths, with & without titles beneath -->
+    <Page.TopAppBar>
+        <CommandBar>
+            <AppBarButton Label="Checklist" Click="Checklist_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="✅" />
+                    <!-- Glyph="&#x2705;" Unicode WHITE HEAVY CHECK MARK character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="New Report" Click="New_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="🚑" />
+                    <!--Glyph="&#x1F691;" Unicode AMBULANCE character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="All Stations" Click="AllStations_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="👪" />
+                    <!-- Glyph="&#x1F46A;" Unicode FAMILY character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Outbox" Click="Outbox_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📮" />
+                    <!-- Glyph="&#x1F4EE;"  Unicode POSTBOX character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Statistics" Click="Statistics_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📊" />
+                    <!-- Glyph="&#x1F4CA;"  Unicode BAR CHART character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </CommandBar>
+    </Page.TopAppBar>
+    <!-- OLD Win 8.0 -->
     <!-- Loaded/Unloaded calls are needed to get auto-resizing (and suppression of text) to work in snapped view. Lets app buttons know about state changes -->
     <!-- but doesn't do design view right -->
-    <!-- Note that 5 buttons is max in snapped view (or 10 if using 2 rows) -->
-    <!-- Supposely MS App Labs says put the home button in the bottom bar -->
+    <!--
     <Page.TopAppBar>
         <AppBar x:Name="TopAppBarSplitPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Top App Bar New Report Page">
             <Grid>
-                <!--
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal"> -->
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Style="{StaticResource ChecklistAppBarButtonStyle}" Tag="Checklist" Click="Checklist_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                     <Button Style="{StaticResource NewReportAppBarButtonStyle}" Tag="New" Click="New_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
@@ -36,7 +109,21 @@
             </Grid>
         </AppBar>
     </Page.TopAppBar>
+    -->
 
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Home" Icon="Home" Click="Home_Click"/>
+            </CommandBar.SecondaryCommands>
+            <!-- Maybe TO DO, but needs more work at back end:
+            <AppBarButton Label="Discard" Icon="Delete" Flyout="{StaticResource DiscardFlyoutSearch}" /> --> <!-- Trash can icon -->
+                <!-- See ViewEditReport.xaml for more about treatment of flyout menu in bottom app bar and in Page.Resources above -->
+            <AppBarButton Label="Edit" Icon="Edit" Click="Edit_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <!-- WAS Win8.0
     <Page.BottomAppBar>
         <AppBar x:Name="BottomAppBarSplitPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Bottom App Bar New Report">
             <Grid>
@@ -46,11 +133,11 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel x:Name="BottomAppBarLeftPanel" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
                     <Button Style="{StaticResource HomeAppBarButtonStyle}" Tag="Home" Click="Home_Click" Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                </StackPanel>
+                </StackPanel> -->
                 <!-- Hide discard button here for now, don't know if we can make it work from this location with v33+ services -->
-                <StackPanel x:Name="BottomAppBarRightPanel" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                <!-- <StackPanel x:Name="BottomAppBarRightPanel" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal"> -->
                     <!-- <Button x:Name="ClearEntry" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" Click="Discard_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/> -->
-                    <!--<Button Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard">
+                    <!-- <Button Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard">
                         <Button.Flyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Text="From outbox only" Click="DeleteLocal_Click"/>
@@ -58,20 +145,13 @@
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button> -->
-                    <Button x:Name="Edit" Style="{StaticResource EditAppBarButtonStyle}" Tag="Edit" Click="Edit_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
+                    <!-- <Button x:Name="Edit" Style="{StaticResource EditAppBarButtonStyle}" Tag="Edit" Click="Edit_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                 </StackPanel>
             </Grid>
         </AppBar>
-    </Page.BottomAppBar>
+    </Page.BottomAppBar> -->
 
-    <Page.Resources>
 
-        <!-- Collection of items displayed by this page -->
-        <CollectionViewSource
-            x:Name="itemsViewSource"
-            Source="{Binding Items}" />
-        <!-- d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}" /> -->
-    </Page.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -103,24 +183,30 @@
                 x:Name="backButton"
                 Click="GoBack"
                 IsEnabled="{Binding DefaultViewModel.CanGoBack, ElementName=pageRoot}"
-                Style="{StaticResource BackButtonStyle}"/>
+                Style="{StaticResource TitleBackButtonStyle}"/>
+            <!-- Before Feb 2015, was Win8.0 BackButtonStyle -->
             <TextBlock x:Name="eventAndOrgTextPortrait" Grid.Column="1" Margin="0,10,0,110" Text="[event(s)]" Visibility="Collapsed"
-                        IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextStyle}"/>
+                        IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
+            <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
             <StackPanel x:Name="pageTitlePanel" Grid.Column="1" Orientation="Horizontal">
-                <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}"/>
-                <TextBlock x:Name="countOfItems" Text ="([count])" Style="{StaticResource PageHeaderTextStyle}"/>
+                <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
+                <TextBlock x:Name="countOfItems" Text ="([count])" Style="{StaticResource PageHeaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
             </StackPanel>
             <TextBlock x:Name="sortedByTextPortrait" Grid.Column="1" Margin="0,90,0,7" Text="[sorted by]" Visibility="Collapsed"
                         IsHitTestVisible="false" FontSize="18" />
-            <!-- Causes problems: Style="{StaticResource PageSubsubheaderTextStyle}"-->
+            <!-- Causes problems: Style="{StaticResource PageSubsubheaderTextStyle}" (which is superceded by PageSubsubheaderTextBlockStyle)-->
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,114,0,0">
                 <CheckBox x:Name="CheckBoxCurrentEventOnlyPortrait" Content="Current Event Only" Visibility="Collapsed"
                             HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="160" HorizontalContentAlignment="Left" Tapped="CheckBoxCurrentEventOnly_Tapped"/>
                 <CheckBox x:Name="CheckBoxMyOrgOnlyPortrait" Grid.Column="1" Margin="20,0" Content="My Org Only" Visibility="Collapsed"
                             HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Left" Tapped="CheckBoxMyOrgOnly_Tapped"/>
             </StackPanel>
-            <Button x:Name="sortFlyoutOutboxPortrait" Grid.Column="2" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0"
-                    Tapped="sortFlyoutOutbox_Tapped" Visibility="Collapsed"/>
+            <!-- TO DO FURTHER CONVERSION: Button to AppBarButton, less use of StandardStyles -->
+            <!-- was before Feb 2015: <Button x:Name="sortFlyoutOutboxPortrait" Grid.Column="2" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0"
+                    Tapped="sortFlyoutOutbox_Tapped" Visibility="Collapsed"/>  -->
+            <AppBarButton x:Name="sortFlyoutOutboxPortrait" Grid.Column="2" Tapped="sortFlyoutOutbox_Tapped" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch" Visibility="Collapsed"/>
         </Grid>
        
 
@@ -147,14 +233,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Canvas x:Name="sortDetailsCanvas" Grid.Column="0" Margin="70,0,0,0">
-                <TextBlock x:Name="eventAndOrgText" Canvas.Top="10" Text="[event(s)]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextStyle}"/>
+                <TextBlock x:Name="eventAndOrgText" Canvas.Top="10" Text="[event(s)]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
                 <!-- WAS: <TextBlock x:Name="queryText" Canvas.Top="70" Text="{Binding QueryText}" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/> -->
-                <TextBlock x:Name="sortedByText" Canvas.Top="50" Text="[sorted by]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextStyle}" TextWrapping="Wrap" />
+                <TextBlock x:Name="sortedByText" Canvas.Top="50" Text="[sorted by]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}" TextWrapping="Wrap" />
+                <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
                 <CheckBox x:Name="CheckBoxCurrentEventOnly" Canvas.Top="96" Content="Current Event Only" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="160" HorizontalContentAlignment="Left" Tapped="CheckBoxCurrentEventOnly_Tapped"/>
                 <CheckBox x:Name="CheckBoxMyOrgOnly" Canvas.Top="96" Content="My Org Only" Canvas.Left="180" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Left" Tapped="CheckBoxMyOrgOnly_Tapped"/>
             </Canvas>
-            <Button x:Name="sortFlyoutOutbox" Grid.Column="1" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0" Tapped="sortFlyoutOutbox_Tapped"/>
-            <!-- <Button x:Name="filterFlyout" Grid.Column="2" Click="filterFlyout_Click" Style="{StaticResource FilterAppBarButtonStyle}" Margin="0,42,0,0"/> -->
+            <!-- was before Feb 2015: <Button x:Name="sortFlyoutOutbox" Grid.Column="1" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0" Tapped="sortFlyoutOutbox_Tapped"/> -->
+            <AppBarButton x:Name="sortFlyoutOutbox" Grid.Column="1" Tapped="sortFlyoutOutbox_Tapped" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <!-- also in theory, old form: <Button x:Name="filterFlyout" Grid.Column="2" Click="filterFlyout_Click" Style="{StaticResource FilterAppBarButtonStyle}" Margin="0,42,0,0"/> -->
+            <!-- In theory, new form: <AppBarButton x:Name="filterFlyout" Grid.Column="2" Click="filterFlyout_Click" Icon="Filter" Label="Filter"  Margin="0,42,0,0" VerticalAlignment="Stretch"/> -->
         </Grid>
 
         <!-- Details for selected item -->
@@ -183,8 +273,10 @@
 
                 <!-- Items much changed from original template layout -->
                 <StackPanel x:Name="itemDetailTitlePanel" Grid.Row="0">
-                    <TextBlock x:Name="itemTitle" Margin="0,-10,0,0" Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}"/>
-                    <TextBlock x:Name="itemSubtitle" Margin="0,0,0,20" Text="{Binding Subtitle}" Style="{StaticResource SubtitleTextStyle}"/>
+                    <TextBlock x:Name="itemTitle" Margin="0,-10,0,0" Text="{Binding Title}" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                    <!-- Win 8.0 was SubheaderTextStyle-->
+                    <TextBlock x:Name="itemSubtitle" Margin="0,0,0,20" Text="{Binding Subtitle}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                    <!-- Win 8.0 was SubtitleTextStyle-->
                     <Border Grid.Row="1" Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Margin="0,0,20,0"
                             MinWidth="180" MinHeight="180" MaxHeight="360" MaxWidth="360"
                             BorderThickness="3" BorderBrush="{Binding ImageBorderColor}" HorizontalAlignment="Left">
@@ -197,7 +289,8 @@
                         </Canvas>-->
                     </Border>
                 </StackPanel>
-                <TextBlock Grid.Row="1" Margin="0,20,0,0" Text="{Binding Content}" Style="{StaticResource BodyTextStyle}"/>
+                <TextBlock Grid.Row="1" Margin="0,20,0,0" Text="{Binding Content}" Style="{StaticResource BodyTextBlockStyle}"/>
+                <!-- Win 8.0 was BodyTextStyle-->
             </Grid>
         </ScrollViewer>
 
@@ -229,7 +322,8 @@
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
@@ -241,10 +335,12 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubheaderTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubheaderTextBlockStyle}"/>
+                            <!-- Win 8.0 was SubheaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="countOfItems" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubheaderTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubheaderTextBlockStyle}"/>
+                            <!-- Win 8.0 was SubheaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0,37,0,0"/>
@@ -308,7 +404,8 @@
                 <VisualState x:Name="FullScreenPortrait_Detail">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
@@ -345,10 +442,11 @@
                 <VisualState x:Name="Snapped">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
@@ -378,10 +476,12 @@
                 <VisualState x:Name="Snapped_Detail">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
@@ -412,13 +512,15 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,60"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TitleTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TitleTextBlockStyle}"/>
+                            <!-- Win 8.0 was TitleTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemTitle" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemSubtitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CaptionTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CaptionTextBlockStyle}"/>
+                            <!-- Win 8.0 was CaptionTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>

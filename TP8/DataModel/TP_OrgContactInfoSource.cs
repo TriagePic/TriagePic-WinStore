@@ -208,8 +208,29 @@ namespace TP8.Data // nah: .DataModel
             }
         }
 
-        public async Task<string> GetCurrentOrgContactInfo(string orgUuid, string orgName)
+        public async Task<string> GetCurrentOrgContactInfo(string orgUuid, string orgName)  // This body introduced v34
         {
+            int u = -1; 
+            try
+            {
+                u = Convert.ToInt32(orgUuid);
+            }
+            catch (Exception)
+            {
+                App.MyAssert(false);
+                u = -1;
+            }
+            string status;
+            if (u == -1)
+                return "ERROR: HOSPITAL ID WTIH BAD FORMAT.";
+            status = await GetCurrentOrgContactInfo(u, orgName);
+            return status;
+        }
+
+        public async Task<string> GetCurrentOrgContactInfo(int orgUuid, string orgName) // was v33: string orgUuid, ...
+        {
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512.  
+
             string status = await App.service.GetHospitalData(orgUuid, orgName); // Function call puts results directly into App.CurrentOrgContactInfo
             // could check status for "ERROR:" or "COMMUNICATIONS ERROR:"
             // If ERROR, there may or may not be anything put into App.CurrentOrgContactInfo
@@ -348,9 +369,20 @@ namespace TP8.Data // nah: .DataModel
                 }
             }
             // Freshen the data if possible:
-            string s;
-            s = await App.CurrentOrgContactInfo.GetCurrentOrgContactInfo(Uuid, Name); // puts results into CurrentOrgContactInfo
-            if (s.StartsWith("ERROR:"))
+            string s = "";
+            int u = -1; // introduced v34
+            try
+            {
+                u = Convert.ToInt32(Uuid);
+            }
+            catch (Exception)
+            {
+                App.MyAssert(false);
+                u = -1;
+            }
+            if(u != -1)
+                s = await App.CurrentOrgContactInfo.GetCurrentOrgContactInfo(u, Name); // puts results into CurrentOrgContactInfo
+            if (s.StartsWith("ERROR:") || u == -1)
             {
                 await ReadXML(); // in case call to web service wiped out App.CurrentOrgContactInfo
                 // For the user, this is not an error

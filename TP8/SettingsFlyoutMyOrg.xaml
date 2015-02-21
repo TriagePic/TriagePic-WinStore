@@ -33,9 +33,10 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <TextBlock HorizontalAlignment="Left" Margin="0,20,0,0" TextWrapping="Wrap" Text="Associated Contact Information" VerticalAlignment="Top" Width="275" FontSize="18" Foreground="#FFEC1414"/>
-                <TextBlock x:Name="SomeTextOrgInfo" Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap" Margin="0,10,0,0" MinHeight="100" />
-            </StackPanel>
-            <TextBlock Grid.Row="1" Style="{StaticResource BodyTextStyle}" Foreground="Black" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap"
+            <TextBlock x:Name="SomeTextOrgInfo" Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" TextWrapping="Wrap" Margin="0,10,0,0" MinHeight="100" />
+            <!-- Win 8.0 style was BodyTextStyle-->
+        </StackPanel>
+            <TextBlock Grid.Row="1" Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap"
             Text="For the selected organization, the contact information above is read-only here.  It is set by an administrator of the central web site to which TriagePic reports." />
         </Grid>
 

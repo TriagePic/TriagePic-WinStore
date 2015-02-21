@@ -379,7 +379,7 @@ namespace TP8.Data
 
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
-            s = await App.service.GetReportsFromAllStationsCurrentEvent(plname, plpass);
+            s = await App.service.GetReportsFromAllStationsCurrentEvent(); // was, but now uses global token: (plname, plpass);
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
@@ -496,7 +496,9 @@ namespace TP8.Data
             // When we got here, we've ALREADY tried reading cache file, so don't try again.
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
-            s = await App.service.GetReportsForOutbox(plname, plpass);
+            s = await App.service.GetReportsForOutboxAllOpenEvents(false /* = all orgs*/);  // Get all orgs now, so that user later can toggle client-side filtering with or without current org
+            // was before Feb 2015: GetReportsForOutboxCurrentEvent()
+            // Called earlier GetReportsForOutbox(); // was, but now uses global token: (plname, plpass);
             if (s.StartsWith("ERROR:"))
             {
                 // For the user, this is not an error
@@ -525,7 +527,11 @@ namespace TP8.Data
                             continue; // someone other than me sent it.  Note that Outbox in TP8 is per-user, not per-device
                         if (item.edxl == null || item.edxl.Count() == 0)
                             continue; // not originated by mobile device
-                        if (item.edxl[0].login_account != App.UserWin8Account || item.edxl[0].login_machine != App.DeviceName)
+                        // Depending on Win8 OS user setting, the login_account may not be available, either currently or as reported earlier within retrieved records.
+                        // So screening here must be less rigorous (as of Feb 2015):
+                        if (!String.IsNullOrEmpty(item.edxl[0].login_account) && !String.IsNullOrEmpty(App.UserWin8Account) && item.edxl[0].login_account != App.UserWin8Account)
+                            continue;
+                        if (item.edxl[0].login_machine != App.DeviceName)
                             continue;
                         // TO DO:  In future version, support Practice.  For now, skip any records so labeled
                         if (item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
@@ -534,6 +540,10 @@ namespace TP8.Data
                         // No, causes loop artifacts: SampleDataSource.RefreshOutboxItems();
                     }
                 }
+                // Note that, unlike with AllStations, we are not enforcing a 250 record limit here, though it could exceed that because it concatenates reports from events.
+                // To do that right, we would have get a report count associated with every event first, prioritize them if the total was over 250, e.g., always include
+                // current event, and/or sort by event start date, discarding oldest.
+                // Of course, if we had more sophisticated memory management, maybe we wouldn't need any record limit.
                 await _outbox.WriteXML();
             }
         }

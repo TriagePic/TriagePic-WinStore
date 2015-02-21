@@ -62,8 +62,8 @@ namespace LPF_SOAP
                 return "ERROR: " + e.Message;
             }
 
-            if (rutout.errorCode != "0")
-                return PackageErrorString(rutout.errorCode, rutout.errorMessage);
+            if (rutout.errorCode != 0)// was v33: if (rutout.errorCode != "0")
+                return PackageErrorString(rutout.errorCode.ToString(), rutout.errorMessage); // was v33: rutout.errorCode, ...
 
             return ChangeToErrorIfNull(rutout.token);
         }
@@ -88,8 +88,8 @@ namespace LPF_SOAP
                 return "ERROR: " + e.Message;
             }
 
-            if (ratout.errorCode != "0")
-                return PackageErrorString(ratout.errorCode, ratout.errorMessage);
+            if (ratout.errorCode != 0)// was v33: if (rutout.errorCode != "0")
+                return PackageErrorString(ratout.errorCode.ToString(), ratout.errorMessage);
 
             return ChangeToErrorIfNull(ratout.token);
         }
@@ -342,7 +342,7 @@ namespace LPF_SOAP
             // pin.pingString = App.DeviceName;
             // pin.latency = pingLatencyInTenthsOfSeconds.ToString();
             pin.token = App.pd.plToken;
-            pin.latency = pingLatencyInTenthsOfSeconds.ToString();
+            pin.latency = pingLatencyInTenthsOfSeconds; // was v33: .ToString();
             pin.pingString = App.DeviceName + ";TriagePic-Win8.1";
                 // Ideal format: "machinename;device id;app name;app version;operating system;device username;pl username"
             //pingWithEchoResponse pout = new pingWithEchoResponse();
@@ -398,8 +398,8 @@ namespace LPF_SOAP
                 return "ERROR: " + e.Message;
             }
 
-            if (hlout.errorCode != "0")
-                return PackageErrorString(hlout.errorCode, hlout.errorMessage);
+            if (hlout.errorCode != 0)// was v33: if (rutout.errorCode != "0")
+                return PackageErrorString(hlout.errorCode.ToString(), hlout.errorMessage);
 
             return ChangeToErrorIfNull(hlout.hospitalList);
         }
@@ -408,7 +408,7 @@ namespace LPF_SOAP
         /// Gets the organization's contact info, e.g., hospital data for hospital, and puts it into App.CurrentOrgContactInfo (and as first and only item of App.CurrentOrgContactList)
         /// Returns an empty string if no error.
         /// </summary>
-        public async Task<string> GetHospitalData(string hospital_uuid, string hospitalName)
+        public async Task<string> GetHospitalData(int hospital_uuid, string hospitalName) // was v33: string hospital_uuid, string hospitalName)
         {
             App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             /* Win 7:
@@ -500,8 +500,8 @@ namespace LPF_SOAP
             App.OrgContactInfoList.Clear();
             App.OrgContactInfoList.Add(App.CurrentOrgContactInfo); // kludgery
 
-            if (hdout.errorCode != "0")
-                return PackageErrorString(hdout.errorCode, hdout.errorMessage);
+            if (hdout.errorCode != 0)// was v33: if (rutout.errorCode != "0")
+                return PackageErrorString(hdout.errorCode.ToString(), hdout.errorMessage);
 
             return "";
         }
@@ -509,7 +509,7 @@ namespace LPF_SOAP
         /// <summary>
         /// Returns the hospital policy for hospital 
         /// </summary>
-        public async Task<string> GetHospitalPolicy(string hospital_uuid)
+        public async Task<string> GetHospitalPolicy(int hospital_uuid) // was v33: string hospital_uuid)
         {
             App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             /* Win 7:
@@ -549,8 +549,8 @@ namespace LPF_SOAP
             {
                 return "ERROR: " + e.Message;
             }
-            if (hpout.errorCode != "0")
-                return PackageErrorString(hpout.errorCode, hpout.errorMessage);
+            if (hpout.errorCode != 0)// was v33: if (rutout.errorCode != "0")
+                return PackageErrorString(hpout.errorCode.ToString(), hpout.errorMessage);
 /* MAYBE:
             if (retValPatientIdPrefix == null)
                 return ChangeToErrorIfNull(null);
@@ -785,8 +785,10 @@ INSTEAD: */
             string plname = parent.pd.DecryptPLUsername();
             string plpass = parent.pd.DecryptPLPassword(); */
 
-            reportPersonRequest rpin = new reportPersonRequest();
-            reportPersonResponse rpout = new reportPersonResponse();
+            // was v33: reportPersonRequest rpin = new reportPersonRequest();
+            // was v34: reportPersonResponse rpout = new reportPersonResponse();
+            reportRequest rpin = new reportRequest();
+            reportResponse rpout = new reportResponse();
             try
             {
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
@@ -812,14 +814,15 @@ INSTEAD: */
                 rpin.payload = content;
                 rpin.payloadFormat = "TRIAGEPIC1";
                 rpin.shortname = App.CurrentDisaster.EventShortName;
-                rpout = await App.pl.reportPersonAsync(rpin);
+                // was v33: rpout = await App.pl.reportPersonAsync(rpin);
+                rpout = await App.pl.reportAsync(rpin);
             }
             catch (Exception e)
             {
                 return "ERROR: " + e.Message;
             }
-            if (rpout.errorCode != "0")
-                return PackageErrorString(rpout.errorCode, rpout.errorMessage);
+            if (rpout.errorCode != 0) // was v33: "0"
+                return PackageErrorString(rpout.errorCode.ToString(), rpout.errorMessage);
 
             return ""; //Win 7: CAUSES PROBLEMS FOR CALLER: return url;
         }
@@ -839,9 +842,10 @@ INSTEAD: */
             string url = "";
             string plname = parent.pd.DecryptPLUsername();
             string plpass = parent.pd.DecryptPLPassword(); */
-            reReportPersonRequest rrpin = new reReportPersonRequest();
-            reReportPersonResponse rrpout = new reReportPersonResponse();
-
+            // was v33: reReportPersonRequest rrpin = new reReportPersonRequest();
+            // was v33: reReportPersonResponse rrpout = new reReportPersonResponse();
+            updateRecordRequest rrpin = new updateRecordRequest();
+            updateRecordResponse rrpout = new updateRecordResponse();
             try
             {
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
@@ -868,14 +872,15 @@ INSTEAD: */
                 rrpin.shortname = App.CurrentDisaster.EventShortName;
                 //rrpin.personXML = content;
                 rrpin.payload = content;
-                rrpout = await App.pl.reReportPersonAsync(rrpin);                 
+                // was v33: rrpout = await App.pl.reReportPersonAsync(rrpin);
+                rrpout = await App.pl.updateRecordAsync(rrpin);
             }
             catch (Exception e)
             {
                 return "ERROR: " + e.Message;
             }
-            if (rrpout.errorCode != "0")
-                return PackageErrorString(rrpout.errorCode, rrpout.errorMessage);
+            if (rrpout.errorCode != 0) // was v33: "0"
+                return PackageErrorString(rrpout.errorCode.ToString(), rrpout.errorMessage);
 
             return ""; //Win 7: CAUSES PROBLEMS FOR CALLER: return url;
         }
@@ -912,9 +917,9 @@ INSTEAD: */
                 string errorMessage = "ERROR: " + e.Message; // This line for debug breakpoint only
                 return "";
             }
-            if (guout.errorCode != "0")
+            if (guout.errorCode != 0)// was v33: if (rutout.errorCode != "0")
             {
-                string errorMessage = PackageErrorString(guout.errorCode, guout.errorMessage); // 9998, 9999 also possible.  This line for debug breakpoint only
+                string errorMessage = PackageErrorString(guout.errorCode.ToString(), guout.errorMessage); // 9998, 9999 also possible.  This line for debug breakpoint only
                 return "";
             }
 
@@ -1103,7 +1108,7 @@ INSTEAD: */
                 rutout = await App.pl.requestUserTokenAsync(rutin);
                 // Do below, only if successful: App.pd.plToken = rutout.token;
                 //MAYBE TO DO AS NEEDED: groupIdPL = rutout.groupIdPL;
-                errorCode = rutout.errorCode;
+                errorCode = rutout.errorCode.ToString(); // v33: was rutout.errorCode
                 errorMessage = rutout.errorMessage;
             }
 
@@ -1426,9 +1431,10 @@ INSTEAD: */
 
         // NEW WITH Win 8 - Calls to PL Search functions:
         /// <summary>
-        /// Gets all reports for the current event, independent of submitter or submitting organization
+        /// Gets all reports for the current event, independent of submitter or submitting organization.
+        /// This is in support of client-side filtering.
         /// </summary>
-        public async Task<string> GetReportsFromAllStationsCurrentEvent(string userPL, string passwordPL)
+        public async Task<string> GetReportsFromAllStationsCurrentEvent()// was, but not needed now: (string userPL, string passwordPL)
         {
             App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
@@ -1441,8 +1447,12 @@ INSTEAD: */
             //sarin.eventShortname = App.CurrentDisaster.EventShortName;
             // v33, replace "sarin" with "srin" many times below
             srin.eventShortname = App.CurrentDisaster.EventShortName;
-            srin.filterAgeAdult = srin.filterAgeChild = srin.filterAgeUnknown = true;
-            srin.filterGenderMale = srin.filterGenderFemale = srin.filterGenderComplex = srin.filterGenderUnknown = true;
+            // NOT WORKING AS CLAIMED, ACTS AS IF hasImage=true
+            // srin.filters = ""; // Spec says this means all filters are true, except hasImage is false and hospital defaults to "all".
+            // Equivalently in effect, if not in verbosity:
+            srin.filters = PackageFiltersIntoSearchParameter("all");
+            // was v33: srin.filterAgeAdult = srin.filterAgeChild = srin.filterAgeUnknown = true;
+            // was v33: srin.filterGenderMale = srin.filterGenderFemale = srin.filterGenderComplex = srin.filterGenderUnknown = true;
 /* NO.  Always get all records here.  Filter later
             if(App.OutboxCheckBoxMyOrgOnly)
             {
@@ -1460,15 +1470,16 @@ INSTEAD: */
             {
                 // spec says: sarin.filterHospital = ""; // empty = don't filter on orgs; otherwise, [but not implemeneted] comma-separated org shortnames
                 // What Greg chose to implement instead is single hospital uuid  */
-                srin.filterHospital = "all"; // temporary workaround
+                // was v 33: srin.filterHospital = "all"; // temporary workaround
             //}
             // WAS before V32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
-            srin.filterStatusAlive = srin.filterStatusInjured = srin.filterStatusDeceased = srin.filterStatusMissing = srin.filterStatusUnknown = srin.filterStatusFound = true;
-            srin.filterHasImage = false; // true would return ONLY reports with images
-            srin.pageStart = "0";
-            srin.perPage = "250"; // 1000 gave out of memory problems
+            // was v33: srin.filterStatusAlive = srin.filterStatusInjured = srin.filterStatusDeceased = srin.filterStatusMissing = srin.filterStatusUnknown = srin.filterStatusFound = true;
+            // was v33: srin.filterHasImage = false; // true would return ONLY reports with images
+            srin.pageStart = 0; // was v33: "0";
+            srin.perPage = 250; // was v33: "250"; // 1000 gave out of memory problems
             srin.sortBy = ""; // = updated desc, score desc
-            srin.searchTerm = "";
+            srin.query = ""; // was v 33: srin.searchTerm = "";
+            srin.photo = ""; // if empty, means "use query instead".
             try
             {
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
@@ -1480,6 +1491,7 @@ INSTEAD: */
                 //sarout = await App.pl.searchWithAuthAsync(sarin);
                 srout = await App.pl.searchAsync(srin);
             }
+            // Also available with v34, but not used here: srout.recordsFound; srout.timeElapsed
             catch (Exception e)
             {
                 // WAS: sarout
@@ -1489,12 +1501,114 @@ INSTEAD: */
             return ChangeToErrorIfNull(srout.resultSet); // WAS before v33: sarout
         }
 
+        private string PackageFiltersIntoSearchParameter(string orgUuid)
+        {
+            // Call this function to search for a specific hospital, e.g., orgUuid != "all".
+            // (For all defaults, use empty string; Spec says this means all filters below are true, except hasImage is false and hospital defaults to "all".
+            string s =
+                "{\"genderMale\":true,\"genderFemale\":true,\"genderComplex\":true,\"genderUnknown\":true," +
+                "\"ageAdult\":true,\"ageChild\":true,\"ageUnknown\":true," +
+                "\"statusMissing\":true,\"statusAlive\":true,\"statusInjured\":true,\"statusDeceased\":true,\"statusUnknown\":true,\"statusFound\":true," +
+                "\"hasImage\":false," +
+                "\"hospital\":\"" + orgUuid + "\",";
+                // Example of zone code formatting:
+                // s += "\"Green\":true,\"BH Green\":true,\"Yellow\":true,\"Red\":true,\"Gray\":true,\"Black\":true,\"Unknown\":true}";
+            foreach(TP_ZoneChoiceItem zci in App.ZoneChoices.GetZoneChoiceList())
+            {
+                if (String.IsNullOrEmpty(zci.ButtonName))
+                    continue;
+                s += "\"" + zci.ButtonName + "\":true,";
+            }
+            // Replace trailing "," with "}"
+            int lastPos = s.Length - 1;
+            App.MyAssert(s[lastPos] == ','); // Will fail if no zones defined
+            s = ReplaceAt(s, lastPos, '}');
+            return s;
 
-        // NEW WITH Win 8 - Calls to PL Search functions:
+        }
+
         /// <summary>
-        /// Gets all reports for the current event, from the current hospital.  Caller must filter more, to narrow.
+        /// 
         /// </summary>
-        public async Task<string> GetReportsForOutbox(string userPL, string passwordPL)
+        /// <param name="s">string of interest</param>
+        /// <param name="p">position within string</param>
+        /// <param name="c">replacement character</param>
+        /// <returns></returns>
+        private string ReplaceAt(string s, int p, char c)
+        {
+            App.MyAssert(p >= 0);
+            App.MyAssert(p <= s.Length);
+            // This is generally faster than the StringBuilder way of doing the same thing
+            char[] s_array = s.ToCharArray();
+            s_array[p] = c;
+            return new string(s_array);
+        }
+
+
+        // NEW WITH Win 8 - Calls to TriageTrak/PL Search functions:
+
+        /// <summary>
+        /// Gets all reports for the current event, from the current hospital.  Caller must filter more (e.g., by sending user/device), to narrow.
+        /// </summary>
+        public async Task<string> GetReportsForOutboxCurrentEvent(bool myOrgOnly) // was, but now uses global token: (string userPL, string passwordPL)
+        {
+            string s = await GetReportsForOutboxImpl(App.CurrentDisaster.EventShortName, myOrgOnly); // false = include all orgs,
+                // in case there are multiple "orgs" as separate facilities from which given user/device reports
+            return s;
+        }
+
+        /// <summary>
+        /// Gets all reports for all open events, from the current hospital.  Caller must filter more (e.g., by sending user/device), to narrow.
+        /// This is used to approximately restore a missing Outbox cache.
+        /// Reports that have been deleted at TriageTrak (i.e., expired) will presumably not be included in what TT sends us.
+        /// Usually the bool parameter is set as false, to include all orgs, and handle the case where
+        /// there are multiple "orgs" as separate facilities from which given user/device reports.
+        /// </summary>
+        public async Task<string> GetReportsForOutboxAllOpenEvents(bool myOrgOnly) // new Feb 2015
+        {
+            // To Do: filter by reporter username, login account, login machine.  Better to do this at higher level than here, after JSON deserialization.
+            string s = "";
+            string temp;
+            int count = 0;
+            int eventCount = App.CurrentDisasterList.Count();
+            foreach (var i in App.CurrentDisasterList)
+            {
+                temp = await GetReportsForOutboxImpl(i.EventShortName, myOrgOnly);
+                if (temp.StartsWith("ERROR:"))
+                {
+                    return temp; // If any error, return just that call
+                }
+                if (count == 0)
+                    s = temp;
+                else
+                {
+                    if(temp.Length > 0) // skip empty events
+                    {
+                        // Hmmm, not real efficient, probably should gather all s strings into a string array, then process into concatenated results in a second pass.  to do.
+                        // Concatenate strings together JSON-style: remove trailing "]" and leading "["
+                        int lastPos = s.Length - 1;
+                        App.MyAssert(s[lastPos] == ']');
+                        s = s.Substring(0, lastPos) + ","; // Copy all but trailing "]", adding comma instead .  lastPos used as copy length here.
+                        lastPos = temp.Length - 1;
+                        App.MyAssert(temp[0] == '[');
+                        temp = temp.Substring(1); // skip "["
+                        s += temp;
+                    }
+                }
+                count++;
+            }
+            return s;
+        }
+
+
+
+ 
+
+        // NEW WITH Win 8 - Calls to TriageTrak/PL Search functions:
+        /// <summary>
+        /// Gets all reports for the specified event, from the current hospital.  Caller must filter more, to narrow. To get reports from all orgs, set myOrgOnly=false.
+        /// </summary>     
+        public async Task<string> GetReportsForOutboxImpl(string eventShortName, bool myOrgOnly) // was, but now uses global token: (string userPL, string passwordPL)
         {
             App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
             //searchWithAuthRequest sarin = new searchWithAuthRequest(); // Before V31: named searchCompleteWithAuth
@@ -1505,25 +1619,33 @@ INSTEAD: */
             //sarin.username = userPL;
             //sarin.password = passwordPL;
             // "sarin" replaced by "srin", "sarout" replaced by "srout" many places below
-            srin.eventShortname = App.CurrentDisaster.EventShortName;
-            srin.filterAgeAdult = srin.filterAgeChild = srin.filterAgeUnknown = true;
-            srin.filterGenderMale = srin.filterGenderFemale = srin.filterGenderComplex = srin.filterGenderUnknown = true;
-            string Name = App.CurrentOrgContactInfo.OrgName;
-            string Uuid = App.OrgDataList.GetOrgUuidFromOrgName(Name);
-            if (Uuid == "") // couldn't find match
+            srin.eventShortname = eventShortName; // moved to caller Feb 2015: App.CurrentDisaster.EventShortName;
+            // was v33: srin.filterAgeAdult = srin.filterAgeChild = srin.filterAgeUnknown = true;
+            // was v33: srin.filterGenderMale = srin.filterGenderFemale = srin.filterGenderComplex = srin.filterGenderUnknown = true;
+            string Uuid = "";
+            if(myOrgOnly)
+                Uuid = "all";
+            else
             {
-                App.MyAssert(false);
-                //Uuid = App.OrgDataList.First().OrgUuid;
-                //Name = App.OrgDataList.First().OrgName;
+                string Name = App.CurrentOrgContactInfo.OrgName;
+                Uuid = App.OrgDataList.GetOrgUuidFromOrgName(Name);
+                if (Uuid == "") // couldn't find match
+                {
+                    App.MyAssert(false);
+                    //Uuid = App.OrgDataList.First().OrgUuid;
+                    //Name = App.OrgDataList.First().OrgName;
+                }
             }
-            srin.filterHospital = Uuid; // instead of "" or "all" = don't filter on orgs.
+            // was v33: srin.filterHospital = Uuid; // instead of "" or "all" = don't filter on orgs.
+            srin.filters = PackageFiltersIntoSearchParameter(Uuid);
             // WAS before v32: sarin.filterHospitalSH = sarin.filterHospitalWRNMMC = sarin.filterHospitalOther = true;
-            srin.filterStatusAlive = srin.filterStatusInjured = srin.filterStatusDeceased = srin.filterStatusMissing = srin.filterStatusUnknown = srin.filterStatusFound = true;
-            srin.filterHasImage = false;  // true would return ONLY reports with images
-            srin.pageStart = "0";
-            srin.perPage = "250"; // "1000";  If you change this, change it too in TP_PatientReportsSource.cs
+            // was v33: srin.filterStatusAlive = srin.filterStatusInjured = srin.filterStatusDeceased = srin.filterStatusMissing = srin.filterStatusUnknown = srin.filterStatusFound = true;
+            // was v33: srin.filterHasImage = false;  // true would return ONLY reports with images
+            srin.pageStart = 0; // was v33: "0";
+            srin.perPage = 250; // was v33: "250"; // "1000";  If you change this, change it too in TP_PatientReportsSource.cs.  1000 seemed to be running out of memory
             srin.sortBy = ""; // = updated desc, score desc
-            srin.searchTerm = "";
+            srin.query = ""; // was v33: srin.searchTerm = "";
+            srin.photo = ""; // if empty, means "use query instead".
             try
             {
                 SetPLEndpointAddress(App.pl); //read the configured endpoint address
@@ -1535,6 +1657,7 @@ INSTEAD: */
                 //sarout = await App.pl.searchWithAuthAsync(sarin);
                 srout = await App.pl.searchAsync(srin);
             }
+            // Also available with v34, but not used here: srout.recordsFound; srout.timeElapsed
             catch (Exception e)
             {
                 srout.resultSet = "ERROR: " + e.Message; // Win 7: responseData = "ERROR: " + e.Message;

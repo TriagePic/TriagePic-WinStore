@@ -128,7 +128,7 @@ namespace TP8
                 await dlg.ShowAsync();
                 return;
             }
-            this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
+            this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts"); // was: (typeof(SplitPage),"Statistics"); // Defined in SampleDataSource.cs
         }
 
         private void Home_Click(object sender, RoutedEventArgs e)
@@ -142,6 +142,7 @@ namespace TP8
             var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
         }
 
+#if BEFORE_v34
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
             //var dialog = new MessageDialog("Edit: TO DO");
@@ -179,6 +180,69 @@ namespace TP8
 
             var dialog = new MessageDialog("Edit: No item selected.");
             var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
+        }
+#endif
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            //var dialog = new MessageDialog("Edit: TO DO");
+            //var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
+            if (this.itemsViewSource.View != null)
+            {
+                SampleDataItem selectedItem = (SampleDataItem)this.itemsViewSource.View.CurrentItem;
+                if (selectedItem != null)
+                {
+                    // Temporary restriction, until we can do a better job of allowing edit of other items not originated at this station.
+                    // See also ItemDetailFlipViewPage for this restriction.
+                    string uniqueIdAsKnownToOutbox = FindSearchItemInOutboxList(selectedItem); // UniqueId is WhenLocalTime, but unfortunately time returned by search isn't same as Outbox's, so use mass casualty ID too.
+                    if (String.IsNullOrEmpty(uniqueIdAsKnownToOutbox))
+                    {
+                        string msg =
+                            "Sorry, can't edit this report, or any report not in the Outbox list.\n" +
+                            "Only reports that were created here (and not deleted from here) can be edited here.\n" +
+                            "This is a temporary restriction of this release of TriagePic for Windows Store.\n" +
+                            "For now, consider editing such reports at the TriageTrak web site.";
+                        var dialog1 = new MessageDialog(msg);
+                        var t1 = dialog1.ShowAsync(); // Assign to t1 to suppress compiler warning
+                        return;
+                    }
+
+                    this.Frame.Navigate(typeof(BasicPageViewEdit), uniqueIdAsKnownToOutbox); // was: selectedItem.UniqueId); // "pageViewEdit");  //UniqueId is WhenLocalTime
+                    return;
+                }
+            }
+            var dialog = new MessageDialog("Edit: No item selected.");
+            var t = dialog.ShowAsync(); // Assign to t to suppress compiler warning
+        }
+
+
+        private string FindSearchItemInOutboxList(SampleDataItem selectedItem)
+        {
+            // Temporary restriction, until we can do a better job of allowing edit of other items not originated at this station.
+            // See also ItemDetailFlipViewPage for this restriction.
+            string results = "";
+            foreach (var pr_ in App.PatientDataGroups.GetOutbox())
+            {
+                // WhenLocalTime is reported to TriageTrak as  format like "2012-08-13 18:24:26 -04:00".
+                // Search formats selectedItem.UniqueId using TP_PatientReport.FormatUniqueID(){ return String.Format("{0}", WhenLocalTime); }
+                // But we are seeing selectedItem.UniqueId does not have " -04:00" part.
+                // And for pr_.WhenLocalTime, in some older cases the "-04:00" part is lost... maybe if Outbox xml is reconstructed from TT?
+                // Even worse, the timestamps don't match!  Off by 8 seconds.  Probably server is returning server time when received, not what we reported!
+                //if (pr_.WhenLocalTime == selectedItem.UniqueId)
+                //{
+                //    foundPatient = true;
+                //    break;
+                //}
+                // Instead, match by date alone, and mass casualty ID
+                // selectedItem.Subtitle is set by FormatSubtitle(){ ...; return String.Format("Mass Casualty ID {0}", patientID); } where patientID has prefix if appropriate
+                if (pr_.WhenLocalTime.Substring(0, 10) == selectedItem.UniqueId.Substring(0, 10) &&
+                    selectedItem.Subtitle.EndsWith(pr_.PatientID))
+                {
+                    results = pr_.WhenLocalTime;
+                    break;
+                }
+            }
+            return results;
         }
         #endregion
 

@@ -107,7 +107,7 @@ namespace TP8
 /* WAS
         private void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
+            this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts"); // was: (typeof(SplitPage),"Statistics"); // Defined in SampleDataSource.cs
         }
  */
 

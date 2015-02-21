@@ -244,27 +244,6 @@ namespace TP8.Data // nah .DataModel
 
         private async Task ShowStartupWiz()
         {
-#if FIRSTTRY
-                SolidColorBrush gray = new SolidColorBrush(Colors.Gray);
-                wizPopUp = new Popup();
-                Grid grid = new Grid();
-                StackPanel panel = new StackPanel(); 
-                panel.Background = gray; // PopoverViewOverlayThemeBrush; "{StaticResource PopoverViewOverlayThemeBrush}"; //.Background;
-                panel.Height = 140;
-                panel.Width = 180;
-                Button wizButton = new Button();
-                wizButton.Content = "OK";
-                wizButton.Style = (Style)App.Current.Resources["TextButtonStyle"];
-                wizButton.Margin = new Thickness(20, 10, 20, 10);
-                wizButton.Click += Wiz_Click;
-                panel.Children.Add(wizButton);
-                // Add the root menu as the popup contents:
-                wizPopUp.Child = panel;
-                // Calculate the location, here in the bottom righthand corner with padding of 4:
-                //wizPopUp.HorizontalOffset = Window.Current.CoreWindow.Bounds.Right - panel.Width - 4;
-                //wizPopUp.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - BottomAppBar.ActualHeight - panel.Height - 4;
-                wizPopUp.IsOpen = true;
-#endif
             var sw = new StartupWizUserControl.StartupWiz();
             var results = await sw.ShowAsync();
             if (results == 0)

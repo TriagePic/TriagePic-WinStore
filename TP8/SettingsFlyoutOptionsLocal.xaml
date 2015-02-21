@@ -22,12 +22,14 @@
         <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
             <TextBlock Text="Web Service Endpoint" Foreground="#FFD81414" Margin="0,10,0,0" FontSize="20"/>
 
-            <TextBlock Name="TextBlockEndpoints" Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+            <TextBlock Name="TextBlockEndpoints" Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" 
                         Text="  TriagePic Reports to:&#x0a;    my site&#x0a;]" 
                         TextWrapping="Wrap"/>
-            <TextBlock Name="TextBlockCustomized" Style="{StaticResource BodyTextStyle}" Foreground="Black" 
+            <!-- Win 8.0 was BodyTextStyle-->
+            <TextBlock Name="TextBlockCustomized" Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" 
                         Text="Endpoint Address Customized?  No&#x0a;Address can be customized by device admin in OtherSettings.XML" 
                         TextWrapping="Wrap" FontSize="10"/>
+            <!-- Win 8.0 was BodyTextStyle-->
             <ToggleSwitch x:Name="blockToggle" Header="Block Communication (for testing only)" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="#FFA21616" BorderBrush="Black" BorderThickness="2" Toggled="blockToggle_Toggled" Background="#FF7C7C9C" Margin="0,10,0,0"/>
         </StackPanel>
         <!-- Define more Content Sections below as necessary -->

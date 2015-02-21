@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("National Library of Medicine")]
 [assembly: AssemblyProduct("TriagePic")]
-[assembly: AssemblyCopyright("NLM, public domain/open source, 2013")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("NLM, public domain/open source, 2013-15")]
+[assembly: AssemblyTrademark("TriagePic is a register trademark of NLM")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:
@@ -24,6 +24,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.0.0.0")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
+[assembly: AssemblyVersion("3.2.0.0")]
+[assembly: AssemblyFileVersion("3.2.0.0")]
 [assembly: ComVisible(false)]

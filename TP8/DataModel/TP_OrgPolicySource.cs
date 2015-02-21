@@ -191,7 +191,7 @@ namespace TP8.Data // nah: .DataModel
             return Convert.ToUInt32(OrgPatientIdPrefixText.Length) + suffixLength;
         }
 #endif
-        public async Task<string> GetCurrentOrgPolicy(string orgUuid)
+        public async Task<string> GetCurrentOrgPolicy(int orgUuid) // was v33: (string orgUuid)
         {
             string status = await App.service.GetHospitalPolicy(orgUuid); // Function call puts results directly into App.OrgPolicy and first and only item of App.OrgPolicyList
             // could check status for "ERROR:" or "COMMUNICATIONS ERROR:"
@@ -299,9 +299,20 @@ namespace TP8.Data // nah: .DataModel
                  Uuid = App.OrgDataList.First().OrgUuid;
             }
 
-            string s;
-            s = await App.OrgPolicy.GetCurrentOrgPolicy(Uuid); // puts results into App.OrgPolicy and first and only item of App.OrgPolicyList
-            if (s.StartsWith("ERROR:"))
+            string s = "";
+            int u = -1; // introduced v34
+            try
+            {
+                u = Convert.ToInt32(Uuid);
+            }
+            catch (Exception)
+            {
+                App.MyAssert(false);
+                u = -1;
+            }
+            if (u != -1)
+                s = await App.OrgPolicy.GetCurrentOrgPolicy(u); // puts results into App.OrgPolicy and first and only item of App.OrgPolicyList
+            if (s.StartsWith("ERROR:") || u == -1)
             {
                 await ReadXML(); // in case call to web service wiped out App.OrgPolicy and App.OrgPolicyList
                 App.OrgPolicy = this.First();

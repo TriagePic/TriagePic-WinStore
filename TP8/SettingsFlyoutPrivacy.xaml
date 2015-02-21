@@ -23,7 +23,7 @@
         <!-- Content Section 1-->
         <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
 
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap">
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" TextWrapping="Wrap"> <!-- Win 8.0 was BodyTextStyle-->
                 The TriagePic/TriageTrak system collects and displays rather-minimal data about people arriving at a triage station.
                 This comprises personally identifiable information (name, photo,
                 gender, age group, notes) and general medical status (triage zone).
@@ -37,9 +37,10 @@
                 TriagePic caches data locally.  This cache is cleared if the app is uninstalled.  The cached TriageTrak
                 username and password are encrypted.
             </TextBlock>
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="#FFEC1414" FontSize="20" 
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="#FFEC1414" FontSize="20" 
                 Text="When Reporting to NLM's Demo TriageTrak" Margin="0,10,0,0"/>
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black"  TextWrapping="Wrap">
+            <!-- Win 8.0 was BodyTextStyle-->
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="Black"  TextWrapping="Wrap"> <!-- Win 8.0 was BodyTextStyle-->
                 This intended for testing and evaluation, so don't report actual patient data there.  Although you'll be reporting data to a disaster
                 event that requires 'hospital staff' privilege, you will share access with
                 other evaluators given that privilege, so consider the data effectively public.  Only post data about
@@ -50,10 +51,12 @@
                 by NLM and be used only to assist you.  It is NLM policy not to release such
                 information to third parties.
             </TextBlock>
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="#FFEC1414" TextWrapping="Wrap" FontSize="20" Margin="0,10,0,0"
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="#FFEC1414" TextWrapping="Wrap" FontSize="20" Margin="0,10,0,0"
                 Text="With a Private Instance of TriageTrak"/>
-            <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="Black" TextWrapping="Wrap"
+            <!-- Win 8.0 was BodyTextStyle-->
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Foreground="Black" TextWrapping="Wrap"
                 Text="The hosting organization should establish infrastructure, policies, and practices to protect privacy, consistent with HIPAA or other appropriate regulations."/>
+            <!-- Win 8.0 was BodyTextStyle-->
         </StackPanel>
 
         <!-- Define more Content Sections below as necessary -->

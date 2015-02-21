@@ -11,14 +11,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+
+    <!-- Don't need New here, since bottom controls do that.  Instead, substitute Home -->
+    <Page.TopAppBar>
+        <CommandBar>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Home" Icon="Home" Click="Home_Click"/>
+            </CommandBar.SecondaryCommands>
+            <AppBarButton Label="Checklist" Click="Checklist_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="✅" />
+                    <!-- Glyph="&#x2705;" Unicode WHITE HEAVY CHECK MARK character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="All Stations" Click="AllStations_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="👪" />
+                    <!-- Glyph="&#x1F46A;" Unicode FAMILY character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Outbox" Click="Outbox_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📮" />
+                    <!-- Glyph="&#x1F4EE;"  Unicode POSTBOX character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Statistics" Click="Statistics_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📊" />
+                    <!-- Glyph="&#x1F4CA;"  Unicode BAR CHART character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <!-- OLD Win 8.0-->
     <!-- Loaded/Unloaded calls are needed to get auto-resizing (and suppression of text) to work in snapped view. Lets app buttons know about state changes -->
     <!-- but doesn't do design view right -->
-    <!-- Note that 5 buttons is max in snapped view (or 10 if using 2 rows) -->
-    <!-- Supposely MS App Labs says put the home button in the bottom bar -->
-    <Page.TopAppBar>
+    <!-- Don't need New here, since bottom controls do that.  Instead, substitute Home -->
+    <!--
+    <Page.TopAppBar>    
         <AppBar x:Name="TopAppBarHomeItemsPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Top App Bar New Report Page">
-            <Grid>
-                <!-- Don't need New here, since bottom controls do that.  Instead, substitute Home -->
+            <Grid> -->
+                <!-- Don't need New here, since bottom controls do that.  Instead, substitute Home --> <!--
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Style="{StaticResource ChecklistAppBarButtonStyle}" Tag="Checklist" Click="Checklist_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                     <Button Style="{StaticResource HomeAppBarButtonStyle}" Tag="New" Click="Home_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
@@ -28,7 +63,7 @@
                 </StackPanel>
             </Grid>
         </AppBar>
-    </Page.TopAppBar>
+    </Page.TopAppBar> -->
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}" >
         <Grid.RowDefinitions>

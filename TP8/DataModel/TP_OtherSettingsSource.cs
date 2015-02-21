@@ -88,15 +88,6 @@ namespace TP8.Data
                 PropertyChanged(this, new PropertyChangedEventArgs(caller));
             }
         }
-/* FOR REF:
-        public async Task<string> GetCurrentOrgContactInfo(string orgUuid, string orgName)
-        {
-            string status = await App.service.GetHospitalData(orgUuid, orgName); // Function call puts results directly into App.CurrentOrgContactInfo
-            // could check status for "ERROR:" or "COMMUNICATIONS ERROR:"
-            // If ERROR, there may or may not be anything put into App.CurrentOrgContactInfo
-            return status;
-        }
- */
 
     }
 

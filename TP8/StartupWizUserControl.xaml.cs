@@ -86,26 +86,12 @@ namespace TP8
             if (d.OrgName == App.CurrentOrgContactInfo.OrgName)
                 return;
 
-            /*string s = */
-            await App.CurrentOrgContactInfo.GetCurrentOrgContactInfo(d.OrgUuid, d.OrgName);
+            /*string s = */ await App.CurrentOrgContactInfo.GetCurrentOrgContactInfo(d.OrgUuid, d.OrgName);
             // Could check s for "ERROR:"
             // ALREADY DONE BY GetCurrentOrgContactInfo:
             // App.OrgContactInfoList.Clear();
             // App.OrgContactInfoList.Add(App.CurrentOrgContactInfo);
             await App.OrgContactInfoList.WriteXML();
-#if PROBABLYNOTHERE
-            // See if patient ID format changes
-            int format = App.OrgPolicy.OrgPatientIdFixedDigits;
-            string prefix = App.OrgPolicy.OrgPatientIdPrefixText;
-            await App.OrgPolicyList.Init();
-            if (App.OrgPolicyList.Count() > 0)
-                App.OrgPolicy = App.OrgPolicyList.First(); // FirstOrDefault(); // will return null if nothing in list
-            if (prefix != App.OrgPolicy.OrgPatientIdPrefixText)
-                App.CurrentPatient.PatientID.Replace(prefix, App.OrgPolicy.OrgPatientIdPrefixText);
-            if (format != App.OrgPolicy.OrgPatientIdFixedDigits)
-                App.CurrentPatient.PatientID = App.OrgPolicy.ForceValidFormatID(App.CurrentPatient.PatientID); // maybe this will work
-#endif
-
         }
 
         /// <summary>

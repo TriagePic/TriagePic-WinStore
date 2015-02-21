@@ -41,7 +41,7 @@ namespace TP8
 
         public string MyZoneButtonItemWidth { get; set; }
 
-        //App.CurrentPatient serves as the previousReport 
+        //App.CurrentPatient serves as the previousReport, but only initially
         private TP_PatientReport updatedReport = null;
         //TRIED, USELESS:  private bool suppressMarkingAsAltered = false;
 
@@ -178,7 +178,17 @@ namespace TP8
                     }
                 }
                 if (!foundPatient)
-                    App.MyAssert(false);
+                {
+                    // was before PLUS v34: App.MyAssert(false);
+                    string msg =
+                        "Sorry, internal problem: TriagePic can't find this report to edit in the Outbox list.\n" +
+                        "Conjecture: due to starting an edit, but leaving and then coming back through search?\n" +
+                        "This is a known problem of this release of TriagePic for Windows Store.\n" +
+                        "If problem persists, consider editing such reports at the TriageTrak web site.";
+                    var dialog1 = new MessageDialog(msg);
+                    var t1 = dialog1.ShowAsync(); // Assign to t1 to suppress compiler warning
+                    return;
+                }
             }
             if (App.ReportAltered)
                 ShowTitleAndSentTimeAsAltered();
@@ -705,7 +715,6 @@ namespace TP8
             PatientIdTextBox.Text = pr_.PatientID;
             App.MyAssert(CheckBoxAdult.IsChecked == false);
             App.MyAssert(CheckBoxPeds.IsChecked == false);
-            App.MyAssert(pr_.AgeGroup == "Youth" || pr_.AgeGroup == "Adult" || pr_.AgeGroup == "Unknown Age Group" || pr_.AgeGroup == "Other Age Group (e.g., Expectant)");
             switch (pr_.AgeGroup)
             {
                 case "Adult":
@@ -715,11 +724,12 @@ namespace TP8
                 case "Other Age Group (e.g., Expectant)":
                     CheckBoxAdult.IsChecked = CheckBoxPeds.IsChecked = true; break;
                 case "Unknown Age Group":
-                default: break;
+                case "": // Added Feb 2015. May occur if record entry is incomplete, interrupted by webcam capture
+                    break;
+                default: App.MyAssert(false); break;
             }
             App.MyAssert(CheckBoxMale.IsChecked == false);
             App.MyAssert(CheckBoxFemale.IsChecked == false);
-            App.MyAssert(pr_.Gender == "Male" || pr_.Gender == "Female" || pr_.Gender == "Complex Gender" || pr_.Gender == "Unknown");
             switch (pr_.Gender)
             {
                 case "Male":
@@ -729,10 +739,13 @@ namespace TP8
                 case "Complex Gender":
                     CheckBoxMale.IsChecked = CheckBoxFemale.IsChecked = true; break;
                 case "Unknown":
-                default: break;
+                case "": // Added Feb 2015. May occur if record entry is incomplete, interrupted by webcam capture
+                    break;
+                default: App.MyAssert(false); break;
             }
             zoneSelected = pr_.Zone;
-            ZoneSelect(zoneSelected);
+            if (zoneSelected != "") // Test for empty string added Feb 2015. May occur if record entry is incomplete, interrupted by webcam capture 
+                ZoneSelect(zoneSelected);
 
             // Empty fields with hints are already showing hints.  But should we override:
             // We have earlier, during clearing, moved focus away from Notes and Captions.
@@ -873,6 +886,7 @@ namespace TP8
         {
             // Maybe we should introduce App.EditingPatient, rather than reusing CurrentPatient
             await SaveReportFieldsToObject(App.CurrentPatient); //, ""); // Leave IntendToSend empty until "Send" button pressed.
+            updatedReport = App.CurrentPatient; // Probably not strictly necessary, will go out of scope soon.
             App.MyAssert(App.CurrentPatient.SentCode != "" && !App.CurrentPatient.ObjSentCode.IsQueued()); // This MUST be true because WebcamPage will be checking it to decide to come back here, instead of to NewReport
             this.Frame.Navigate(typeof(WebcamPage));
             // if fresh image is gotten, App.ReportAltered will be true for benefit of MarkAsAltered
@@ -1082,7 +1096,7 @@ namespace TP8
             {
                 App.CurrentPatient.Clear();
                 App.ViewedDisaster.Clear();
-                this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
+                this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts"); // was: (typeof(SplitPage),"Statistics"); // Defined in SampleDataSource.cs
             }
         }
 
@@ -1122,13 +1136,13 @@ namespace TP8
             panel.Width = 180;
             Button DeleteLocalButton = new Button();
             DeleteLocalButton.Content = "From outbox only";
-            DeleteLocalButton.Style = (Style)App.Current.Resources["TextButtonStyle"];
+            DeleteLocalButton.Style = (Style)App.Current.Resources["TextButtonStyle"];  //Feb 2015 note: if this code ever comes back, use TextBlockButtonStyle
             DeleteLocalButton.Margin = new Thickness(20, 10, 20, 10);
             DeleteLocalButton.Click += DeleteLocal_Click;
             panel.Children.Add(DeleteLocalButton);
             Button DeleteRemoteTooButton = new Button();
             DeleteRemoteTooButton.Content = "From TriageTrak too";
-            DeleteRemoteTooButton.Style = (Style)App.Current.Resources["TextButtonStyle"];
+            DeleteRemoteTooButton.Style = (Style)App.Current.Resources["TextButtonStyle"];  //Feb 2015 note: if this code ever comes back, use TextBlockButtonStyle
             DeleteRemoteTooButton.Margin = new Thickness(20, 10, 20, 10);
             DeleteRemoteTooButton.Click += DeleteRemoteToo_Click;
             panel.Children.Add(DeleteRemoteTooButton);  
@@ -1239,7 +1253,7 @@ namespace TP8
             panel2.Children.Add(explanation);
             Button OKButton = new Button();
             OKButton.Content = "OK";
-            OKButton.Style = (Style)App.Current.Resources["TextButtonStyle"];
+            OKButton.Style = (Style)App.Current.Resources["TextButtonStyle"];  //Feb 2015 note: if this code ever comes back, use TextBlockButtonStyle
             OKButton.Margin = new Thickness(20, 10, 20, 10);
             OKButton.Click += FinishRemoteDiscard_Click;
             panel2.Children.Add(OKButton);

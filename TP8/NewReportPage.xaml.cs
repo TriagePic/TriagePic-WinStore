@@ -43,6 +43,9 @@ namespace TP8
         public string MyZoneButtonItemWidth { get; set; }
 
         private TP_PatientReport pr = null; //pdi = null;
+        // FEB 2015 COMMENT: Treatment of pr and App.CurrentPatient here, and updatedReport and App.CurrentPatient in ViewEditReport, not real consistent.
+        // In ViewEditReport, App.CurrentPatient is treated as original version of report, but then overwritten if we navigate to webcam.
+        // Need to rethink next time refactoring of these pages is done (e.g., to have a common base page)
 
         private const string NOTES_TEXT_HINT = "Optional Notes"; // Must match string in XAML too
         private const string CAPTION_TEXT_HINT = "Optional Caption";  // Must match string in XAML too.  Temporary limit: 1 photo, 1 caption
@@ -54,6 +57,7 @@ namespace TP8
         private ZoneButton[] zb = null;
         private int zbCount = 0;
         private bool firstTime = true;
+        private NavigationEventArgs latestNavigation = null;
 
         public BasicPageNew()
         {
@@ -147,6 +151,13 @@ namespace TP8
             }
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            latestNavigation = e;            
+            base.OnNavigatedTo(e); // This calls LoadState
+        }
+
+
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -159,8 +170,15 @@ namespace TP8
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             InitiateZones();
-            if (!String.IsNullOrEmpty(App.CurrentPatient.Zone)) // This test may need refinement
+            // was before Release 2:
+            // if (!String.IsNullOrEmpty(App.CurrentPatient.Zone)) // This test may need refinement
+            //    LoadReportFieldsFromObject(pr);
+            if (latestNavigation.NavigationMode == NavigationMode.Back) // probably back from webcam
+            {
+                // Assume there's content to reload
+                pr = App.CurrentPatient;
                 LoadReportFieldsFromObject(pr);
+            }
             pageSubtitle.Text = " " + App.CurrentDisaster.EventName; // TO DO: binding in XAML instead of here?  Add space to separate from icon
             if(App.CurrentDisaster.TypeIconUri.Length > EMBEDDED_FILE_PREFIX.Length)
             {
@@ -606,6 +624,8 @@ namespace TP8
                     CheckBoxPeds.IsChecked = true; break;
                 case "Unknown Age Group":  // WAS: "Unknown"
                     break;
+                case "": // Added Feb 2015. May occur if record entry is incomplete, interrupted by webcam capture
+                    break;
                 default: App.MyAssert(false); break;
             }
 
@@ -621,10 +641,13 @@ namespace TP8
                     CheckBoxMale.IsChecked = CheckBoxFemale.IsChecked = true; break;
                 case "Unknown":
                     break;
+                case "": // Added Feb 2015. May occur if record entry is incomplete, interrupted by webcam capture
+                    break;
                 default: App.MyAssert(false); break;
             }
             zoneSelected = pr_.Zone;
-            ZoneSelect(zoneSelected);
+            if (zoneSelected != "") // Test for empty string added Feb 2015. May occur if record entry is incomplete, interrupted by webcam capture 
+                ZoneSelect(zoneSelected);
 
             // Empty fields with hints are already showing hints.  But should we override:
             // We have earlier, during clearing, moved focus away from Notes and Captions.
@@ -745,6 +768,7 @@ namespace TP8
         private async void patientImage_Tapped(object sender, TappedRoutedEventArgs e)
         {
             await SaveReportFieldsToObject(App.CurrentPatient, ""); // Not yet sent
+            pr = App.CurrentPatient; // Probably not necessary since pr will be going out of scope, but just in case.
             this.Frame.Navigate(typeof(WebcamPage));
         }
 
@@ -884,7 +908,7 @@ namespace TP8
                 await dlg.ShowAsync();
                 return;
             }
-            this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
+            this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts"); // was: (typeof(SplitPage),"Statistics"); // Defined in SampleDataSource.cs
         }
 
         private void Home_Click(object sender, RoutedEventArgs e)
@@ -895,6 +919,7 @@ namespace TP8
         private async void Webcam_Click(object sender, RoutedEventArgs e)
         {
             await SaveReportFieldsToObject(App.CurrentPatient, "");
+            pr = App.CurrentPatient; // Probably not necessary since pr will be coing out of scope, but just in case.
             this.Frame.Navigate(typeof(WebcamPage), e);
         }
         #endregion

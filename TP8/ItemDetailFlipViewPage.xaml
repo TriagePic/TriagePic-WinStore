@@ -10,19 +10,64 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <!-- Note that 5 buttons is max in snapped/narrow view (or 10 if using 2 rows) -->
+    <!-- Supposely MS App Labs 8.0 guidance says put the home button in the bottom bar, but for 8.1 we prefer top except if too many, as here -->
+    <!-- Note that for non-standard glyths, just saying Icon="&#x2705" or Icon="✅" will give runtime XAML parsing error -->
+    <!-- Don't need checklist button on checklist page-->
+    <!-- CommandBar will handle layout, automagically switch between normal & small size appbarbutton glyths, with & without titles beneath -->
+
+    <Page.TopAppBar>
+        <CommandBar>
+            <AppBarButton Label="Checklist" Click="Checklist_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="✅" />
+                    <!-- Glyph="&#x2705;" Unicode WHITE HEAVY CHECK MARK character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="New Report" Click="New_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="🚑" />
+                    <!--Glyph="&#x1F691;" Unicode AMBULANCE character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="All Stations" Click="AllStations_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="👪" />
+                    <!-- Glyph="&#x1F46A;" Unicode FAMILY character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Outbox" Click="Outbox_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📮" />
+                    <!-- Glyph="&#x1F4EE;"  Unicode POSTBOX character -->
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton Label="Statistics" Click="Statistics_Click">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="📊" />
+                    <!-- Glyph="&#x1F4CA;"  Unicode BAR CHART character-->
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Home" Icon="Home" Click="Home_Click"/>
+            </CommandBar.SecondaryCommands>
+            <AppBarButton Label="Discard" Icon="Delete" Click="Discard_Click" />
+            <!-- Maybe this should be Clear Entry, Delete-->
+            <AppBarButton Label="Edit" Icon="Edit" Click="Edit_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <!-- OLD Win 8.0 -->
     <!-- Loaded/Unloaded calls are needed to get auto-resizing (and suppression of text) to work in snapped view. Lets app buttons know about state changes -->
     <!-- but doesn't do design view right -->
-    <!-- Note that 5 buttons is max in snapped view (or 10 if using 2 rows) -->
-    <!-- Supposely MS App Labs says put the home button in the bottom bar -->
+    <!--
     <Page.TopAppBar>
         <AppBar x:Name="TopAppBarNewReportPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Top App Bar New Report Page">
             <Grid>
-                <!--
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal"> -->
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Style="{StaticResource ChecklistAppBarButtonStyle}" Tag="Checklist" Click="Checklist_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
                     <Button Style="{StaticResource NewReportAppBarButtonStyle}" Tag="New" Click="New_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
@@ -50,7 +95,7 @@
                 </StackPanel>
             </Grid>
         </AppBar>
-    </Page.BottomAppBar>
+    </Page.BottomAppBar> -->
 
     <Page.Resources>
 
@@ -110,7 +155,7 @@
 
                             <!-- Content is allowed to flow across as many columns as needed -->
                             <common:RichTextColumns x:Name="richTextColumns" Margin="117,0,117,47">
-                                <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False">
+                                <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource BodyRichTextBlockStyle}" IsTextSelectionEnabled="False"> <!-- was ItemRichTextStyle in 8.0 -->
                                     <Paragraph>
                                         <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
                                         <LineBreak/>
@@ -193,8 +238,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Group.Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource TitleBackButtonStyle}"/>
+            <!-- Before Feb 2015, was Win8.0 BackButtonStyle -->
+            <TextBlock x:Name="pageTitle" Text="{Binding Group.Title}" Style="{StaticResource PageHeaderTextBlockStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+            <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
@@ -208,7 +255,8 @@
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -217,10 +265,12 @@
                 <VisualState x:Name="Snapped">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
