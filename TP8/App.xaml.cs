@@ -157,6 +157,7 @@ namespace TP8
         public static bool AppFinishedLaunching = false; // set to true during home page launch
         public static bool ProcessingAllStationsList = false;
         public static SemaphoreSlim LocalStorageDataSemaphore = new SemaphoreSlim(1); // LocalStorage.Data is a static shared resource; serialize read/write access to it.
+        public static string CurrentVisualState = ""; // New win 8.1
 
         public static App Instance
         {

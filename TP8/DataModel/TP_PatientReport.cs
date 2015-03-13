@@ -1766,18 +1766,19 @@ namespace TP8.Data
          {
              // Usual problem, first name is not necessarily given_name (culture specific), but force for now.
              // Could make smarter if take location of event into account
+             // Before Release 3, calls herein to String.IsNullOrWhiteSpace were String.IsNullOrEmpty.  Not uncommon to see strings of " ".
              string ret = "";
-             if(!String.IsNullOrEmpty(item.given_name))
+             if (!String.IsNullOrWhiteSpace(item.given_name))
              {
                 ret = item.given_name;
-                if(!String.IsNullOrEmpty(item.alternate_names))
+                if (!String.IsNullOrWhiteSpace(item.alternate_names))
                     ret += " \"" + item.alternate_names + "\""; // treat as nick
              }
-             else if(!String.IsNullOrEmpty(item.full_name))
+             else if (!String.IsNullOrWhiteSpace(item.full_name))
              {
                  ret = GetAllButLastWord(item.full_name);
              }
-             else if(!String.IsNullOrEmpty(item.alternate_names))
+             else if (!String.IsNullOrWhiteSpace(item.alternate_names))
              {
                  ret = GetAllButLastWord(item.alternate_names);
              }
@@ -1786,7 +1787,10 @@ namespace TP8.Data
 
         private string GetAllButLastWord(string name)
         {
-            char[] c = new char[1] {' '};
+            char[] c = new char[1] { ' ' };
+            name = name.Trim(c);  // Added for Release 3
+            if (!name.Contains(' '))
+                return ""; // Added for Release 3
             string[] s = name.Split(c);
             return name.Substring(0, name.Length - (s.Last().Length + 1)); // +1 for last space separator
         }
@@ -1795,24 +1799,28 @@ namespace TP8.Data
         {
             // TO DO: Make smarter to handle suffixes like Jr.  Also prefixes like "von"
             char[] c = new char[1] { ' ' };
+            name = name.Trim(c);  // Added for Release 3
+            if (!name.Contains(' '))
+                return name; // Added for Release 3
             string[] s = name.Split(c);
-            return s[0];
+            return s.Last(); // Before Release 3, was buggy: s[0]
         }
 
          private string MapLastName(Search_Response_Toplevel_Row item)
          {
              // Usual problem, last name is not necessarily family_name (culture specific), but force for now.
-             // Could make smarter if take location of event into account
+             // Could make smarter if take location of event into account.
+             // Before Release 3, calls herein to String.IsNullOrWhiteSpace were String.IsNullOrEmpty.  Not uncommon to see strings of " ".
              string ret = "";
-             if (!String.IsNullOrEmpty(item.family_name))
+             if (!String.IsNullOrWhiteSpace(item.family_name))
              {
                  ret = item.family_name;
              }
-             else if (!String.IsNullOrEmpty(item.full_name))
+             else if (!String.IsNullOrWhiteSpace(item.full_name))
              {
                  ret = GetLastWord(item.full_name);
              }
-             else if (!String.IsNullOrEmpty(item.alternate_names)) // could this be comma-separated? don't know
+             else if (!String.IsNullOrWhiteSpace(item.alternate_names))
              {
                  ret = GetLastWord(item.alternate_names);
              }
