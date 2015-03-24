@@ -197,7 +197,7 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="EventComboBox" Storyboard.TargetProperty="Width">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="EventListView" Storyboard.TargetProperty="Width"> <!-- WAS EventComboBox -->
                             <DiscreteObjectKeyFrame KeyTime="0" Value="312"/>
                             <!-- 320 minus two size 4 margins -->
                         </ObjectAnimationUsingKeyFrames>

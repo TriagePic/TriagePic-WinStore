@@ -25,7 +25,7 @@ namespace TP8
     /// A page that displays a collection of item previews.  In the Split Application this page
     /// is used to display and select one of the available groups.
     /// </summary>
-    public sealed partial class HomeItemsPage : TP8.Common.BasicLayoutPage //was: LayoutAwarePage
+    public sealed partial class HomeItemsPage : TP8.Common.LayoutAwarePage
     {
 
         public HomeItemsPage()
@@ -33,7 +33,6 @@ namespace TP8
             this.InitializeComponent();
         }
 
-#if WAS
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -59,30 +58,6 @@ namespace TP8
             }
             App.AppFinishedLaunching = true; // set to true during home page launch
 
-        }
-
-#endif
-        /// <summary>
-        /// Populates the page with content passed during navigation.  Any saved state is also
-        /// provided when recreating a page from a prior session.
-        /// </summary>
-        protected override async void LoadState(Common.LoadStateEventArgs e)
-        {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var navigationParameter = e.NavigationParameter;
-            var sampleDataGroups = SampleDataSource.GetGroups((String)navigationParameter);
-            this.DefaultViewModel["Items"] = sampleDataGroups;
-
-            // Too simple events model:
-            // 2nd try: TP_EventsDataList edl = new TP_EventsDataList();
-            if (App.DelayedMessageToUserOnStartup != "") // Got content during App.OnLaunched, but can't be easily shown until now
-            {
-                MessageDialog dlg = new MessageDialog(App.DelayedMessageToUserOnStartup);
-                await dlg.ShowAsync();
-                App.DelayedMessageToUserOnStartup = "";
-            }
-            App.AppFinishedLaunching = true; // set to true during home page launch
-            // Not needed: base.LoadState(e);
         }
 
         /// <summary>
@@ -132,14 +107,14 @@ namespace TP8
 /* WAS
         private void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ChartsFlipPage), "pageCharts"); // was: (typeof(SplitPage),"Statistics"); // Defined in SampleDataSource.cs
+            this.Frame.Navigate(typeof(SplitPage), "Statistics"); // Defined in SampleDataSource.cs
         }
  */
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            // was: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
+            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");

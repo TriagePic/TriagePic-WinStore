@@ -430,10 +430,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleRow" Storyboard.TargetProperty="Height">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="80"/>
                         </ObjectAnimationUsingKeyFrames> -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="newReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[0].Height">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="viewEditReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[0].Height"> <!-- BUGGY, WAS: newReportGrid -->
                             <DiscreteObjectKeyFrame KeyTime="0" Value="80"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="newReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[1].Height">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="viewEditReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[1].Height"> <!-- BUGGY, WAS: newReportGrid -->
                             <DiscreteObjectKeyFrame KeyTime="0" Value="*"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Margin">
