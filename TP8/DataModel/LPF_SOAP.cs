@@ -343,8 +343,8 @@ namespace LPF_SOAP
             // pin.latency = pingLatencyInTenthsOfSeconds.ToString();
             pin.token = App.pd.plToken;
             pin.latency = pingLatencyInTenthsOfSeconds; // was v33: .ToString();
-            pin.pingString = App.DeviceName + ";TriagePic-Win8.1";
-                // Ideal format: "machinename;device id;app name;app version;operating system;device username;pl username"
+            App.MyAssert(!String.IsNullOrEmpty(App.PingString));
+            pin.pingString = App.PingString; // Before June 2015 v 3.4, contents were set here.  Now in App.GetPingString().
             //pingWithEchoResponse pout = new pingWithEchoResponse();
             pingEchoResponse pout = new pingEchoResponse();
 

@@ -206,6 +206,7 @@ namespace TP8.Data
         private TP_PatientReports _allstationssorted = new TP_PatientReports();
         private TP_PatientReports _outboxsortedandfiltered = new TP_PatientReports();
         private TP_PatientReports _allstationssortedandfiltered = new TP_PatientReports();
+        private TP_PatientReports _outboxforstatistics = new TP_PatientReports(); // New June 2015. WhenLocalTime is changed to consist of date only (for daily counts), no time stamp or UTC offset
 
         public TP_PatientReports GetOutbox()
         {
@@ -245,6 +246,11 @@ namespace TP8.Data
         public TP_PatientReports GetAllStationsSortedAndFiltered()
         {
             return _allstationssortedandfiltered;
+        }
+
+        public TP_PatientReports GetOutboxForStatistics()
+        {
+            return _outboxforstatistics;
         }
 
         public TP_PatientDataGroups()
@@ -291,7 +297,7 @@ namespace TP8.Data
 */
             Scrub(); // Remove bad data
             //ReFilter();
-            ReSortAndFilter();
+            ReSortAndFilter();  // includes OutboxForStatisticsRefresh() as of June 2015
             // must follow ReSortAndFilter:
             SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
         }
@@ -309,6 +315,7 @@ namespace TP8.Data
             // Caller has already done post-delete outbox list scrub, and save to XML file.
             // Not necessary to call service for this: await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword, false); // startup is false
             ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
+            OutboxForStatisticsRefresh(); // new June 2015
             SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
         }
 
@@ -364,18 +371,21 @@ namespace TP8.Data
 
         private async Task ProcessAllStationsListImpl(string plname, string plpass, bool onStartup, bool invalidateCacheFirst) 
         {
+            string updateMsg = "Updating reports from all stations for this event ";
+            if (App.CurrentVisualState == "vs321To500Wide" || App.CurrentVisualState == "vs320Wide") // Added for Release 3
+                updateMsg = "Updating reports ";
 
             // Compare Win 7 FormTriagePic.ProcessEventList(...)
             MessageDialog ImmediateDlg = new MessageDialog("");
             if (invalidateCacheFirst) // do this only if current event has changed
             {
                 if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 1 of 4]"; //"Purging cache";
+                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 1 of 4]"; //"Purging cache";
                 await PurgeCachedAllStationsList();
             }
 
             if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 2 of 4]"; //"Calling web service";
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 2 of 4]"; //"Calling web service";
 
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
@@ -408,7 +418,7 @@ namespace TP8.Data
             }
 
             if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 3 of 4]";// "Reading web service results into memory";
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 3 of 4]";// "Reading web service results into memory";
             responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
             // Hopefully don't have to add more filtering here... we'll see.
             if (responseRows == null) // Assume this is an error, not just zero reports
@@ -435,7 +445,7 @@ namespace TP8.Data
             {
                 i++;
                 if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 3 of 4; report " +
+                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 3 of 4; report " +
                         i.ToString() + " of " + count + "]";// "Reading web service results into memory";
 
                 // TO DO:  In future version, support Practice.  For now, skip any records so labeled
@@ -480,7 +490,7 @@ namespace TP8.Data
             }
 #endif
             if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = "Updating reports from all stations for this event [Step 4 of 4]"; //"Also caching results to file";
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 4 of 4]"; //"Also caching results to file";
             await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             // Caller will take care of _allstationssorted, _allstationssortedandfiltered
         }
@@ -622,12 +632,14 @@ namespace TP8.Data
         public void ReSortAndFilter()
         {
             ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
+            OutboxForStatisticsRefresh(); // new June 2015
             ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, true, false);
         }
 
         public void ReSortAndMinimallyFilter() // used by SplitPage, filter is only "current event only" checkbox
         {
             ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, false, true);
+            OutboxForStatisticsRefresh(); // new June 2015
             ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false);
         }
         /// <summary>
@@ -805,6 +817,39 @@ namespace TP8.Data
 
         }
 
+        /// <summary>
+        /// When called, rebuilds outboxforstatistics from outbox
+        /// </summary>
+        public void OutboxForStatisticsRefresh()
+        {
+            // If I could figure out how to define TP_PatientReports.OrderBy, wouldn't need these conversions here and at end:
+            List<TP_PatientReport> orig = _outbox.GetAsList();
+            List<TP_PatientReport> clone = new List<TP_PatientReport>(); // NOT NEEDED: = sortL.GetAsList();
+
+            foreach (TP_PatientReport i in orig)
+            {
+                if(String.IsNullOrEmpty(i.WhenLocalTime))
+                    continue; // skip messed-up records
+                TP_PatientReport r = new TP_PatientReport(i); // make deep copy
+                r.WhenLocalTime = ParseDate(r.WhenLocalTime); // perform surgery on clone, leave orig unaffected.
+                clone.Add(r);
+            }
+            // sort by local time, oldest first, as required by algorithms in Statistics:
+            clone = clone.OrderBy(o => o.WhenLocalTime).ToList();
+
+            _outboxforstatistics.ReplaceWithList(clone);
+        }
+
+        /// <summary>
+        /// Take first 10 characters, for date only, ignore time and UTC offset
+        /// </summary>
+        /// <param name="WhenLocalTime"></param>
+        /// <returns></returns>
+        private string ParseDate(string WhenLocalTime)
+        {
+            return WhenLocalTime.Substring(0, 10);// Assume YYYY-MM-DD format.
+        }
+
         public class PatientIdComparer : IComparer<string>
         {
             // Adapted from Jeff Paulsen, stackoverflow.com/questions/6396378/c-sharp-linq-orderby-numbers-that-are-string-and-you-cannot-convert-them-to-int
@@ -887,9 +932,9 @@ namespace TP8.Data
                 case App.SortByItem.AgeGroup:
                     desc += "age group"; break;
                 case App.SortByItem.PatientIdSkipPrefixNumeric:
-                    desc += "patient ID (numeric)"; break;
+                    desc += "casualty ID (number only)"; break; // was: ...(numeric)
                 case App.SortByItem.PatientIdWithPrefixAlphabetic:
-                    desc += "patient ID (alphabetic)"; break;
+                    desc += "casualty ID (full)"; break; // was: ...(alphabetic
                 case App.SortByItem.TriageZone:
                     desc += "triage zone (alphabetic)"; break;
                 case App.SortByItem.ArrivalTime:
@@ -922,9 +967,9 @@ namespace TP8.Data
                 case App.SortByItem.AgeGroup:
                     desc += "age group"; break;
                 case App.SortByItem.PatientIdSkipPrefixNumeric:
-                    desc += "ID number"; break;
+                    desc += "ID (number)"; break;
                 case App.SortByItem.PatientIdWithPrefixAlphabetic:
-                    desc += "full ID"; break;
+                    desc += "ID (full)"; break;
                 case App.SortByItem.TriageZone:
                     desc += "zone name"; break;
                 case App.SortByItem.ArrivalTime:

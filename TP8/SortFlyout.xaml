@@ -38,9 +38,9 @@
                 <x:String>Gender</x:String>
                 <x:String>Age Group</x:String>
                 <x:String>Triage Zone</x:String>
-                <x:String>People Locator Status</x:String>
+                <!-- needs work: <x:String>People Locator Status</x:String> -->
                 <x:String>Disaster Event</x:String>
-                <x:String>Reporting Station</x:String>
+                <!-- needs work: <x:String>Reporting Station</x:String> -->
             </ComboBox>
             <!-- Another idea is to add in image with text; don't know if can do with carousel, but general approach is:
             <ComboBox><ComboBox.ItemTemplate><DataTemplate><StackPanel Orientation="Horizontal" VertcialAlignment="Center"><Image/><TextBlock/>[close all]

@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:BasicLayoutPage
     x:Name="pageCharts"
     x:Class="TP8.ChartsFlipPage"
     IsTabStop="false"
@@ -17,7 +17,7 @@
     <!-- Adapted from "WinRTXamlToolkit.Sample.Views.ChartsTestPage" -->
     <!-- Was <controls:AlternativePage -->
 
-    <common:LayoutAwarePage.Resources>
+    <common:BasicLayoutPage.Resources>
         <Style x:Key="charting:ZonePalette" TargetType="charting:Chart">
             <Setter Property="Palette">
                 <Setter.Value>
@@ -233,7 +233,7 @@
             </Setter>
         </Style>
 
-    </common:LayoutAwarePage.Resources>
+    </common:BasicLayoutPage.Resources>
 
     <Grid
         Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
@@ -244,11 +244,14 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition
-                Width="120" />
+                Width="20" />
+            <!-- was Width="120"-->
+            <ColumnDefinition
+                Width="120" /> <!-- new column added June 2015-->
             <ColumnDefinition
                 Width="*" />
             <ColumnDefinition
-                Width="120" />
+                Width="20" /><!-- was Width="120"-->
         </Grid.ColumnDefinitions>
         <controls:CustomAppBar
             Grid.Row="1"
@@ -261,17 +264,23 @@
             </StackPanel>
         </controls:CustomAppBar>
         <Button
-            x:Name="BackButton"
+            x:Name="BackButton" Grid.Column="1"
             Style="{StaticResource TitleBackButtonStyle}"
             Click="GoBack"  /> <!-- Before Feb 2015, was Win8.0 BackButtonStyle -->
         <TextBlock
             Text="📊  Statistics"
-            Grid.Column="1"
+            Grid.Column="2"
             Style="{StaticResource PageHeaderTextBlockStyle}" /> <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
+        <TextBlock
+            Text="Arrivals through this Station (in Outbox)"
+            Grid.Column="2" Margin="90,100,0,0" VerticalAlignment="Top"
+            Style="{StaticResource PageSubheaderTextBlockStyle}" /> <!-- added June 2015, and chart titles shortened-->
+
 
         <FlipView
-            Grid.Column="1"
-            Grid.Row="1">
+            Grid.Column="1" Grid.ColumnSpan="2"
+            Grid.Row="1"> <!-- ColumnSpan="2" added June 2015-->
+ <!-- Flip Page 1 -->
             <Viewbox>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -287,7 +296,7 @@
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="1" Grid.Column="1" />
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="2" Grid.Column="0" />
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="2" Grid.Column="1" />
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Arrivals through this Station, All Events" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="For All Open or Closed Events" FontSize="20" HorizontalAlignment="Center"/> <!-- was FontWeight="Bold" until June 2015-->
                     <charting:Chart
                     x:Name="PieChartByTriageZoneAllEvents"
                     Title="By Assigned Triage Zone"
@@ -365,7 +374,8 @@
                     <Border BorderBrush="{StaticResource ApplicationForegroundThemeBrush}" BorderThickness="1" Grid.Row="1" Grid.Column="1" />
                     <Border BorderBrush="{StaticResource ApplicationForegroundThemeBrush}" BorderThickness="1" Grid.Row="2" Grid.Column="0" />
                     <Border BorderBrush="{StaticResource ApplicationForegroundThemeBrush}" BorderThickness="1" Grid.Row="2" Grid.Column="1" />
-                    <TextBlock x:Name="PiesForCurrentEvent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Arrivals through this Station, Current Event" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="PiesForCurrentEvent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="For Current Event"
+                               FontSize="20" HorizontalAlignment="Center"/>
 
                     <charting:Chart
                     x:Name="PieChartByTriageZoneCurrentEvent"
@@ -459,8 +469,8 @@
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="1" Grid.Column="1" />
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="2" Grid.Column="0" />
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="2" Grid.Column="1" />
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Arrivals through this Station, All Events"
-                               FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="For All Open or Closed Events"
+                               FontSize="20" HorizontalAlignment="Center"/>
                     
                     <charting:Chart
                     x:Name="BarChartByTriageZoneAllEvents"
@@ -571,8 +581,8 @@
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="1" Grid.Column="1" />
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="2" Grid.Column="0" />
                     <Border BorderBrush="White" BorderThickness="1" Grid.Row="2" Grid.Column="1" />
-                    <TextBlock x:Name="BarsForCurrentEvent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Arrivals through this Station, Current Event"
-                               FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="BarsForCurrentEvent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="For Current Event"
+                               FontSize="20" HorizontalAlignment="Center"/>
 
                     <charting:Chart
                     x:Name="BarChartByTriageZoneCurrentEvent"
@@ -681,12 +691,12 @@
 
             <charting:Chart
                 x:Name="LineChartArrivals"
-                Title="Arrivals Per Day, This Station, Current Event"
+                Title="Per Day, for Current Event"
                 Margin="70,0">
                 <charting:Chart.TitleStyle>
                     <Style TargetType="vis:Title">
                         <Setter Property="FontSize" Value="28" />
-                        <Setter Property="FontWeight" Value="Bold" />
+                        <!--<Setter Property="FontWeight" Value="Bold" /> -->
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </charting:Chart.TitleStyle>
@@ -716,12 +726,12 @@
 <!-- Page 6 -->
             <charting:Chart
                 x:Name="LineChartArrivalsAllStations"
-                Title="Total Arrivals Per Day, This Station, All Events"
+                Title="Per Day, for All Open or Closed Events"
                 Margin="70,0">
                 <charting:Chart.TitleStyle>
                     <Style TargetType="vis:Title">
                         <Setter Property="FontSize" Value="28" />
-                        <Setter Property="FontWeight" Value="Bold" />
+                        <!-- <Setter Property="FontWeight" Value="Bold" /> -->
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </charting:Chart.TitleStyle>
@@ -737,12 +747,12 @@
 <!-- Page 7 -->
             <charting:Chart
                 x:Name="LineChartArrivalsAllStations_Page7"
-                Title="Arrivals Per Day, This Station, All Events (Itemized)"
+                Title="Per Day, Itemized by Event (Open Only)"
                 Margin="70,0">
                 <charting:Chart.TitleStyle>
                     <Style TargetType="vis:Title">
                         <Setter Property="FontSize" Value="28" />
-                        <Setter Property="FontWeight" Value="Bold" />
+                        <!-- <Setter Property="FontWeight" Value="Bold" /> -->
                         <Setter Property="HorizontalAlignment" Value="Center" />
                     </Style>
                 </charting:Chart.TitleStyle>
@@ -932,5 +942,5 @@
             -->
         </FlipView>
     </Grid>
-</common:LayoutAwarePage>
+</common:BasicLayoutPage>
 <!-- </controls:AlternativePage> -->

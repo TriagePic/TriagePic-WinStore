@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
+using TP8.Common;
 
 // The Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234233
 
@@ -66,7 +67,7 @@ namespace TP8
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
         /// </summary>
-        protected override async void LoadState(Common.LoadStateEventArgs e)
+        protected override async void LoadState(LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var navigationParameter = e.NavigationParameter;
@@ -138,7 +139,7 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
             // was: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:

@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:BasicLayoutPage
     x:Name="pageViewEditReport"
     x:Class="TP8.BasicPageViewEdit"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
@@ -65,26 +65,6 @@
             </AppBarButton>
         </CommandBar>
     </Page.TopAppBar>
-    <!-- OLD Win 8.0 -->
-    <!-- Loaded/Unloaded calls are needed to get auto-resizing (and suppression of text) to work in snapped view. Lets app buttons know about state changes -->
-    <!-- but doesn't do design view right -->
-    <!-- 
-    <Page.TopAppBar>
-        <AppBar x:Name="TopAppBarNewReportPage" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Top App Bar New Report Page">
-            <Grid>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Style="{StaticResource ChecklistAppBarButtonStyle}" Tag="Checklist" Click="Checklist_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                    <Button Style="{StaticResource NewReportAppBarButtonStyle}" Tag="New" Click="New_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                    <Button Style="{StaticResource AllStationsAppBarButtonStyle}" Tag="AllStations" Click="AllStations_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                    <Button Style="{StaticResource OutboxAppBarButtonStyle}" Tag="Outbox" Click="Outbox_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                    <Button Style="{StaticResource StatisticsAppBarButtonStyle}" Tag="Statistics" Click="Statistics_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                </StackPanel>
-            </Grid>
-        </AppBar>
-    </Page.TopAppBar>
--->
-
-
 
     <Page.BottomAppBar>
         <CommandBar>
@@ -108,40 +88,6 @@
             <AppBarButton Label="Webcam" Icon="WebCam" Click="Webcam_Click"/>
         </CommandBar>
     </Page.BottomAppBar>
-
-    <!-- OLD Win 8.0:
-    <Page.BottomAppBar>    
-        <AppBar x:Name="BottomAppBarNewReport" Padding="10,0,10,0" FontFamily="Global User Interface" AutomationProperties.Name="Bottom App Bar New Report">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel x:Name="BottomAppBarLeftPanel" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Button Style="{StaticResource HomeAppBarButtonStyle}" Tag="Home" Click="Home_Click" Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                </StackPanel>
-                <StackPanel x:Name="BottomAppBarRightPanel" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal"> -->
-                    <!-- Probably more confusing than helpful: 
-                    <Button x:Name="ClearEntry" Style="{StaticResource DeleteAppBarButtonStyle}" Tag="Clear Entry" Click="Clear_Entry_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/> -->
-                    <!-- <Button x:Name="Discard" Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard" Click="Discard_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates" /> -->
-                    <!--
-                    <Button Style="{StaticResource DiscardAppBarButtonStyle}" Tag="Discard"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates">
-                        <Button.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="From outbox only" Click="DeleteLocal_Click"/>
-                                <ToggleMenuFlyoutItem Text="From TriageTrak too" Click="DeleteRemoteToo_Click"/>
-                            </MenuFlyout>
-                        </Button.Flyout>
-                    </Button>
-                    <Button x:Name="Webcam" Style="{StaticResource WebcamAppBarButtonStyle}" Tag="New" Click="Webcam_Click"  Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates"/>
-                </StackPanel>
-            </Grid>
-        </AppBar>
-    </Page.BottomAppBar> -->
-
-
-
-
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -226,7 +172,7 @@
                 <!-- In landscape & filled view, caption is in column 3.  In snapped view, its hidden (for now) -->
                 <TextBox x:Name="CaptionPortrait" Visibility="Collapsed" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/>
 
-                <Grid Margin="0,30,0,0">
+                <Grid x:Name="SexAndAge" Margin="0,30,0,0">
                     <!-- spacing & size tweaked for snap view:-->
                     <CheckBox x:Name="CheckBoxMale" Content="Male" HorizontalAlignment="Left" Height="33" VerticalAlignment="Top" Width="65" Tapped="AnyCheckBox_Tapped"/>
                     <CheckBox x:Name="CheckBoxFemale" Content="Female" HorizontalAlignment="Left" Height="33" Margin="69,0,0,0" VerticalAlignment="Top" Width="76" Tapped="AnyCheckBox_Tapped"/>
@@ -245,21 +191,52 @@
                 </ItemsControl>
                 <!-- Items hidden in landscape & filled views: -->
                 <Grid x:Name="BottomControlsColumn1" Visibility="Collapsed">
-                    <ComboBox x:Name="ZoneChoiceComboSnapped" ItemsSource="{Binding}"  HorizontalAlignment="Left" Margin="0,16,0,0" VerticalAlignment="Top" Width="174" SelectionChanged="ZoneChoiceComboSnapped_SelectionChanged"/>
+                    <!-- In this mode, place sent message above zone combo box & send button, in order to have more width for message-->
+                    <!-- toggle visibility to show either LastSentMsg or ProgressBar but not both-->
+                    <!-- Tried Text="{Binding LastSentMessage}" but didn't work, presumably because 3 object binding not allowed? -->
+                    <TextBlock x:Name="LastSentMsgSnapped" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="16"/>
+                    <ProgressBar x:Name="progressBarSendingSnapped" VerticalAlignment="Top" HorizontalAlignment="Left" Height="10" Margin="0,10,0,0" Grid.Row="1" Width="424" RenderTransformOrigin="0.5,0.5" IsEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False" IsIndeterminate="True" Visibility="Collapsed">
+                        <ProgressBar.RenderTransform>
+                            <CompositeTransform ScaleY="-1"/>
+                        </ProgressBar.RenderTransform>
+                    </ProgressBar>
+                    <ComboBox x:Name="ZoneChoiceComboSnapped" ItemsSource="{Binding}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,30,0,0" Width="174" SelectionChanged="ZoneChoiceComboSnapped_SelectionChanged"/>
+
                     <!-- TO DO:
                     <CheckBox x:Name="CheckBoxPracticeModeSnapped" Content="Practice Mode" HorizontalAlignment="Left" Height="33" Margin="0,65,0,0" VerticalAlignment="Top" Width="130" Tapped="AnyCheckBox_Tapped"/> -->
+                    <StackPanel HorizontalAlignment="Right" Margin="0,20,130,0" VerticalAlignment="Center">
+                        <!-- FieldModifier is public on next items to allow toggling from SendQueue-->
+                        <Rectangle x:Name="BlinkerTopRedSnapped" x:FieldModifier="public" Height="15" Width="15" Fill="DarkRed" />
+                        <Rectangle x:Name="BlinkerMiddleYellowSnapped" x:FieldModifier="public" Margin="0,4" Height="15" Width="15" Fill="DarkGoldenrod" />
+                        <Rectangle x:Name="BlinkerBottomGreenSnapped" x:FieldModifier="public" Height="15" Width="15" Fill="DarkGreen" />
+                        <TextBlock x:Name="CountInSendQueueSnapped" x:FieldModifier="public" Height="30" Width="40" Margin="0,10,0,0" FontSize="18" TextAlignment="Center" FontWeight="Bold" />
+                    </StackPanel>
                     <Canvas Name="SendControlSnapped" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,0,0" Height="70" Width="70">
                         <Button x:Name="SendButtonSnapped" Canvas.Top="9" Content="&#xE122;" Click="Send_Click" FontFamily="Segoe UI Symbol" FontSize="28" BorderThickness="0"/>
                         <Ellipse x:Name="outerCircleSnapped" Stroke="White" StrokeThickness="4" Height="70" Width="70"/>
                     </Canvas>
-
                 </Grid>
 
                 <Grid x:Name="BottomControlsPortrait" Visibility="Collapsed">
+                    <!-- toggle visibility to show either LastSentMsg or ProgressBar but not both-->
+                    <!-- Tried Text="{Binding LastSentMessage}" but didn't work, presumably because 3 object binding not allowed? -->
+                    <TextBlock x:Name="LastSentMsgPortrait" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="16"/>
+                    <ProgressBar x:Name="progressBarSendingPortrait" HorizontalAlignment="Left" Height="10" Margin="0,20,0,0" Grid.Row="1" VerticalAlignment="Top" Width="424" RenderTransformOrigin="0.5,0.5" IsEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False" IsIndeterminate="True" Visibility="Collapsed">
+                        <ProgressBar.RenderTransform>
+                            <CompositeTransform ScaleY="-1"/>
+                        </ProgressBar.RenderTransform>
+                    </ProgressBar>
                     <!-- TO DO:
                     <CheckBox x:Name="CheckBoxPracticeModePortrait" Content="Practice Mode" HorizontalAlignment="Left" Height="33" Margin="0,100,0,0" VerticalAlignment="Top" Width="130" Tapped="AnyCheckBox_Tapped"/> -->
-
-                    <Canvas Name="SendControlPortrait" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,0,0" Height="120" Width="100">
+                    <StackPanel HorizontalAlignment="Right" Margin="0,20,130,0" VerticalAlignment="Center">
+                        <!-- FieldModifier is public on next items to allow toggling from SendQueue-->
+                        <Rectangle x:Name="BlinkerTopRedPortrait" x:FieldModifier="public" Height="15" Width="15" Fill="DarkRed" />
+                        <Rectangle x:Name="BlinkerMiddleYellowPortrait" x:FieldModifier="public" Margin="0,4" Height="15" Width="15" Fill="DarkGoldenrod" />
+                        <Rectangle x:Name="BlinkerBottomGreenPortrait" x:FieldModifier="public" Height="15" Width="15" Fill="DarkGreen" />
+                        <TextBlock x:Name="CountInSendQueuePortrait" x:FieldModifier="public" Height="30" Width="40" Margin="0,10,0,0" FontSize="18" TextAlignment="Center" FontWeight="Bold" />
+                    </StackPanel>
+                    
+                    <Canvas Name="SendControlPortrait" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" Height="120" Width="100">
                         <Button x:Name="SendButtonPortrait" Canvas.Top="15" Content="&#xE122;" Click="Send_Click" FontFamily="Segoe UI Symbol" FontSize="45" BorderThickness="0"/>
                         <Ellipse x:Name="outerCirclePortrait" Stroke="White" StrokeThickness="6" Height="100" Width="100"/>
                         <TextBlock Canvas.Top="105" Canvas.Left="33" Text="Send" FontSize="15"></TextBlock>
@@ -267,12 +244,19 @@
                 </Grid>
             </StackPanel>
 
-            <!-- Right column in landscape & filled modes: -->
+            <!-- Right column in landscape, filled, & half modes: -->
             <StackPanel Grid.Column="3">
                 <Viewbox x:Name="PatientImageViewboxLandscape"  Height="404" Width="550" VerticalAlignment="Top">
                     <Canvas x:Name="PatientImageLandscape" HorizontalAlignment="Left"  VerticalAlignment="Top"  Height="404" Width="550" MaxHeight="404" MaxWidth="550" Background="#FFC17819" >
                         <TextBlock x:Name ="patientImageTextOverlayLandscape" Canvas.Left="78" Canvas.Top="64" Text="No photo.  Click here for webcam." Canvas.ZIndex="1" FontSize="26" Tapped="patientImage_Tapped" FontFamily="Global User Interface"/>
                         <Image x:Name="patientImageLandscape" Height="404" Width="545" Source="Assets/PhotoBackgroundCameraLogo(300x300).png" Tapped="patientImage_Tapped"/>
+                    </Canvas>
+                </Viewbox>
+                <Viewbox x:Name="PatientImageViewboxHalf"  Height="280" Width="280" VerticalAlignment="Top"  Visibility="Collapsed">
+                    <!-- same as snapped except without margin change, and placed here in different column -->
+                    <Canvas x:Name="PatientImageHalf" HorizontalAlignment="Left"  VerticalAlignment="Top"  Height="280" Width="280" MaxHeight="404" MaxWidth="550" Background="#FFC17819" >
+                        <TextBlock x:Name ="patientImageTextOverlayHalf" Canvas.Left="7" Canvas.Top="50" Text="No photo.  Click here for webcam." Canvas.ZIndex="1" FontSize="18" Tapped="patientImage_Tapped" FontFamily="Global User Interface"/>
+                        <Image x:Name="patientImageHalf" Height="280" Width="280" Source="Assets/PhotoBackgroundCameraLogo(300x300).png" Tapped="patientImage_Tapped" ImageFailed="patientImage_ImageFailed" ImageOpened="patientImage_ImageOpened"/>
                     </Canvas>
                 </Viewbox>
                 <TextBox x:Name="Caption" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/>
@@ -294,7 +278,6 @@
                         <Rectangle x:Name="BlinkerMiddleYellow" x:FieldModifier="public" Margin="0,4" Height="15" Width="15" Fill="DarkGoldenrod" />
                         <Rectangle x:Name="BlinkerBottomGreen" x:FieldModifier="public" Height="15" Width="15" Fill="DarkGreen" />
                         <TextBlock x:Name="CountInSendQueue" x:FieldModifier="public" Height="30" Width="40" Margin="0,10,0,0" FontSize="18" TextAlignment="Center" FontWeight="Bold" />
-
                     </StackPanel>
                     <Canvas Name="SendControlLandscape" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,0,0" Height="120" Width="100">
                         <Button x:Name="SendButtonLandscape" Canvas.Top="15" Content="&#xE122;" Click="Send_Click" FontFamily="Segoe UI Symbol" FontSize="45" BorderThickness="0"/>
@@ -306,14 +289,15 @@
         </Grid>
 
 
-
-
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape"/>
-                <VisualState x:Name="Filled">
+                <VisualState x:Name="vs1026To1365Wide"/>
+                
+                <!-- "vs501To672Wide" (new to Release 3) and "vs673To1025Wide" have the same content (so far) -->
+                <VisualState x:Name="vs673To1025Wide">
                     <Storyboard>
                         <!-- Glenn adds, left margin:-->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width">
@@ -343,6 +327,53 @@
                     </Storyboard>
                 </VisualState>
 
+                <!-- "vs501To672Wide" (new to Release 3) and "vs673To1025Wide" have the similar content, but half uses narrower grid margins, smaller layout for image, different spacing for patient ID field & +, - buttons -->
+                <VisualState x:Name="vs501To672Wide">
+                    <Storyboard>
+                        <!-- Glenn adds, left margin:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>20</GridLength>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Column separator:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[2].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>10</GridLength>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Right margin:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[4].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>20</GridLength>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="incrementPatientID" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="2,0,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="decrementPatientID" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="2,0,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Additional animations to narrow zone button widths added to here in code-behind -->
+                        <!-- use smaller visual area of portrait image for half landscape too-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxLandscape" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxHalf" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
@@ -366,7 +397,12 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CaptionPortrait" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
-
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SexAndAge" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,15,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Notes" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,15,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <!--
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ZoneButtons" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
@@ -380,12 +416,17 @@
                         <!-- <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckBoxPracticeMode" Storyboard.TargetProperty="(Grid.Column)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
                         </ObjectAnimationUsingKeyFrames> -->
+                        
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BottomControlsColumn3" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BottomControlsPortrait" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Didn't work:
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BottomControlsColumn3" Storyboard.TargetProperty="Grid.Column">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                        </ObjectAnimationUsingKeyFrames> -->
                         <!-- Adjust left margin: -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width">
                             <DiscreteObjectKeyFrame KeyTime="0">
@@ -423,17 +464,122 @@
                     </Storyboard>
                 </VisualState>
 
-                <!-- The back button and title have different styles when snapped -->
-                <VisualState x:Name="Snapped">
+                <!-- The back button and title have different styles when narrow or snapped -->
+                <!-- "vs321To500Wide" (new to Release 3) and "vs320Wide" have the same content (so far) -->
+                <VisualState x:Name="vs321To500Wide">
                     <Storyboard>
                         <!--
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleRow" Storyboard.TargetProperty="Height">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="80"/>
                         </ObjectAnimationUsingKeyFrames> -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="newReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[0].Height">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="viewEditReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[0].Height">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="80"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="newReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[1].Height">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="viewEditReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[1].Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="*"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,40,18,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Glenn adds:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="patientID_Prompt" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="firstNamePrompt" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="firstNamePrompt" Storyboard.TargetProperty="Text">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="First Name &lt;tab&gt; Last Name"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lastNamePrompt" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxLandscape" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxSnapped" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ZoneButtons" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Caption" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Notes" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckBoxPracticeMode" Storyboard.TargetProperty="(Grid.Column)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                        </ObjectAnimationUsingKeyFrames> -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BottomControlsColumn3" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BottomControlsColumn1" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Adjust left margin: -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[0].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>20</GridLength>
+                                    <!-- Would be 56 if we wanted to indent to start of title-->
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- What was column separator becomes right margin: -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[2].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>20</GridLength>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Make other columns zero width: -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[3].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>0</GridLength>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Make other columns zero width: -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="mainContentLandscape" Storyboard.TargetProperty="Grid.ColumnDefinitions[4].Width">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <GridLength>0</GridLength>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- The back button and title have different styles when narrow or snapped -->
+                <!-- "vs321To500Wide" (new to Release 3) and "vs320Wide" have the same content (so far) -->
+                <VisualState x:Name="vs320Wide">
+                    <Storyboard>
+                        <!--
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleRow" Storyboard.TargetProperty="Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="80"/>
+                        </ObjectAnimationUsingKeyFrames> -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="viewEditReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[0].Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="80"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="viewEditReportGrid" Storyboard.TargetProperty="Grid.RowDefinitions[1].Height">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="*"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Margin">
@@ -528,4 +674,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</common:LayoutAwarePage>
+</common:BasicLayoutPage>

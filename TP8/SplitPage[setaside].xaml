@@ -52,36 +52,6 @@
             <MenuFlyoutItem Text="From outbox only" Click="DeleteLocal_Click" Tag="outbox only"/>
             <MenuFlyoutItem Text="From TriageTrak too" Click="DeleteRemoteToo_Click" Tag="triagetrak too"/>
         </MenuFlyout>  -->
-
-        <!-- Next 3 added June 2015: -->
-        <Style x:Key="SplitPageTitleBackButtonStyle" TargetType="Button" BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
-            <Setter Property="Margin" Value="40,43,40,40"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
-
-        <Style x:Key="SplitPageNarrowTitleBackButtonStyle" TargetType="Button" BasedOn="{StaticResource NavigationBackButtonSmallStyle}">
-            <Setter Property="Margin" Value="10,39,10,0"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
-
-        <Style x:Key="SplitPagePortraitTitleBackButtonStyle" TargetType="Button" BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
-            <Setter Property="Margin" Value="30,43,30,0"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
-
-        <Style x:Key="SplitPageTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
-            <Setter Property="FontSize" Value="30"/>
-            <Setter Property="FontWeight" Value="Light"/>
-            <Setter Property="LineHeight" Value="30"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="0,40,0,10"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
-
-        <Style x:Key="SplitPageNarrowTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource PageSubheaderTextBlockStyle}">
-            <Setter Property="Margin" Value="0,40,0,0"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
     </Page.Resources>
 
     <!-- Note that 5 buttons is max in snapped/narrow view (or 10 if using 2 rows) -->
@@ -194,7 +164,7 @@
         <!-- d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}" > -->
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="140"/> <!-- was 140 until June 2015-->
+            <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -207,52 +177,36 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <!-- was 100-->
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <!-- Don't adjust backButton margins here, instead in custom styles above (as assumes vis state XAML)-->
             <Button
                 x:Name="backButton"
                 Click="GoBack"
                 IsEnabled="{Binding DefaultViewModel.CanGoBack, ElementName=pageRoot}"
-                Style="{StaticResource SplitPageTitleBackButtonStyle}"/>
+                Style="{StaticResource TitleBackButtonStyle}"/>
             <!-- Before Feb 2015, was Win8.0 BackButtonStyle -->
-
-            <TextBlock x:Name="debugVisState" Grid.Column="1" Margin="0,0,0,0" FontSize="8" TextAlignment="Right"/> <!-- don't hide this, will have no content unless in debug mode-->
-            <TextBlock x:Name="eventAndOrgText" Grid.Column="1" Margin="0,0,0,0" Text="[event(s), org(s)]"
-                        IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}" VerticalAlignment="Top"/>
-            <!-- Before June 2015 was x:Name="eventAndOrgTextPortrait" -->
+            <TextBlock x:Name="eventAndOrgTextPortrait" Grid.Column="1" Margin="0,10,0,110" Text="[event(s)]" Visibility="Collapsed"
+                        IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
             <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
-            <!-- Simplify June 2015, combine countOfItems into title:
             <StackPanel x:Name="pageTitlePanel" Grid.Column="1" Orientation="Horizontal">
-                <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource SplitPageTitleTextBlockStyle}"  Margin="0,40,0,10" VerticalAlignment="Top"/>-->
-                <!-- was PageHeaderTextBlockStyle before June 2015.  Before Feb 2015: PageHeaderTextStyle-->
-                <!--<TextBlock x:Name="countOfItems" Text ="([count])" Style="{StaticResource SplitPageTitleTextBlockStyle}" Margin="5,40,0,10" VerticalAlignment="Top"/>--> <!-- ditto-->
-            <!--</StackPanel> -->
-            <!-- Don't adjust margin here in pageTitle, instead in custom style above -->
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="([count])" Style="{StaticResource SplitPageTitleTextBlockStyle}" SizeChanged="pageTitle_SizeChanged"/>
-            <TextBlock x:Name="sortedByText" Grid.Column="1" Margin="0,75,0,7" Text="[sorted by]"
-                        IsHitTestVisible="false" FontSize="18" Style="{StaticResource PageSubsubheaderTextBlockStyle}" VerticalAlignment="Top"/>
-            <!-- was named ...Portrait-->
-            <!-- Causes problems: Style="{StaticResource PageSubsubheaderTextStyle}" (which is superceded by PageSubsubheaderTextBlockStyle)-->
-            <StackPanel x:Name="checkboxes" Grid.Column="1" Orientation="Horizontal" Margin="0,114,0,0">
-                <CheckBox x:Name="CheckBoxCurrentEventOnly" Content="Current Event Only"
-                            HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="160" HorizontalContentAlignment="Left" Tapped="CheckBoxCurrentEventOnly_Tapped"/>
-                <!-- was named ...Portrait-->
-                <CheckBox x:Name="CheckBoxMyOrgOnly" Grid.Column="1" Margin="20,0" Content="My Org Only"
-                            HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Left" Tapped="CheckBoxMyOrgOnly_Tapped"/>
-                <!-- was named ...Portrait-->
+                <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
+                <TextBlock x:Name="countOfItems" Text ="([count])" Style="{StaticResource PageHeaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
             </StackPanel>
+            <TextBlock x:Name="sortedByTextPortrait" Grid.Column="1" Margin="0,90,0,7" Text="[sorted by]" Visibility="Collapsed"
+                        IsHitTestVisible="false" FontSize="18" />
+            <!-- Causes problems: Style="{StaticResource PageSubsubheaderTextStyle}" (which is superceded by PageSubsubheaderTextBlockStyle)-->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,114,0,0">
+                <CheckBox x:Name="CheckBoxCurrentEventOnlyPortrait" Content="Current Event Only" Visibility="Collapsed"
+                            HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="160" HorizontalContentAlignment="Left" Tapped="CheckBoxCurrentEventOnly_Tapped"/>
+                <CheckBox x:Name="CheckBoxMyOrgOnlyPortrait" Grid.Column="1" Margin="20,0" Content="My Org Only" Visibility="Collapsed"
+                            HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Left" Tapped="CheckBoxMyOrgOnly_Tapped"/>
+            </StackPanel>
+            <!-- TO DO FURTHER CONVERSION: Button to AppBarButton, less use of StandardStyles -->
             <!-- was before Feb 2015: <Button x:Name="sortFlyoutOutboxPortrait" Grid.Column="2" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0"
                     Tapped="sortFlyoutOutbox_Tapped" Visibility="Collapsed"/>  -->
-            <AppBarButton x:Name="sortFlyoutOutbox" Grid.Column="2" Tapped="sortFlyoutOutbox_Tapped" Icon="Sort" Label="Sort" Margin="0,55,0,0" VerticalAlignment="Stretch"/>
-            <!-- was named ...Portrait-->
-            <Canvas x:Name="sortControlSmall" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,75,3,0" Height="65" Width="50" Visibility="Collapsed">
-                <Button x:Name="SortSymbolSmall"  Content="&#xE174;" Tapped="sortFlyoutOutbox_Tapped" FontFamily="Segoe UI Symbol" FontSize="16" BorderThickness="0" Width="50" FontWeight="Normal"/>
-                <Ellipse x:Name="outerCircle" Canvas.Top="3" Canvas.Left="10" Stroke="White" StrokeThickness="2" Height="30" Width="30"/>
-                <TextBlock x:Name="SortButtonCaption" Canvas.Top="36" Canvas.Left="15" Text="Sort" FontSize="10"></TextBlock>
-            </Canvas>
-
+            <AppBarButton x:Name="sortFlyoutOutboxPortrait" Grid.Column="2" Tapped="sortFlyoutOutbox_Tapped" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch" Visibility="Collapsed"/>
         </Grid>
        
 
@@ -271,7 +225,27 @@
             SelectionChanged="ItemListView_SelectionChanged"
             ItemTemplate="{StaticResource Standard130ItemTemplate}"/>
 
-        <!-- June 2015, drop sortDetails header in right column; controls moved to left column a la portrait mode -->
+        <!-- Glenn adds, as in SearchResultsPage:-->
+        <Grid x:Name ="sortDetails" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Canvas x:Name="sortDetailsCanvas" Grid.Column="0" Margin="70,0,0,0">
+                <TextBlock x:Name="eventAndOrgText" Canvas.Top="10" Text="[event(s)]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
+                <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
+                <!-- WAS: <TextBlock x:Name="queryText" Canvas.Top="70" Text="{Binding QueryText}" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/> -->
+                <TextBlock x:Name="sortedByText" Canvas.Top="50" Text="[sorted by]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}" TextWrapping="Wrap" />
+                <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
+                <CheckBox x:Name="CheckBoxCurrentEventOnly" Canvas.Top="96" Content="Current Event Only" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="160" HorizontalContentAlignment="Left" Tapped="CheckBoxCurrentEventOnly_Tapped"/>
+                <CheckBox x:Name="CheckBoxMyOrgOnly" Canvas.Top="96" Content="My Org Only" Canvas.Left="180" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Left" Tapped="CheckBoxMyOrgOnly_Tapped"/>
+            </Canvas>
+            <!-- was before Feb 2015: <Button x:Name="sortFlyoutOutbox" Grid.Column="1" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0" Tapped="sortFlyoutOutbox_Tapped"/> -->
+            <AppBarButton x:Name="sortFlyoutOutbox" Grid.Column="1" Tapped="sortFlyoutOutbox_Tapped" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <!-- also in theory, old form: <Button x:Name="filterFlyout" Grid.Column="2" Click="filterFlyout_Click" Style="{StaticResource FilterAppBarButtonStyle}" Margin="0,42,0,0"/> -->
+            <!-- In theory, new form: <AppBarButton x:Name="filterFlyout" Grid.Column="2" Click="filterFlyout_Click" Icon="Filter" Label="Filter"  Margin="0,42,0,0" VerticalAlignment="Stretch"/> -->
+        </Grid>
 
         <!-- Details for selected item -->
         <!-- WAS: Grid.Row="0" -->
@@ -325,18 +299,11 @@
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <!-- Filled or Full On Big Screen (landscape with available with to app of 1366 pixels or more) -->
-                <VisualState x:Name="TwoColumnsLoose"/> <!-- was before June 2015 x:Name="FilledOrFullOnBigScreen"-->
+                <VisualState x:Name="FilledOrFullOnBigScreen"/>
 
                 <!-- Filled or Full On Small Screen (landscape with under 1366 pixels for us) uses a simpler list format in a narrower column -->
-                <VisualState x:Name="TwoColumnsTight"> <!-- was "FilledOrFullOnSmallScreen" -->
+                <VisualState x:Name="FilledOrFullOnSmallScreen">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleTextBlockStyle}"/>
-                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
-                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="420"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -346,16 +313,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemDetail" Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="60,0,66,0"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- new June 2015:-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <!-- was FontSize 9-->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
-                    
                 </VisualState>
 
                 <!--
@@ -365,11 +323,69 @@
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPagePortraitTitleBackButtonStyle}"/>
-                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle. Before June 2015, was PortraitTitleBackButtonStyle -->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- June 2015, many items deleted here as no longer needed -->
-
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutboxPortrait" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventAndOrgTextPortrait" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubheaderTextBlockStyle}"/>
+                            <!-- Win 8.0 was SubheaderTextStyle-->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="countOfItems" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubheaderTextBlockStyle}"/>
+                            <!-- Win 8.0 was SubheaderTextStyle-->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,37,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="countOfItems" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="5,37,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Height">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="40"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="countOfItems" Storyboard.TargetProperty="Height">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="40"/>
+                            </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="30"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="countOfItems" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="30"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitlePanel" Storyboard.TargetProperty="VerticalAlignment">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Top"/>
+                        </ObjectAnimationUsingKeyFrames>
+                       <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortedByTextPortrait" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckBoxCurrentEventOnlyPortrait" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CheckBoxMyOrgOnlyPortrait" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Overlay title: --><!--
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortDetails" Storyboard.TargetProperty="Grid.Column">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0"/> 
+                        </ObjectAnimationUsingKeyFrames> 
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortDetailsCanvas" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="120,0,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortByText" Storyboard.TargetProperty="Canvas.Top">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="96"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortByText" Storyboard.TargetProperty="Canvas.Left">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="180"/>
+                        </ObjectAnimationUsingKeyFrames> -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemDetail" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -381,24 +397,24 @@
 
                 <!--
                     When an item is selected in portrait the details display requires more extensive changes:
-                     * Hide the master list and the column it was in
-                     * Move item details down a row to make room for the title [which as of June 2015 is left blank]
-                     * Move the [blank] title directly above the details
+                     * Hide the master list and the column is was in
+                     * Move item details down a row to make room for the title
+                     * Move the title directly above the details
                      * Adjust margins and padding for details
                  -->
                 <VisualState x:Name="FullScreenPortrait_Detail">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPagePortraitTitleBackButtonStyle}"/>
-                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle.  Before June 2015, was PortraitTitleBackButtonStyle -->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- dropped June 2015:<ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortDetails" Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortDetails" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames> -->
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -417,22 +433,6 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemDetail" Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="100,0,90,0"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- Next 5 collapses are new June 2015: -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventAndOrgText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortedByText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="checkboxes" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
 
@@ -440,15 +440,16 @@
                     The back button and title have different styles when snapped, and the page
                     initially hides details to show only the list of items
                 -->
-                <VisualState x:Name="vs320Wide">
+                <VisualState x:Name="Snapped">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleTextBlockStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
                             <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
+
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="320"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -460,13 +461,6 @@
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView" Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <!-- new June 2015:-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility"> <!-- was FontSize 9-->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -480,34 +474,17 @@
                      * Use a different font for title and subtitle
                      * Adjust margins below subtitle
                  -->
-                <VisualState x:Name="vs320Wide_Detail">
+                <VisualState x:Name="Snapped_Detail">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
-                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle. Before June 2015, was NarrowTitleBackButtonStyle -->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- New June 2015: -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventAndOrgText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility"> <!-- before June 2015 was pageTitlePanel -->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortedByText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="checkboxes" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
 
-                        <!-- was
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/> -->
-                            <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
-                        <!-- was </ObjectAnimationUsingKeyFrames> -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -554,15 +531,16 @@
                     The back button and title have different styles when snapped, and the page
                     initially hides details to show only the list of items
                 -->
-                <VisualState x:Name="vs321To500Wide">
+                <VisualState x:Name="Narrow">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleTextBlockStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
                             <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
+
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="320"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -574,14 +552,6 @@
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView" Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <!-- new June 2015:-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <!-- was FontSize 9-->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
@@ -596,36 +566,16 @@
                      * Use a different font for title and subtitle
                      * Adjust margins below subtitle
                  -->
-                <VisualState x:Name="vs321To500Wide_Detail">
+                <VisualState x:Name="Narrow_Detail">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                             <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
-
-                        <!-- New June 2015: -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventAndOrgText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
-                            <!-- before June 2015 was pageTitlePanel -->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortedByText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="checkboxes" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        
-                        <!-- was
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/> -->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
                             <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
-                        <!--</ObjectAnimationUsingKeyFrames> -->
+                        </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
@@ -672,13 +622,13 @@
                     The back button and title have different styles when snapped, and the page
                     initially hides details to show only the list of items
                 -->
-                <VisualState x:Name="vs501To672Wide">
+                <VisualState x:Name="Half">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleTextBlockStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
                             <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
                         </ObjectAnimationUsingKeyFrames>
 
@@ -694,14 +644,6 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemListView" Storyboard.TargetProperty="Padding">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <!-- new June 2015:-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <!-- was FontSize 9-->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
 
@@ -715,36 +657,16 @@
                      * Use a different font for title and subtitle
                      * Adjust margins below subtitle
                  -->
-                <VisualState x:Name="vs501To672Wide_Detail">
+                <VisualState x:Name="Half_Detail">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SplitPageNarrowTitleBackButtonStyle}"/>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                             <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
-
-                        <!-- New June 2015: -->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventAndOrgText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
-                            <!-- before June 2015 was pageTitlePanel -->
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortedByText" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="checkboxes" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyoutOutbox" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        
-                        <!-- was
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/> -->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
                             <!-- WAS BEFORE FEB 2015: PageHeaderTextStyle-->
-                        <!--</ObjectAnimationUsingKeyFrames> -->
+                        </ObjectAnimationUsingKeyFrames>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="primaryColumn" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>

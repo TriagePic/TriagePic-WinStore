@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Text.RegularExpressions;
 using Windows.UI.Popups;
+using TP8.Common;
 
 // The Split Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234234
 
@@ -26,7 +27,7 @@ namespace TP8
     /// A page that displays a group title, a list of items within the group, and details for the
     /// currently selected item.
     /// </summary>
-    public sealed partial class SplitPage : TP8.Common.LayoutAwarePage
+    public sealed partial class SplitPage : TP8.Common.BasicLayoutPage
     {
         // Used with bottom app bar:
 // WAS:        private Popup discardMenuPopUp = null;
@@ -51,9 +52,11 @@ namespace TP8
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected async override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState) // Glenn changes to async
+        protected async override void LoadState(LoadStateEventArgs e) // was: protected async override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState) // Glenn changes to async
         {
-            var group = SampleDataSource.GetGroup((String)navigationParameter);
+            string navigationParameter = e.NavigationParameter.ToString();
+            var pageState = e.PageState;
+            var group = SampleDataSource.GetGroup(navigationParameter);
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
 
@@ -66,13 +69,13 @@ namespace TP8
             App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
             SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
 
-            sortedByTextPortrait.Text = sortedByText.Text = "Sorted " + App.PatientDataGroups.GetShortSortDescription(); // Similar to DefaultViewModel["QueryText"] in SearchResultsPage
+            UpdateSortedBySubtitle(); // broken out as function June 2015
             // Either the user naviagated here, or we are resuming from a suspend.  In either case, all stations data may be old.  Refresh if possible:
             if (isOutbox)
             {
                 SetOutboxEventAndOrgText(); // Based on App.OutboxCheckBoxCurrentEventOnly
-                CheckBoxCurrentEventOnlyPortrait.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
-                CheckBoxMyOrgOnlyPortrait.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+                CheckBoxCurrentEventOnly.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
+                CheckBoxMyOrgOnly.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
                 // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
                 App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
                 SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
@@ -80,9 +83,10 @@ namespace TP8
             }
             else
             {
-                CheckBoxCurrentEventOnly.Visibility = CheckBoxCurrentEventOnlyPortrait.Visibility = Visibility.Collapsed;
+                // June 2015, CheckBoxCurrentEventOnlyPortrait dropped, only need CheckBoxCurrentEvent.  Likewise MyOrgOnly
+                CheckBoxCurrentEventOnly.Visibility = Visibility.Collapsed;
                 SetAllStationsEventAndOrgText();
-                CheckBoxMyOrgOnlyPortrait.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
+                CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
                 if (App.PatientDataGroups.GetAllStations().Count() == 0)
                 {
                     // Provide local stale data as backup in case connectivity is no good:
@@ -96,7 +100,7 @@ namespace TP8
                 UpdateCountInTitle();
                 if (App.goodWebServiceConnectivity)
                 {
-                    countOfItems.Text = "(...)";
+                    pageTitle.Text = "(...)"; // WAS, but now combined: countOfItems.Text = "(...)";
                     await App.PatientDataGroups.ReloadAllStationsListAsync();
                     UpdateCountInTitle();
                 }
@@ -136,14 +140,49 @@ namespace TP8
         //    SampleDataSource.RefreshOutboxAndAllStationsItems();
         //}
 
+        private void pageTitle_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateSortedBySubtitle();
+            UpdateCountInTitle(); // Mainly calling this to update title format, preceding count text
+        }
+
+        private void UpdateSortedBySubtitle()
+        {
+            // June 2015, sortedByTextPortrait dropped, only need sortedByText
+            if (App.CurrentVisualState == "FullScreenLandscape" || App.CurrentVisualState == "FullScreenPortrait" ||
+                App.CurrentVisualState == "Over1365Wide" || App.CurrentVisualState == "vs1026To1365Wide")
+                sortedByText.Text = "Sorted " + App.PatientDataGroups.GetShortSortDescription(); // Similar to DefaultViewModel["QueryText"] in SearchResultsPage
+            else
+            {
+                string s = App.PatientDataGroups.GetVeryShortSortDescription();
+                //string s = App.PatientDataGroups.GetShortSortDescription();
+                //s = s.Replace(", ascending", ""); // just leave uparrow or downarrow to indicate sort method
+                //s = s.Replace(", descending", "");
+                //s = s.Replace("triage ", ""); // just say "zone (alphabetic)"
+                sortedByText.Text = s;
+            }
+        }
+
         private void UpdateCountInTitle()
         {
+            string titleGlyph = "👪  "; // same as group.Title, but broken into its 2 elements.  group.Title also has 2 spaces as separator
+            string titleText = "All Stations";
+            if (isOutbox)
+            {
+                titleGlyph = "📮";
+                titleText = "Outbox";
+            }
+            string title = titleText;
+            if (App.CurrentVisualState == "FullScreenLandscape" || App.CurrentVisualState == "FullScreenPortrait" ||
+                App.CurrentVisualState == "Over1365Wide" || App.CurrentVisualState == "vs1026To1365Wide") // but not vs673To1025Wide, part of 2ColumnsTight
+                    title = titleGlyph + "  " + titleText + " ";
+
             int count;
             if (isOutbox)
                 count = App.PatientDataGroups.GetOutboxSortedAndFiltered().Count();
             else
                 count = App.PatientDataGroups.GetAllStationsSortedAndFiltered().Count();
-            countOfItems.Text = "(" + count + ")";
+            pageTitle.Text = title + "(" + count + ")"; // was: countOfItems.Text = "(" + count + ")";
         }
 
         /// <summary>
@@ -151,10 +190,11 @@ namespace TP8
         /// page is discarded from the navigation cache.  Values must conform to the serialization
         /// requirements of <see cref="SuspensionManager.SessionState"/>.
         /// </summary>
-        /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
-        protected override void SaveState(Dictionary<String, Object> pageState)
+// WAS:        /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
+        protected override void SaveState(SaveStateEventArgs e)  //WAS:  protected override void SaveState(Dictionary<String, Object> pageState)
         {
             //dt.Stop();
+            var pageState = e.PageState;
             if (this.itemsViewSource.View != null)
             {
                 var selectedItem = (SampleDataItem)this.itemsViewSource.View.CurrentItem;
@@ -189,8 +229,8 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            //WAS: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");
@@ -439,6 +479,7 @@ namespace TP8
         // pages.  The code below achieves this goal without making the user aware of the
         // distinction.
 
+#if WAS
         /// <summary>
         /// Invoked to determine whether the page should act as one logical page or two.
         /// </summary>
@@ -453,6 +494,22 @@ namespace TP8
             return viewState == ApplicationViewState.FullScreenPortrait ||
                 viewState == ApplicationViewState.Snapped;
         }
+#endif
+        /// <summary>
+        /// Invoked to determine whether the page should act as one logical page or two.
+        /// </summary>
+        /// <returns>True when the current view state in question is portrait, snapped, narrow, or half, false otherwise.</returns>
+        private bool UsingLogicalPageNavigation()
+        {
+            switch (App.CurrentVisualState)
+            {
+                case "FullScreenLandscape": case "vsOver1365Wide": case "vs1026To1365Wide": case "vs673To1025Wide":
+                    return false;
+                default: // for null, "FullScreenPortrait", "vs320Wide",  "vs321To500Wide", "vs501To672Wide";
+                    return true;
+            }
+        }
+                
 
         /// <summary>
         /// Invoked when an item within the list is selected.
@@ -493,6 +550,7 @@ namespace TP8
             }
         }
 
+#if WAS_WITH_LAYOUT_AWARE_PAGE
         /// <summary>
         /// Invoked to determine the name of the visual state that corresponds to an application
         /// view state.
@@ -524,6 +582,55 @@ namespace TP8
             // suffix when viewing details instead of the list
             var defaultStateName = base.DetermineVisualState(viewState);
             return logicalPageBack ? defaultStateName + "_Detail" : defaultStateName;
+        }
+#endif
+
+        /// <summary>
+        /// Invoked to determine the name of the visual state that corresponds to an application view state.
+        /// </summary>
+        /// <param name="viewState">The view state for which the question is being posed.</param>
+        /// <returns>The name of the desired visual state.  This is the same as the name of the
+        /// view state except when there is a selected item in portrait and snapped views where
+        /// this additional logical page is represented by adding a suffix of _Detail.</returns>
+        protected override string DetermineMappedVisualState()
+        {
+            // Update the back button's enabled state when the view state changes
+            var logicalPageBack = this.UsingLogicalPageNavigation() && this.itemListView.SelectedItem != null;
+            var physicalPageBack = this.Frame != null && this.Frame.CanGoBack;
+            this.DefaultViewModel["CanGoBack"] = logicalPageBack || physicalPageBack;
+
+            string results = "";
+            // Determine visual states for landscape layouts based not on the view state, but
+            // on the width of the window.  This page has one layout that is appropriate for
+            // 1366 virtual pixels or wider, and another for narrower displays or when another
+            // application reduces the horizontal space available to less than 1366.
+            if (App.CurrentVisualState == "FullScreenLandscape")
+            {
+                var windowWidth = Window.Current.Bounds.Width;
+                if (windowWidth >= 1366)
+                    results = "TwoColumnsLoose"; //was before June 2015: "FilledOrFullOnBigScreen";
+                else
+                    results = "TwoColumnsTight"; //was before June 2015: "FilledOrFullOnSmallScreen";
+            }
+            else if (App.CurrentVisualState == "vs673To1025Wide" || App.CurrentVisualState == "vs1026To1365Wide")
+            {
+                results = "TwoColumnsTight"; //was before June 2015: "FilledOrFullOnSmallScreen";
+            }
+            else if (App.CurrentVisualState == "vsOver1365Wide")
+            {
+                results = "TwoColumnsLoose"; //was before June 2015: "FilledOrFullOnBigScreen";
+            }
+            else
+            {
+                // When in portrait, or landscape not real wide, start with the default visual state name, then add a
+                // suffix when viewing details instead of the list
+                var defaultStateName = base.DetermineMappedVisualState();
+                results = logicalPageBack ? defaultStateName + "_Detail" : defaultStateName;
+            }
+#if DEBUG
+            debugVisState.Text = App.CurrentVisualState + "," + results;
+#endif
+            return results;
         }
 
         #endregion
@@ -654,12 +761,14 @@ namespace TP8
         private void CheckBoxCurrentEventOnly_Tapped(object sender, TappedRoutedEventArgs e)
         {
             App.OutboxCheckBoxCurrentEventOnly = (bool)((CheckBox)sender).IsChecked;
-            if (((CheckBox)sender).Name == "CheckBoxCurrentEventOnly") // propagate from control visible in current view mode to hidden control
-                CheckBoxCurrentEventOnlyPortrait.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
-            else
+//            if (((CheckBox)sender).Name == "CheckBoxCurrentEventOnly") // propagate from control visible in current view mode to hidden control
+//                CheckBoxCurrentEventOnlyPortrait.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
+//            else
                 CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
             SetOutboxEventAndOrgText();
-            LoadState(App.CurrentSearchResultsGroupName, null);
+            LoadStateEventArgs lsea = new LoadStateEventArgs(App.CurrentSearchResultsGroupName, null);
+            LoadState(lsea);
+            //was: LoadState(App.CurrentSearchResultsGroupName, null);
         }
 
         private void CheckBoxMyOrgOnly_Tapped(object sender, TappedRoutedEventArgs e)
@@ -667,9 +776,9 @@ namespace TP8
             if (isOutbox)
             {
                 App.OutboxCheckBoxMyOrgOnly = (bool)((CheckBox)sender).IsChecked;
-                if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
-                    CheckBoxMyOrgOnlyPortrait.IsChecked = App.OutboxCheckBoxMyOrgOnly;
-                else
+//                if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
+//                    CheckBoxMyOrgOnlyPortrait.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+//                else
                     CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
                 SetOutboxEventAndOrgText();
             }
@@ -677,41 +786,47 @@ namespace TP8
             {
 
                 App.AllStationsCheckBoxMyOrgOnly = (bool)((CheckBox)sender).IsChecked;
-                if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
-                    CheckBoxMyOrgOnlyPortrait.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
-                else
+//                if (((CheckBox)sender).Name == "CheckBoxMyOrgOnly") // propagate from control visible in current view mode to hidden control
+//                    CheckBoxMyOrgOnlyPortrait.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
+//                else
                     CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
                 SetAllStationsEventAndOrgText();
             }
-            LoadState(App.CurrentSearchResultsGroupName, null);
+            LoadStateEventArgs lsea = new LoadStateEventArgs(App.CurrentSearchResultsGroupName, null);
+            LoadState(lsea);
+            //was: LoadState(App.CurrentSearchResultsGroupName, null);
         }
 
         private void SetOutboxEventAndOrgText()
         {
             if (App.OutboxCheckBoxCurrentEventOnly)
-                eventAndOrgTextPortrait.Text = eventAndOrgText.Text = App.CurrentDisaster.EventName + ", ";
+                /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text = App.CurrentDisaster.EventName + ", ";
             else
-                eventAndOrgTextPortrait.Text = eventAndOrgText.Text = "All Events, ";
+                /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text = "All Events, ";
             if (App.OutboxCheckBoxMyOrgOnly)
-                eventAndOrgTextPortrait.Text = eventAndOrgText.Text += App.CurrentOrgContactInfo.OrgAbbrOrShortName;
+                /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text += App.CurrentOrgContactInfo.OrgAbbrOrShortName;
             else
-                eventAndOrgTextPortrait.Text = eventAndOrgText.Text += "All Orgs";
+                /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text += "All Orgs";
         }
 
         private void SetAllStationsEventAndOrgText()
         {
             // Only current event supported
-            eventAndOrgTextPortrait.Text = eventAndOrgText.Text = App.CurrentDisaster.EventName + ", ";
+            /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text = App.CurrentDisaster.EventName + ", ";
             if (App.AllStationsCheckBoxMyOrgOnly)
-                eventAndOrgTextPortrait.Text = eventAndOrgText.Text += App.CurrentOrgContactInfo.OrgAbbrOrShortName;
+                /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text += App.CurrentOrgContactInfo.OrgAbbrOrShortName;
             else
-                eventAndOrgTextPortrait.Text = eventAndOrgText.Text += "All Orgs";
+                /*eventAndOrgTextPortrait.Text = */eventAndOrgText.Text += "All Orgs";
         }
 
         private async void sortFlyoutOutbox_Tapped(object sender, TappedRoutedEventArgs e)
         {
             //bool changed;
-            if (ApplicationView.Value == ApplicationViewState.Snapped)
+            //WAS: if (ApplicationView.Value == ApplicationViewState.Snapped)
+            //WAS: if(App.CurrentVisualState == "Snapped")
+            // Workaround for iPopup not seeming to work with non-full-screen modes
+            if(App.CurrentVisualState != "FullScreenLandscape" && App.CurrentVisualState != "FullScreenPortrait")
+            // equivalent: if(App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide" || App.CurrentVisualState == "vs501To672Wide" || App.CurrentVisualState == "vs673To1025Wide" || App.CurrentVisualState == "vs1026To1365Wide" || App.CurrentVisualState == "vsOver1365Wide")
             {
                 this.Frame.Navigate(typeof(SortNonFlyout), "pageSortNonFlyout");
                 // may set to true: App.CurrentFilterProfile.AControlChanged
@@ -727,7 +842,9 @@ namespace TP8
             if (App.CurrentFilterProfile.AControlChanged)
             {
                 //GroupOrFlyoutFilterChanged(); // Search is not refreshed until flyout is dismissed.  Simple but maybe not ideal.
-                LoadState(App.CurrentSearchResultsGroupName, null); // As if navigating anew to this page...to get lists
+                LoadStateEventArgs lsea = new LoadStateEventArgs(App.CurrentSearchResultsGroupName, null);
+                LoadState(lsea);
+                //was: LoadState(App.CurrentSearchResultsGroupName, null); // As if navigating anew to this page...to get lists
                 App.CurrentFilterProfile.AControlChanged = false;
             }
         }
@@ -737,5 +854,7 @@ namespace TP8
             // Same App Bar Edit
             TryToGoToViewEdit();
         }
+
+
     }
 }

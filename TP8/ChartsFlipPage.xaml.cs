@@ -31,59 +31,65 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
         }
     }
 
-    public sealed partial class ChartsFlipPage : TP8.Common.LayoutAwarePage //WinRTXamlToolkit.Controls.AlternativePage
+    public sealed partial class ChartsFlipPage : TP8.Common.BasicLayoutPage// WAS:LayoutAwarePage //WinRTXamlToolkit.Controls.AlternativePage
     {
+        private DateTime minDT;
+        private DateTime maxDT;
+
         public ChartsFlipPage()
         {
             // Win 8.1: Check for snapped or narrow visual states moved to caller
             //WAS Win 8.0: Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since layout for snapped view hasn't been developed
 
             this.InitializeComponent();
-
+            if(App.PatientDataGroups.GetOutboxForStatistics().Count() == 0)
+                App.PatientDataGroups.OutboxForStatisticsRefresh(); // new June 2015
             UpdateCharts();
         }
 
+        // As of late June 2015, replace throughout App.PatientDataGroups.GetOutbox() with App.PatientDataGroups.GetOutboxForStatistics()
+        // Later is private clone with shortened WhenLocalTime (no UTC offset) and guaranteed to be sorted from oldest to newest time.
         private Random _random = new Random();
 
         public int outboxCountPerZoneAllEvents(string zone)
         {
-            var count = App.PatientDataGroups.GetOutbox().Count(p => p.Zone == zone);
+            var count = App.PatientDataGroups.GetOutboxForStatistics().Count(p => p.Zone == zone);
             return count;
         }
 
         public int outboxCountPerZoneCurrentEvent(string zone)
         {
-            var count = App.PatientDataGroups.GetOutbox().Count(p => (p.Zone == zone && p.EventName == App.CurrentDisaster.EventName) );
+            var count = App.PatientDataGroups.GetOutboxForStatistics().Count(p => (p.Zone == zone && p.EventName == App.CurrentDisaster.EventName) );
             return count;
         }
 
         public int outboxCountPerGenderAllEvents(string gender)
         {
-            var count = App.PatientDataGroups.GetOutbox().Count(p => p.Gender == gender);
+            var count = App.PatientDataGroups.GetOutboxForStatistics().Count(p => p.Gender == gender);
             return count;
         }
 
         public int outboxCountPerGenderCurrentEvent(string gender)
         {
-            var count = App.PatientDataGroups.GetOutbox().Count(p => (p.Gender == gender && p.EventName == App.CurrentDisaster.EventName));
+            var count = App.PatientDataGroups.GetOutboxForStatistics().Count(p => (p.Gender == gender && p.EventName == App.CurrentDisaster.EventName));
             return count;
         }
 
         public int outboxCountPerAgeGroupAllEvents(string ageGroup)
         {
-            var count = App.PatientDataGroups.GetOutbox().Count(p => p.AgeGroup == ageGroup);
+            var count = App.PatientDataGroups.GetOutboxForStatistics().Count(p => p.AgeGroup == ageGroup);
             return count;
         }
 
         public int outboxCountPerAgeGroupCurrentEvent(string ageGroup)
         {
-            var count = App.PatientDataGroups.GetOutbox().Count(p => (p.AgeGroup == ageGroup && p.EventName == App.CurrentDisaster.EventName));
+            var count = App.PatientDataGroups.GetOutboxForStatistics().Count(p => (p.AgeGroup == ageGroup && p.EventName == App.CurrentDisaster.EventName));
             return count;
         }
 
         public void outboxCountPerEventAllEvents(List<NameValueItem> arrivalsByEventAllEvents)
         {
-            var grouped = App.PatientDataGroups.GetOutbox()
+            var grouped = App.PatientDataGroups.GetOutboxForStatistics()
                 .GroupBy(s => s.EventName)
                 .Select(group => new NameValueItem { Name = group.Key, Value = group.Count() });
             // Can't figure out cast, so copy instead:
@@ -99,7 +105,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             //   1) use of FieldsForBarChart instead of NameValueItems (we could have used latter if all bars are same color,
             //      e.g., "Blue"... but maybe we'll color code real versus test in futuer)
             //   2) Labels are shortened, don't need count, but get pseudo tickmarks
-            var grouped = App.PatientDataGroups.GetOutbox()
+            var grouped = App.PatientDataGroups.GetOutboxForStatistics()
                 .GroupBy(s => s.EventName)
                 .Select(group => new NameValueItem { Name = group.Key, Value = group.Count() });
             // Can't figure out cast, so copy instead:
@@ -154,15 +160,18 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
         /// <param name="arrivalsByDateCurrentEvent"></param>
         public void outboxCountPerDateCurrentEvent(List<NameValueItem> arrivalsByDateCurrentEvent)
         {
-            var outbx = App.PatientDataGroups.GetOutbox();
-            TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
-            foreach (var i in outbx)
-            {
-                i.WhenLocalTime = ParseDate(i.WhenLocalTime);
-                outbx2.Add(i);
-            }
+            var outbx = App.PatientDataGroups.GetOutboxForStatistics();
+            // No longer needed, now that we have _outboxforstatistics:
+            //TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
+            //foreach (var i in outbx)
+            //{
+            //    if (String.IsNullOrEmpty(i.WhenLocalTime))
+            //        continue; // probably weird empty record
+            //    i.WhenLocalTime = ParseDate(i.WhenLocalTime); // take first 10 characters, ignore UTC offset
+            //    outbx2.Add(i); // Hmmm, are we changing outbox list itself, removing UTC offset? Maybe not intended side effect.
+            //}
 
-            var grouped = outbx2
+            var grouped = outbx //outbx2
                 .Where(s => s.EventName == App.CurrentDisaster.EventName) // Maybe should be using this througout: .Where(s => s.EventID == App.CurrentDisasterEventID)
                 .GroupBy(s => s.WhenLocalTime)
                 .Select(group => new NameValueItem { Name = group.Key, Value = group.Count() });
@@ -176,15 +185,18 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
 
         public void outboxCountPerDateCurrentEventForBarChart(List<FieldsForBarChart> arrivalsByDateCurrentEvent)
         {
-            var outbx = App.PatientDataGroups.GetOutbox();
-            TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
-            foreach (var i in outbx)
-            {
-                i.WhenLocalTime = ParseDate(i.WhenLocalTime);
-                outbx2.Add(i);
-            }
+            var outbx = App.PatientDataGroups.GetOutboxForStatistics();
+            // No longer needed, now that we have _outboxforstatistics:
+            //TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
+            //foreach (var i in outbx)
+            //{
+            //    if (String.IsNullOrEmpty(i.WhenLocalTime))
+            //        continue; // probably weird empty record
+            //    i.WhenLocalTime = ParseDate(i.WhenLocalTime); // take first 10 characters, ignore UTC offset
+            //    outbx2.Add(i); // Hmmm, are we changing outbox list itself, removing UTC offset? Maybe not intended side effect.
+            //}
 
-            var grouped = outbx2
+            var grouped = outbx //outbx2
                 .Where(s => s.EventName == App.CurrentDisaster.EventName) // Maybe should be using this througout: .Where(s => s.EventID == App.CurrentDisasterEventID)
                 .GroupBy(s => s.WhenLocalTime)
                 .Select(group => new NameValueItem { Name = group.Key, Value = group.Count() });
@@ -295,23 +307,41 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
         /// <param name="arrivalsByDateCurrentEvent"></param>
         public void outboxCountPerDayCurrentEvent(List<DateValueItem> arrivalsByDateCurrentEvent)
         {
-            var outbx = App.PatientDataGroups.GetOutbox();
+            var outbx = App.PatientDataGroups.GetOutboxForStatistics();
             TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
             foreach (var i in outbx)
             {
                 if(i.EventName == App.CurrentDisaster.EventName)
                     outbx2.Add(i);
             }
+            // No longer needed, now that we have _outboxforstatistics:
+            // // Sorting added June 2015:
+            //List<TP_PatientReport> outbx2L = outbx2.GetAsList();
+            //List<TP_PatientReport> sortL = new List<TP_PatientReport>();
+            // sort oldest to newest by local datetime
+            //sortL = outbx2L.OrderBy(o => o.WhenLocalTime).ToList(); // or sortL = outbx2L.OrderByDescending(o => o.WhenLocalTime).ToList(); 
+            //TP_PatientReports sort = new TP_PatientReports();
+            //sort.ReplaceWithList(sortL);
+            //outboxCountPerDaySpecificEventSet(sort, arrivalsByDateCurrentEvent); // assumes outbox order is oldest to newest
             outboxCountPerDaySpecificEventSet(outbx2, arrivalsByDateCurrentEvent); // assumes outbox order is oldest to newest
         }
         /// <summary>
         /// Returns a list with the start time of each bucket (even hours) and the count within the bucket,
-        /// without distinguishing among events
+        /// without distinguishing among events. Includes open and closed events.
         /// </summary>
         /// <param name="arrivalsByDateCurrentEvent"></param>
         public void outboxCountPerDayAllEvents(List<DateValueItem> arrivalsByDateAllEvents)
         {
-            outboxCountPerDaySpecificEventSet(App.PatientDataGroups.GetOutbox(), arrivalsByDateAllEvents); // assumes outbox order is oldest to newest
+            // No longer needed, now that we have _outboxforstatistics:
+            //             // Sorting added June 2015:
+            //List<TP_PatientReport> outbx2L = App.PatientDataGroups.GetOutbox().GetAsList();
+            //List<TP_PatientReport> sortL = new List<TP_PatientReport>();
+            // // sort oldest to newest by local datetime
+            //sortL = outbx2L.OrderBy(o => o.WhenLocalTime).ToList(); // or sortL = outbx2L.OrderByDescending(o => o.WhenLocalTime).ToList(); 
+            //TP_PatientReports sort = new TP_PatientReports();
+            //sort.ReplaceWithList(sortL);
+            //outboxCountPerDaySpecificEventSet(sort, arrivalsByDateAllEvents); // assumes outbox order is oldest to newest
+            outboxCountPerDaySpecificEventSet(App.PatientDataGroups.GetOutboxForStatistics(), arrivalsByDateAllEvents); // assumes outbox order is oldest to newest
         }
 
         /// <summary>
@@ -329,9 +359,13 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             int inBucket = 0;
             foreach (var i in arrivalsIn)
             {
+                if (String.IsNullOrEmpty(i.WhenLocalTime))
+                    continue; // assume weird empty record
+
                 if (firstloop)
                 {
                     firstloop = false;
+
                     DateTimeOffset firstInBucket = DateTimeOffset.Parse(i.WhenLocalTime);
                     // Zero out anything under 1 day
                     startOfBucket = new DateTimeOffset(firstInBucket.Year, firstInBucket.Month, firstInBucket.Day, 0, 0, 0, firstInBucket.Offset);
@@ -385,10 +419,11 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             }
         }
 
-        private string ParseDate(string WhenLocalTime)
-        {
-            return WhenLocalTime.Substring(0, 10);// Assume YYYY-MM-DD format
-        }
+        // Moved to TP_PatientReportsSource:
+        //private string ParseDate(string WhenLocalTime)
+        //{
+        //    return WhenLocalTime.Substring(0, 10);// Assume YYYY-MM-DD format
+        //}
 
         private void UpdateCharts()
         {
@@ -513,7 +548,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
         {
             List<NameValueItem> arrivalsByAgeGroupAllEvents = new List<NameValueItem>();
             arrivalsAdd(arrivalsByAgeGroupAllEvents, "Adult", outboxCountPerAgeGroupAllEvents("Adult"));
-            arrivalsAdd(arrivalsByAgeGroupAllEvents, "Peds", outboxCountPerAgeGroupAllEvents("Pediatric"));
+            arrivalsAdd(arrivalsByAgeGroupAllEvents, "Peds", outboxCountPerAgeGroupAllEvents("Youth")); // was: "Pediatric"
             arrivalsAdd(arrivalsByAgeGroupAllEvents, "Unknown", outboxCountPerAgeGroupAllEvents("Unknown Age Group"));
 
             ((PieSeries)this.PieChartByAgeGroupAllEvents.Series[0]).ItemsSource = arrivalsByAgeGroupAllEvents;
@@ -530,7 +565,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
 
         private void UpdateChartPage2()
         {
-            PiesForCurrentEvent.Text = "Arrivals through this Station, for " + App.CurrentDisaster.EventName;
+            PiesForCurrentEvent.Text = "For Current Event \"" + App.CurrentDisaster.EventName + "\"";
             // For 4 piecharts on 2nd page:
             UpdateChartPage2ByZone();
             UpdateChartPage2ByGender();
@@ -576,7 +611,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             // DOESN'T QUITE WORK IF YOU CARE ABOUT WHICH COLOR GETS ASSIGNED TO A CATEGORY:
             //   outboxCountPerAgeGroupCurrentEvent(arrivalsByAgeGRoupCurrentEvent);
             arrivalsAdd(arrivalsByAgeGroupCurrentEvent, "Adult", outboxCountPerAgeGroupCurrentEvent("Adult"));
-            arrivalsAdd(arrivalsByAgeGroupCurrentEvent, "Peds", outboxCountPerAgeGroupCurrentEvent("Pediatric"));
+            arrivalsAdd(arrivalsByAgeGroupCurrentEvent, "Peds", outboxCountPerAgeGroupCurrentEvent("Youth")); // was: "Pediatric"
             arrivalsAdd(arrivalsByAgeGroupCurrentEvent, "Unknown", outboxCountPerAgeGroupCurrentEvent("Unknown Age Group"));
 
             // was: arrivalsByAgeGroupCurrentEvent.Add(new NameValueItem { Name = "Adult", Value = outboxCountPerAgeGroupCurrentEvent("Adult") });  etc.
@@ -667,7 +702,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             // For color choices, compare with pie chart AgeGroupPallete style
             // Top-to-bottom code order here will be bottom-to-top when displayed on chart:
             barsAdd(ageGroupBars, "Unknown", "Tan", outboxCountPerAgeGroupAllEvents("Unknown Age Group"));
-            barsAdd(ageGroupBars, "Peds", "Teal", outboxCountPerAgeGroupAllEvents("Pediatric"));
+            barsAdd(ageGroupBars, "Peds", "Teal", outboxCountPerAgeGroupAllEvents("Youth")); // was before June 2015: Pediatric
             barsAdd(ageGroupBars, "Adult", "Brown", outboxCountPerAgeGroupAllEvents("Adult"));
 
             BarSeries bs = ((BarSeries)this.BarChartByAgeGroupAllEvents.Series[0]);
@@ -696,7 +731,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
 
         private void UpdateChartPage4()
         {
-            BarsForCurrentEvent.Text = "Arrivals through this Station, for " + App.CurrentDisaster.EventName;
+            BarsForCurrentEvent.Text = "For Current Event \"" + App.CurrentDisaster.EventName + "\"";
             UpdateChartPage4ByZone();
             UpdateChartPage4ByGender();
             UpdateChartPage4ByAgeGroup();
@@ -754,7 +789,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             // For color choices, compare with pie chart AgeGroupPallete style
             // Top-to-bottom code order here will be bottom-to-top when displayed on chart:
             barsAdd(ageGroupBarsCurrent, "Unknown", "Tan", outboxCountPerAgeGroupCurrentEvent("Unknown Age Group"));
-            barsAdd(ageGroupBarsCurrent, "Peds", "Teal", outboxCountPerAgeGroupCurrentEvent("Pediatric"));
+            barsAdd(ageGroupBarsCurrent, "Peds", "Teal", outboxCountPerAgeGroupCurrentEvent("Youth")); // "Pediatric";
             barsAdd(ageGroupBarsCurrent, "Adult", "Brown", outboxCountPerAgeGroupCurrentEvent("Adult"));
 
             BarSeries bs = ((BarSeries)this.BarChartByAgeGroupCurrentEvent.Series[0]);
@@ -783,12 +818,22 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             outboxCountPerDayCurrentEvent(arrivalsLine);
             LineSeries ls = ((LineSeries)this.LineChartArrivals.Series[0]);
                 
-            ls.ItemsSource = arrivalsLine;
+            ls.ItemsSource = arrivalsLine;  // this is already sorted by local datetime, so just pick off min and max values
+            if (arrivalsLine.Count == 0)
+                minDT = maxDT = DateTime.Today; // just to avoid crashing
+            else
+            {
+                minDT = arrivalsLine[0].DateTimeBucket;
+                maxDT = arrivalsLine[arrivalsLine.Count-1].DateTimeBucket;
+            }
+            minDT = minDT.AddDays(-2.0);
+            maxDT = maxDT.AddDays(2.0);
+            WidenRange(); // may adjust minDT, maxDT
 
             // Setting the interval (and reportedly Min and Max too) causes an exception in XAML, because they are nullable types; do it in code-behind instead.
             // Also reportedly (https://winrtxmltookkit.codeplex.com/discussions/433978) orientation must be stated:
            ls.DependentRangeAxis = new LinearAxis() { Minimum = 0, Interval = 1.0, Orientation = AxisOrientation.Y, ShowGridLines = true, FontSize = 11 }; // BorderThickness = new Thickness(2.0), BorderBrush = new SolidColorBrush(Colors.White) };
-           ls.IndependentAxis = new DateTimeAxis() { FontSize = 10, Orientation = AxisOrientation.X };
+           ls.IndependentAxis = new DateTimeAxis() { Minimum = minDT, Maximum = maxDT, FontSize = 10, Orientation = AxisOrientation.X };
 
         }
 
@@ -798,12 +843,22 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             outboxCountPerDayAllEvents(arrivalsLine);
             LineSeries ls = ((LineSeries)this.LineChartArrivalsAllStations.Series[0]);
 
-            ls.ItemsSource = arrivalsLine;
+            ls.ItemsSource = arrivalsLine;// this is already sorted by local datetime, so just pick off min and max values
+            if (arrivalsLine.Count == 0)
+                minDT = maxDT = DateTime.Today; // just to avoid crashing
+            else
+            {
+                minDT = arrivalsLine[0].DateTimeBucket;
+                maxDT = arrivalsLine[arrivalsLine.Count - 1].DateTimeBucket;
+            }
+            minDT = minDT.AddDays(-2.0);
+            maxDT = maxDT.AddDays(2.0);
+            WidenRange(); // may adjust minDT, maxDT
 
             // Setting the interval (and reportedly Min and Max too) causes an exception in XAML, because they are nullable types; do it in code-behind instead.
             // Also reportedly (https://winrtxmltookkit.codeplex.com/discussions/433978) orientation must be stated:
             ls.DependentRangeAxis = new LinearAxis() { Minimum = 0, Interval = 1.0, Orientation = AxisOrientation.Y, ShowGridLines = true, FontSize = 11 }; // BorderThickness = new Thickness(2.0), BorderBrush = new SolidColorBrush(Colors.White) };
-            ls.IndependentAxis = new DateTimeAxis() { FontSize = 10, Orientation = AxisOrientation.X };
+            ls.IndependentAxis = new DateTimeAxis() { Minimum = minDT, Maximum = maxDT, FontSize = 10, Orientation = AxisOrientation.X };
 
 #if FAILED_ON_SERIES_1
             // Try another 1 with same content:
@@ -823,12 +878,21 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
         private void UpdateChartPage7()
         {
             string eventName = "";
-            TP_PatientReports pdl = App.PatientDataGroups.GetOutbox();
+            // No longer needed, now that we have App.PatientDataGroups.GetOutboxForStatistics():
+            // // sorting added June 2015, so call to outboxCountPerDaySpecificEventSet in UpdateChartPage7Impl will work right
+            // List<TP_PatientReport> orig = App.PatientDataGroups.GetOutbox().GetAsList();
+            // List<TP_PatientReport> sort = new List<TP_PatientReport>();
+            // sort = orig.OrderBy(o => o.WhenLocalTime).ToList();
+            // //sort = orig.OrderByDescending(o => o.WhenLocalTime).ToList();
+            // TP_PatientReports pdl = new TP_PatientReports();
+            // pdl.ReplaceWithList(sort);
+            TP_PatientReports pdl = App.PatientDataGroups.GetOutboxForStatistics();
             TP_PatientReports results = new TP_PatientReports();
             TP_EventsDataList edl = App.CurrentDisasterList;
-            // Across events.  Widen range by 2 days to prevent stupid clipping of line segments and/or data points.
-            DateTime minDT = FindMinimumDate().AddDays(-2.0);
-            DateTime maxDT = FindMaximumDate().AddDays(2.0);
+            // Across events.  Widen range by at least 2 days to prevent stupid clipping of line segments and/or data points.
+            minDT = FindMinimumDate().AddDays(-2.0);
+            maxDT = FindMaximumDate().AddDays(2.0);
+            WidenRange(); // May adjust minDT, maxDT
             List<DateValueItem>[] arrivalLines = new List<DateValueItem>[10]; // Handle up to 10 events first draft
             LineSeries[] ls = new LineSeries[10];
             int i = 0;
@@ -922,22 +986,29 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
 
         }
 
+        /// <summary>
+        /// Looks at all open events in the Outbox, finds earliest day (in local time)
+        /// </summary>
+        /// <returns></returns>
         private DateTime FindMinimumDate()
         {
             string eventName = "";
             DateTime results = DateTime.MaxValue;
-            TP_PatientReports outbx = App.PatientDataGroups.GetOutbox();
-            TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
-            foreach (var i in outbx)
-            {
-                i.WhenLocalTime = ParseDate(i.WhenLocalTime);
-                outbx2.Add(i);
-            }
+            TP_PatientReports outbx = App.PatientDataGroups.GetOutboxForStatistics();
+            // No longer needed, now that we have App.PatientDataGroups.GetOutboxForStatistics():
+            // TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
+            // foreach (var i in outbx)
+            // {
+            //    if (String.IsNullOrEmpty(i.WhenLocalTime))
+            //        continue; // probably weird empty record
+            //    i.WhenLocalTime = ParseDate(i.WhenLocalTime); // take first 10 characters, ignore UTC offset
+            //    outbx2.Add(i); // Hmmm, are we changing outbox list itself, removing UTC offset? Maybe not intended side effect.
+            //}
             TP_EventsDataList edl = App.CurrentDisasterList;
             foreach (var edi in edl)
             {
                 eventName = edi.EventName;
-                foreach (var pdi in outbx2)
+                foreach (var pdi in outbx) // outbx2)
                 {
                     if (pdi.EventName == eventName)
                         if (DateTime.Parse(pdi.WhenLocalTime) < results) // might work
@@ -947,22 +1018,30 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             return results;
         }
 
+        /// <summary>
+        /// Looks at all open events in the Outbox, finds latest day (in local time)
+        /// </summary>
+        /// <returns></returns>
         private DateTime FindMaximumDate()
         {
             string eventName = "";
             DateTime results = DateTime.MinValue;
-            TP_PatientReports outbx = App.PatientDataGroups.GetOutbox();
-            TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
-            foreach (var i in outbx)
-            {
-                i.WhenLocalTime = ParseDate(i.WhenLocalTime);
-                outbx2.Add(i);
-            }
+            TP_PatientReports outbx = App.PatientDataGroups.GetOutboxForStatistics();
+            // No longer needed now that we have App.PatientDataGroups.GetOutboxForStatistics():
+            // TP_PatientReports outbx = App.PatientDataGroups.GetOutboxForStatistics();
+            // TP8.Data.TP_PatientReports outbx2 = new TP8.Data.TP_PatientReports();
+            // foreach (var i in outbx)
+            // {
+            //    if (String.IsNullOrEmpty(i.WhenLocalTime))
+            //        continue; // probably weird empty record
+            //    i.WhenLocalTime = ParseDate(i.WhenLocalTime); // take first 10 characters, ignore UTC offset
+            //    outbx2.Add(i); // Hmmm, are we changing outbox list itself, removing UTC offset? Maybe not intended side effect.
+            // }
             TP_EventsDataList edl = App.CurrentDisasterList;
             foreach (var edi in edl)
             {
                 eventName = edi.EventName;
-                foreach (var pdi in outbx2)
+                foreach (var pdi in outbx) //outbx2)
                 {
                     if (pdi.EventName == eventName)
                         if (DateTime.Parse(pdi.WhenLocalTime) > results) // might work
@@ -970,6 +1049,40 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
                 }
             }
             return results;
+        }
+
+        /// <summary>
+        /// May adjust class variables maxDT, minDT
+        /// </summary>
+        private void WidenRange()
+        {
+            TimeSpan ts = maxDT - minDT;
+            int days = ts.Days;
+            if ((days % 2) == 1)
+                ++days; // round up to even number
+            int targetDays = 0;
+            // Further widen range in an adhoc way as cheap hack to force x axis to be days only, instead of hours
+            // TO DO: arrange recalculation if user changes app width
+            switch (App.CurrentVisualState)
+            {
+                // use only even numbers as targets
+                case "FullScreenPortrait":
+                    targetDays = 10; break;
+                case "FullScreenLandscape":
+                case "Over1365Wide":
+                    targetDays = 20; break;
+                case "vs1026To1365Wide":
+                case "vsvs673To1025Wide":
+                    targetDays = 16; break;
+                default:
+                    targetDays = 8; break;
+            }
+            if (targetDays - days <= 0)
+                return; // no adjustment needed
+
+            int padDays = (targetDays - days) / 2; // divide by 2 for left and right pads
+            minDT = minDT.AddDays(-padDays);
+            maxDT = maxDT.AddDays(padDays);
         }
 
         private void UpdateChartPage7Impl(string eventName, TP_PatientReports arrivalsOneEvent, LineSeries series, List<DateValueItem> arrivalLine)

@@ -10,10 +10,13 @@
             <ResourceDictionary.MergedDictionaries>
 
                 <!-- 
-                    Styles that define common aspects of the platform look and feel
-                    Required by Visual Studio project and item templates
+                    Before May 2015, SharedStyles.xaml was called StandardStyles.xaml, and was
+                    a (much-reduced and converted version of MS's StandardStyles.xaml from Win 8.0.
+                    Originally, it was made up of styles that define common aspects of the Win 8.0 platform look and feel, as
+                    required by Visual Studio project and item templates.
+                    Now, it's mainly styles that are used by the App, or by more than one page class, so shared.
                  -->
-                <ResourceDictionary Source="Common/StandardStyles.xaml"/>
+                <ResourceDictionary Source="Common/SharedStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Application-specific resources -->

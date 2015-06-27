@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:BasicLayoutPage
     x:Name="pageSortNonFlyout"
     x:Class="TP8.SortNonFlyout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -24,9 +24,9 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageSortNonFlyout}" Style="{StaticResource NavigationBackButtonNormalStyle}" />
+                <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageSortNonFlyout}" Style="{StaticResource NavigationBackButtonSmallStyle}" Margin="5,5,0,5" />
                 <!-- Before Feb 2015, was Win8.0 BackButtonStyle Margin="0,0,0,0"-->
-                <Canvas Grid.Column="2" Height="37" Background="#FF5971A4">
+                <Canvas Grid.Column="2" Height="37" Background="#FF5971A4" Margin="0">
                     <TextBlock Canvas.Top="10" Canvas.Left="10" Text="Sort By" Foreground="White" FontSize="20"/>
                     <Rectangle Fill="#FF4A4AE0" Height="100"/>
                 </Canvas>
@@ -47,9 +47,9 @@
                 <x:String>Gender</x:String>
                 <x:String>Age Group</x:String>
                 <x:String>Triage Zone</x:String>
-                <x:String>People Locator Status</x:String>
+                <!-- needs work: <x:String>People Locator Status</x:String> -->
                 <x:String>Disaster Event</x:String>
-                <x:String>Reporting Station</x:String>
+                <!-- needs work: <x:String>Reporting Station</x:String> -->
             </ComboBox>
             <!-- Another idea is to add in image with text; don't know if can do with carousel, but general approach is:
             <ComboBox><ComboBox.ItemTemplate><DataTemplate><StackPanel Orientation="Horizontal" VertcialAlignment="Center"><Image/><TextBlock/>[close all]
@@ -78,4 +78,4 @@
         </StackPanel>
 
     </Grid>
-</common:LayoutAwarePage>
+</common:BasicLayoutPage>

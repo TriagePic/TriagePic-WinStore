@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
 using Windows.UI.Popups;
+using TP8.Common;
 
 // The Search Contract item template is documented at http://go.microsoft.com/fwlink/?LinkId=234240
 
@@ -39,7 +40,7 @@ namespace TP8
     /// <summary>
     /// This page displays search results when a global search is directed to this application.
     /// </summary>
-    public sealed partial class SearchResultsPage : TP8.Common.LayoutAwarePage
+    public sealed partial class SearchResultsPage : TP8.Common.BasicLayoutPage // WAS: LayoutAwarePage
     {
         //private string _query;  Use App.CurrentSerachQuery instead
         private Filter _selectedGroupFilter = null; // Glenn adds, to help flyout
@@ -58,8 +59,11 @@ namespace TP8
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        protected override void LoadState(LoadStateEventArgs e) // WAS: LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
+            string navigationParameter = e.NavigationParameter.ToString();
+            var pageState = e.PageState;
+
             //Ignore App.CurrentDisaster.EventName;
             App.SearchResultsEventTitleTextBasedOnCurrentFilterProfile = eventText.Text = GetEventTextBasedOnCurrentFilterProfile();
             // exclude Org from App.SearchResultsEventTitleTextBasedOnCurrentFilterProfile, to ease interrogating string elsewhere
@@ -113,13 +117,7 @@ namespace TP8
             otherFilterText.Text = filteron;
 
             // Communicate results through the view model
-            string sortdesc = App.PatientDataGroups.GetShortSortDescription();
-            string visualState = DetermineVisualState(ApplicationView.Value);
-            if (visualState == "FullScreenPortrait" || visualState == "Snapped") // might not be enough, may need VisualStateChanged handler
-            {
-                sortdesc = App.PatientDataGroups.GetVeryShortSortDescription();
-            }
-            this.DefaultViewModel["QueryText"] = '\u201c' + App.CurrentSearchQuery + '\u201d' + sortdesc;
+            AdjustQueryText(); // broken out June 2015
             this.DefaultViewModel["Filters"] = filterList;  // These are the group names
             this.DefaultViewModel["ShowFilters"] = filterList.Count > 1;
 /* orig template:
@@ -141,6 +139,35 @@ namespace TP8
             this.DefaultViewModel["QueryText"] = '\u201c' + queryText + '\u201d';
             this.DefaultViewModel["Filters"] = filterList;
             this.DefaultViewModel["ShowFilters"] = filterList.Count > 1; */
+        }
+
+        private void AdjustQueryText()
+        {
+            string resultsForText = "";
+            string vs = App.CurrentVisualState; // for convenience
+            if (vs == "FullScreenLandscape" || vs == "FullScreenPortrait" || vs == "Over1365Wide" || vs == "vs1026To1365Wide")
+                resultsForText = "Results for ";
+            string sortdesc = App.PatientDataGroups.GetShortSortDescription();;
+            if (vs == "FullScreenPortrait" || vs == "vs501To672Wide" || vs == "vs321To500Wide" || vs == "vs320Wide")
+            {
+                sortdesc = App.PatientDataGroups.GetVeryShortSortDescription();
+            }
+            // Communicate results through the view model
+            this.DefaultViewModel["QueryText"] = resultsForText + '\u201c' + App.CurrentSearchQuery + '\u201d' + sortdesc;
+        }
+
+        /// <summary>
+        /// Unlike with SplitPage, where DetermineMappedVisualState actually does mapping, here it's just a visual state change handler.
+        /// </summary>
+        /// <returns>value of App.CurrentVisualState</returns>
+        protected override string DetermineMappedVisualState()
+        {
+            AdjustQueryText();
+            string results = App.CurrentVisualState;
+#if DEBUG
+            debugVisState.Text = results;
+#endif
+            return results;
         }
 
         private string GetEventTextBasedOnCurrentFilterProfile()
@@ -485,10 +512,12 @@ namespace TP8
 
         }
 
-        private async void filterFlyout_Click(object sender, RoutedEventArgs e)
+        private async void filterFlyout_Tapped(object sender, RoutedEventArgs e) // before June 2015 was filterFlyout_Click
         {
-            //bool changed;
-            if (ApplicationView.Value == ApplicationViewState.Snapped)
+            // was: if (App.CurrentVisualState == "vs320Wide") // WAS: if (ApplicationView.Value == ApplicationViewState.Snapped)
+            // Workaround for iPopup not seeming to work with non-full-screen modes
+            if (App.CurrentVisualState != "FullScreenLandscape" && App.CurrentVisualState != "FullScreenPortrait")
+                // equivalent: if(App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide" || App.CurrentVisualState == "vs501To672Wide" || App.CurrentVisualState == "vs673To1025Wide" || App.CurrentVisualState == "vs1026To1365Wide" || App.CurrentVisualState == "vsOver1365Wide")
             {
                 this.Frame.Navigate(typeof(FilterNonFlyout), "pageFilterNonFlyout");
                 // may set to true: App.CurrentFilterProfile.AControlChanged
@@ -503,7 +532,9 @@ namespace TP8
             if (App.CurrentFilterProfile.AControlChanged)
             {
                 //GroupOrFlyoutFilterChanged(); // Search is not refreshed until flyout is dismissed.  Simple but maybe not ideal.
-                LoadState((Object)App.CurrentSearchQuery, null); // As if navigating anew to this page... to get lists & their counts right
+                LoadStateEventArgs lsea = new LoadStateEventArgs((Object)App.CurrentSearchQuery, null); // As if navigating anew to this page... to get lists & their counts right
+                LoadState(lsea);
+                //WAS: LoadState((Object)App.CurrentSearchQuery, null); // As if navigating anew to this page... to get lists & their counts right
                 App.CurrentFilterProfile.AControlChanged = false;
                 // Persist the change...
                 App.FilterProfileList.UpdateOrAdd(App.CurrentFilterProfile);
@@ -521,10 +552,12 @@ namespace TP8
         }
 #endif
 
-        private async void sortFlyout_Click(object sender, RoutedEventArgs e)
+        private async void sortFlyout_Tapped(object sender, RoutedEventArgs e) // before June 2015 was sortFlyout_Click
         {
-            //bool changed;
-            if (ApplicationView.Value == ApplicationViewState.Snapped)
+            // WAS: if(App.CurrentVisualState == "vs320Wide") // WAS: if (ApplicationView.Value == ApplicationViewState.Snapped)
+            // Workaround for iPopup not seeming to work with non-full-screen modes
+            if (App.CurrentVisualState != "FullScreenLandscape" && App.CurrentVisualState != "FullScreenPortrait")
+            // equivalent: if(App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide" || App.CurrentVisualState == "vs501To672Wide" || App.CurrentVisualState == "vs673To1025Wide" || App.CurrentVisualState == "vs1026To1365Wide" || App.CurrentVisualState == "vsOver1365Wide")
             {
                 this.Frame.Navigate(typeof(SortNonFlyout), "pageSortNonFlyout");
                 // may set to true: App.CurrentFilterProfile.AControlChanged
@@ -540,7 +573,9 @@ namespace TP8
             if (App.CurrentFilterProfile.AControlChanged)
             {
                 //GroupOrFlyoutFilterChanged(); // Search is not refreshed until flyout is dismissed.  Simple but maybe not ideal.
-                LoadState((Object)App.CurrentSearchQuery, null); // As if navigating anew to this page... to get lists & their counts right
+                LoadStateEventArgs lsea = new LoadStateEventArgs((Object)App.CurrentSearchQuery, null); // As if navigating anew to this page... to get lists & their counts right
+                LoadState(lsea);
+                // WAS: LoadState((Object)App.CurrentSearchQuery, null); // As if navigating anew to this page... to get lists & their counts right
                 App.CurrentFilterProfile.AControlChanged = false;
             }
         }
@@ -571,8 +606,8 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            // WAS: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");

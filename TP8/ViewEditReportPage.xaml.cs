@@ -27,6 +27,7 @@ using Windows.UI.Popups;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Media.Animation;
 using Win8.Controls;
+using TP8.Common;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -35,7 +36,7 @@ namespace TP8
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class BasicPageViewEdit : TP8.Common.LayoutAwarePage
+    public sealed partial class BasicPageViewEdit : TP8.Common.BasicLayoutPage // was before Release 3: TP8.Common.LayoutAwarePage
     {
         private string zoneSelected = "";
 
@@ -51,6 +52,8 @@ namespace TP8
 
         DispatcherTimer dt = null;
         private bool RollUpward = true;
+
+        // Do we need this in ViewEditReportPage? private NavigationEventArgs latestNavigation = null;
 
         // These NOT in NewReport too:
         private string ViewedDisasterEventTypeIcon;
@@ -116,6 +119,7 @@ namespace TP8
                 tt.Content = zci.Meaning;
                 zb[i].SetToolTip(tt);
                 ZoneButtons.Items.Add(zb[i]);
+                /*
                 // Make widths narrower for filled state:  NOT WORKING YET
                 ObjectAnimationUsingKeyFrames anim = new ObjectAnimationUsingKeyFrames();
                 DiscreteObjectKeyFrame kf = new DiscreteObjectKeyFrame();
@@ -124,7 +128,7 @@ namespace TP8
                 anim.KeyFrames.Add(kf);
                 Storyboard.SetTargetName(anim, buttonName);
                 Storyboard.SetTargetProperty(anim, "ZoneButtonWidth");
-                Filled.Storyboard.Children.Add(anim);
+                Filled.Storyboard.Children.Add(anim); */
                 i++;
             }
             Zone_Clear(); // disables SendButton too
@@ -132,12 +136,154 @@ namespace TP8
 
         private void VisualStateChanged(object sender, WindowSizeChangedEventArgs e)
         {
+            AdjustZoneButtonWidth();
+            /* WAS Win 8.0:
             string visualState = DetermineVisualState(ApplicationView.Value);
-            if (visualState == "Filled")
+            if (visualState == "vs673To1025Wide")
+            {
+                MyZoneButtonItemWidth = "110";  // Can't change button width directly in XAML, because its set by ItemWidth in template, so not allowed.
+            } */
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // DO WE NEED THIS IN VIEWEDITPAGE? latestNavigation = e;
+            base.OnNavigatedTo(e); // This calls LoadState
+        }
+
+        private void AdjustZoneButtonWidth()
+        {
+            // Broken out as separate function Sept 2014 in TP-8.1 project, moved here March 2015
+            string visualState = App.CurrentVisualState; // WAS Win 8.0: DetermineVisualState(ApplicationView.Value);
+            if (visualState == "vs673To1025Wide" || visualState == "vs501To672Wide")  // make filled and half the same, until we know better
             {
                 MyZoneButtonItemWidth = "110";  // Can't change button width directly in XAML, because its set by ItemWidth in template, so not allowed.
             }
+            else
+                MyZoneButtonItemWidth = "140";
+            // Narrow and snapped don't use buttons for zones, instead a pull-down
         }
+
+        /// <summary>
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
+        /// </summary>
+        protected override async void LoadState(LoadStateEventArgs e) // Glenn added async here, might not turn out well
+        {
+            // Differs from NewReport:
+            if (e.NavigationParameter.ToString() == "pageViewEditReport")
+            {
+                // Coming from web cam.  We already have what we need in App.CurrentPatient
+                //suppressMarkingAsAltered = false;
+                updatedReport = App.CurrentPatient;
+                await Load_Entry(updatedReport);
+            }
+            else
+            {   // navigation parameter is the unique Id associated with search results in the the flip view
+                //suppressMarkingAsAltered = true;
+                ShowTitleAndSentTimeAsUnaltered(); // need this?
+                ClearEntryAll(); //ClearEntryExceptPatientID(); // Will need more work when we're reloading state from suspend
+                string UniqueID = e.NavigationParameter.ToString();
+
+                bool foundPatient = false;
+                foreach (var pr_ in App.PatientDataGroups.GetOutbox())
+                {
+                    if (pr_.WhenLocalTime == UniqueID)
+                    {
+                        foundPatient = true;
+                        App.CurrentPatient = pr_;
+                        updatedReport = pr_;
+                        await Load_Entry(updatedReport);
+                        break;
+                    }
+                }
+                if (!foundPatient)
+                {
+                    // was before PLUS v34: App.MyAssert(false);
+                    string msg =
+                        "Sorry, internal problem: TriagePic can't find this report to edit in the Outbox list.\n" +
+                        "Conjecture: due to starting an edit, but leaving and then coming back through search?\n" +
+                        "This is a known problem of this release of TriagePic for Windows Store.\n" +
+                        "If problem persists, consider editing such reports at the TriageTrak web site.";
+                    var dialog1 = new MessageDialog(msg);
+                    var t1 = dialog1.ShowAsync(); // Assign to t1 to suppress compiler warning
+                    return;
+                }
+            }
+            if (App.ReportAltered)
+                ShowTitleAndSentTimeAsAltered();
+
+            pageSubtitle.Text = " " + App.ViewedDisaster.EventName; // App.CurrentDisasterEventName; // TO DO: binding in XAML instead of here?  Add space to separate from icon
+            ViewedDisasterEventTypeIcon = App.ViewedDisaster.GetIconUriFromEventType();
+            // Momentarily shift focus to notes and caption to force text font to the correct color (either black or gray) for contents
+            Notes_GotFocusImpl(); // These don't affect the focus, only the content and font color.
+            Notes_LostFocusImpl();
+            Caption_GotFocusImpl(); // These don't affect the focus, only the content and font color.
+            Caption_LostFocusImpl();
+#if WIN80_CODE_NO_LONGER_WORKS
+            // Didn't work in 8.1, returns false.  Maybe because called from LoadState:
+            // bool debug = Notes.Focus(FocusState.Programmatic);
+            // This was suggested in forum as solution, but still didn't work:
+            bool debug = false;
+            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+                {
+                    debug = Notes.Focus(FocusState.Programmatic); // or maybe .Keyboard
+                });
+            App.MyAssert(debug);
+            GiveCaptionFocus();
+            PatientIdTextBox.Focus(FocusState.Programmatic); // Didn't work... and for View/Edit makes more sense to put on Comment aka Notes field
+#endif
+
+            // In common with NewReport:
+            if (ViewedDisasterEventTypeIcon.Length > EMBEDDED_FILE_PREFIX.Length)
+            {
+                eventTypeImage.Source = new BitmapImage(new Uri(ViewedDisasterEventTypeIcon));
+                // Tried XAML binding, didn't work:                 <Image x:Name="eventTypeImage" Source="{Binding CurrentDisasterEventTypeIcon}" Width="40" VerticalAlignment="Top"/>
+                // WAS before next call added: MyZoneButtonItemWidth = "140";
+            }
+            AdjustZoneButtonWidth();
+
+            UpdateImageLoad();
+            //suppressMarkingAsAltered = false;
+        }
+
+#if FOR_REF_NEW_REPORT
+        /// <summary>
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
+        /// </summary>
+        protected override void LoadState(LoadStateEventArgs e)
+        {
+            InitiateZones();
+            // was before Release 2:
+            // if (!String.IsNullOrEmpty(App.CurrentPatient.Zone)) // This test may need refinement
+            //    LoadReportFieldsFromObject(pr);
+            if (latestNavigation.NavigationMode == NavigationMode.Back) // probably back from webcam
+            {
+                // Assume there's content to reload
+                pr = App.CurrentPatient;
+                LoadReportFieldsFromObject(pr);
+            }
+            pageSubtitle.Text = " " + App.CurrentDisaster.EventName; // TO DO: binding in XAML instead of here?  Add space to separate from icon
+            if (App.CurrentDisaster.TypeIconUri.Length > EMBEDDED_FILE_PREFIX.Length)
+            {
+                eventTypeImage.Source = new BitmapImage(new Uri(App.CurrentDisaster.TypeIconUri));
+                // Tried XAML binding, didn't work:                 <Image x:Name="eventTypeImage" Source="{Binding CurrentDisasterEventTypeIcon}" Width="40" VerticalAlignment="Top"/>
+                // WAS before next call added: MyZoneButtonItemWidth = "140";
+            }
+            AdjustZoneButtonWidth();
+
+            UpdateImageLoad();
+            if (firstTime)
+            {
+                firstTime = false;
+                UpdateStoryBoard();
+            }
+            // Not needed: base.LoadState(e);
+        }
+#endif
+
+#if WAS_BEFORE_RELEASE_3
 
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
@@ -260,7 +406,10 @@ namespace TP8
             // See DeleteRemoteToo_Click() below for actual textbox manipulation.
 #endif
         }
+#endif
 
+        // Override of SaveState not needed
+#if WAS
         /// <summary>
         /// Preserves state associated with this page in case the application is suspended or the
         /// page is discarded from the navigation cache.  Values must conform to the serialization
@@ -270,6 +419,7 @@ namespace TP8
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
+#endif
 
         /// <summary>
         /// Specific to ViewEditReport, not in NewReport
@@ -368,6 +518,7 @@ namespace TP8
         private void SetPatientImageTextOverlay(string s)
         {
             patientImageTextOverlayLandscape.Text =
+            patientImageTextOverlayHalf.Text =
             patientImageTextOverlaySnapped.Text =
             patientImageTextOverlayPortrait.Text = s;
         }
@@ -375,6 +526,7 @@ namespace TP8
         private void SetPatientImageSource(ImageSource s)
         {
             patientImageLandscape.Source =
+            patientImageHalf.Source =
             patientImageSnapped.Source =
             patientImagePortrait.Source = s;
         }
@@ -382,6 +534,7 @@ namespace TP8
         private void SetPatientImageIsTapEnabled(bool b)
         {
             patientImageLandscape.IsTapEnabled =
+            patientImageHalf.IsTapEnabled =
             patientImageSnapped.IsTapEnabled =
             patientImagePortrait.IsTapEnabled = b;
         }
@@ -413,13 +566,17 @@ namespace TP8
         private string SyncAndGetFirstNameTextBox()
         {
             // Hmm, in Win 8.1, there's "Portrait" and "DefaultLayout" and page SizeChanged event handler
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS before Release 3: DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": FirstNameTextBox.Text = FirstNameTextBoxPortrait.Text; break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide"
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: FirstNameTextBoxPortrait.Text = FirstNameTextBox.Text; break;
             }
             // All sync'd
@@ -428,13 +585,17 @@ namespace TP8
 
         private string SyncAndGetLastNameTextBox()
         {
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS before Release 3: DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": LastNameTextBox.Text = LastNameTextBoxPortrait.Text; break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide":
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: LastNameTextBoxPortrait.Text = LastNameTextBox.Text; break;
             }
             // All sync'd
@@ -455,13 +616,17 @@ namespace TP8
 
         private string SyncAndGetCaptionTextBox()
         {
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS before Release 3: DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": Caption.Text = CaptionPortrait.Text; break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide":
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: CaptionPortrait.Text = Caption.Text; break;
             }
             // All sync'd
@@ -470,14 +635,17 @@ namespace TP8
 
         private void GiveCaptionFocus()
         {
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS before Release 3: DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": CaptionPortrait.Focus(FocusState.Programmatic); break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
-
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide":
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: Caption.Focus(FocusState.Programmatic); break;
             }
         }
@@ -588,20 +756,65 @@ namespace TP8
             {
                 count = TP_SendQueue.reportsToSend.Count();
                 if (count > 0)
-                    LastSentMsg.Text = "Reports waiting to send:  " + count;
+                    // was: LastSentMsg.Text = "Reports waiting to send:  " + count;
+                    AdjustLastSentMsgText("Reports waiting to send:  " + count);
                 else
                 {
-                    progressBarSending.Visibility = Visibility.Collapsed;
-                    LastSentMsg.Text = "Sent";
+                    AdjustProgressBarVisibility(Visibility.Collapsed);  // was: progressBarSending.Visibility = Visibility.Collapsed;
+                    AdjustLastSentMsgText("Sent"); // was: LastSentMsg.Text = "Sent";
                 }
 
                 await Task.Delay(2000); // see message for 2 seconds
                 if (count == 0 || count <= TP_SendQueue.reportsToSend.Count()) // if count doesn't decrease after 2 seconds, then don't wait further in this loop
                     break;
             }
-            progressBarSending.Visibility = Visibility.Collapsed;
+            AdjustProgressBarVisibility(Visibility.Collapsed); // was: progressBarSending.Visibility = Visibility.Collapsed;
             ShowTitleAndSentTimeAsUnaltered(); // reset fields from red to white, restore original title
             EntryEachIsEnabled(false); // disable entry fields
+        }
+
+        private void AdjustProgressBarVisibility(Visibility v) // New June 2015
+        {
+            progressBarSendingPortrait.Visibility = progressBarSendingPortrait.Visibility = progressBarSending.Visibility = v;
+            /*if (App.CurrentVisualState == "FullScreenPortrait")
+                progressBarSendingPortrait.Visibility = v;
+            else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+               progressBarSendingPortrait.Visibility = v; v;
+            else
+                progressBarSending.Visibility = v;*/
+        }
+
+        private void AdjustLastSentMsgText(string s)
+        {
+            LastSentMsgPortrait.Text = LastSentMsgSnapped.Text = LastSentMsg.Text = s;
+            /*if (App.CurrentVisualState == "FullScreenPortrait")
+                LastSentMsgPortrait.Text = s;
+            else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                LastSentMsgSnapped.Text = s;
+            else
+                LastSentMsgPortrait.Text = s;*/
+        }
+
+        private void AppendToLastSentMsgText(string s)
+        {
+            // alternatively, add asserts to make sure all 3 text fields have same content before append
+            if (App.CurrentVisualState == "FullScreenPortrait")
+                LastSentMsgPortrait.Text += s;
+            else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                LastSentMsgSnapped.Text += s;
+            else
+                LastSentMsgPortrait.Text += s;
+        }
+
+        private void AdjustLastSentMsgForeground(Brush b)
+        {
+            LastSentMsgPortrait.Foreground = LastSentMsgSnapped.Foreground = LastSentMsg.Foreground = b;
+            /*if (App.CurrentVisualState == "FullScreenPortrait")
+                LastSentMsgPortrait.Foreground = b;
+            else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                LastSentMsgSnapped.Foreground = b;
+            else
+                LastSentMsgPortrait.Foreground = b;*/
         }
 
         private async Task SendClickImpl(TP_PatientReport pr)
@@ -821,6 +1034,7 @@ namespace TP8
         private void ZoneChoiceComboSnapped_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             zoneSelected = ZoneChoiceComboSnapped.SelectedItem.ToString();
+            EnableSendButtonIfPossible(); // added June 2015
         }
 
         private void ZonesEachIsEnabled(bool b)
@@ -846,15 +1060,15 @@ namespace TP8
 
         private void SetSendButtonIsEnabled(bool o)
         {
-            SendButtonLandscape.IsEnabled =
-            SendButtonPortrait.IsEnabled =
+            SendButtonLandscape.IsEnabled = // now handles portrait too
+            //SendButtonPortrait.IsEnabled =
             SendButtonSnapped.IsEnabled = o;
         }
 
         private void SetSendButtonColor(SolidColorBrush b)
         {
-            outerCircleLandscape.Stroke = b;
-            outerCirclePortrait.Stroke = b;
+            outerCircleLandscape.Stroke = b; // now handles portrait too
+            //outerCirclePortrait.Stroke = b;
             outerCircleSnapped.Stroke = b;
             SendButtonCaptionLandscape.Foreground = b; // no caption in other modes I guess
         }
@@ -977,8 +1191,8 @@ namespace TP8
             SolidColorBrush Brush3 = new SolidColorBrush();
             Brush3.Color = Windows.UI.Colors.Red;
             pageTitle.Foreground = Brush3;
-            LastSentMsg.Text += appendedToLastSentMsg;
-            LastSentMsg.Foreground = Brush3;
+            AppendToLastSentMsgText(appendedToLastSentMsg); // was: LastSentMsg.Text += appendedToLastSentMsg;
+            AdjustLastSentMsgForeground(Brush3);// was: LastSentMsg.Foreground = Brush3;
         }
 
         private void ShowTitleAndSentTimeAsUnaltered()
@@ -991,8 +1205,8 @@ namespace TP8
             Brush4.Color = Windows.UI.Colors.White;
             pageTitle.Foreground = Brush4;
 
-            LastSentMsg.Text = "Done with this page.  Please navigate to Outbox, New Report, etc.";
-            LastSentMsg.Foreground = Brush4;
+            AdjustLastSentMsgText("Done with this page.  Please navigate to Outbox, New Report, etc."); // was: LastSentMsg.Text = "Done with this page.  Please navigate to Outbox, New Report, etc.";
+            AdjustLastSentMsgForeground(Brush4);// was: LastSentMsg.Foreground = Brush4;
         }
 
 
@@ -1084,8 +1298,8 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            // WAS before Release 3: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");
@@ -1202,111 +1416,6 @@ namespace TP8
             await md.ShowAsync();
             // Don't call DeleteLocal here... instead, wait for successful dequeue and send, and then cleanup
         }
-
-#if FIRST_ATTEMPT_V33
-// But v33 expireReport web service doesn't work
-        private async void DeleteRemoteToo_Click(object sender, RoutedEventArgs e)
-        {
-            if (!App.goodWebServiceConnectivity)
-            {
-                MessageDialog dlg = new MessageDialog(
-                    "Sorry, better communications with TriageTrak is needed to do this.  Discarding was cancelled.  Try again later when the 'traffic light' squares are flashing green or yellow instead of red.");
-                await dlg.ShowAsync();
-                // We don't want to encourage doing a local delete, because that will make it harder to later do a remote delete.  So close popup, app bar.
-// WAS:                discardMenuPopUp.IsOpen = false;
-                TopAppBar.IsOpen = false;
-                BottomAppBar.IsOpen = false;
-                return;
-            }
-
-            // Ask if discard locally or both places?
-
-            uuid = await App.service.GetUuidFromPatientID(App.CurrentPatient.PatientID, App.CurrentDisaster.EventShortName);
-            if (String.IsNullOrEmpty(uuid))
-            {
-                string errMsg = "TriageTrak can't find a record with Patient ID " + App.CurrentPatient.PatientID + " associated with event '" + App.CurrentDisaster.EventName +
-                    "'.  Discarding was cancelled.  You could try again but choose 'From Outbox Only', if you think that appropriate.";
-                MessageDialog dlg = new MessageDialog(errMsg);
-                await dlg.ShowAsync();
-                await App.ErrorLog.ReportToErrorLog("On ViewEdit Prep for Discard - for event with short name " + App.CurrentDisaster.EventShortName, errMsg, true);
-                // bail out:
-                // Maybe not:
-                // await App.PatientDataGroups.UpdateSendHistoryAfterOutbox(App.CurrentPatient.PatientID, ObjSentCode); // see explanation of this below
-// WAS:                discardMenuPopUp.IsOpen = false;
-                TopAppBar.IsOpen = false;
-                BottomAppBar.IsOpen = false;
-                return;
-            }
-
-// WAS:            discardMenuPopUp.IsOpen = false; // take down 1 popup, then put up another
-            whyDiscardedPopUp = new Popup();
-            whyDiscardedPopUp.IsLightDismissEnabled = true;  // Dismiss popup automatically when user hits other part of app
-            StackPanel panel2 = new StackPanel(); // create a panel as the root of the menu
-            panel2.Background = BottomAppBar.Background;
-            panel2.Height = 140;
-            panel2.Width = 180;
-            TextBlock label = new TextBlock();
-            label.Text = "Why discard? (optional explanation)";
-            panel2.Children.Add(label);
-            TextBox explanation = new TextBox();
-            explanation.Name = "Explanation";
-            panel2.Children.Add(explanation);
-            Button OKButton = new Button();
-            OKButton.Content = "OK";
-            OKButton.Style = (Style)App.Current.Resources["TextButtonStyle"];  //Feb 2015 note: if this code ever comes back, use TextBlockButtonStyle
-            OKButton.Margin = new Thickness(20, 10, 20, 10);
-            OKButton.Click += FinishRemoteDiscard_Click;
-            panel2.Children.Add(OKButton);
-
-            // Add the root menu as the popup contents:
-            whyDiscardedPopUp.Child = panel2;
-            // Calculate the location, here in the bottom righthand corner with padding of 4:
-            whyDiscardedPopUp.HorizontalOffset = Window.Current.CoreWindow.Bounds.Right - panel2.Width - 4;
-            whyDiscardedPopUp.VerticalOffset = Window.Current.CoreWindow.Bounds.Bottom - BottomAppBar.ActualHeight - panel2.Height - 4;
-            whyDiscardedPopUp.IsOpen = true;
-        }
-
-        private async void FinishRemoteDiscard_Click(object sender, RoutedEventArgs e) // From OK button in whyDiscardedPopUp
-        {
-            // Quick hack... call service directly, instead of putting request on send queue
-#if WAS_BUT_FAILS_IN_8_1
-            TextBox explanation = (TextBox)whyDiscardedPopUp.FindName("Explanation");
-            App.MyAssert(explanation != null);
-            await App.service.ExpirePerson(uuid, explanation.Text);
-#endif
-            string text = GetTextFromTextBox(sender, "Explanation");
-            await App.service.ExpirePerson(uuid, text);
-            // On to local discard....
-// WAS:     DeleteLocal_Click(sender, e);
-            await DeleteLocal(true); // = From TriageTrak too
-            TopAppBar.IsOpen = false;
-            BottomAppBar.IsOpen = false;
-            whyDiscardedPopUp.IsOpen = false;
-        }
-
-        private string GetTextFromTextBox(object sender, string textBoxName) // New Dec 2014
-        {
-            TextBox textBox = null;
-            var parent = VisualTreeHelper.GetParent(sender as Button);
-            var numChildren = VisualTreeHelper.GetChildrenCount(parent);
-            for (var i = 0; i < numChildren; ++i)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i) as FrameworkElement;
-                if (child != null && child.Name == textBoxName)
-                {
-                    // Found the text box!
-                    textBox = child as TextBox;
-                    break;
-                }
-            }
-            App.MyAssert(textBox != null);
-            if (textBox != null)
-            {
-                return textBox.Text;
-            }
-            return "";
-        }
-#endif
 
         private async void Webcam_Click(object sender, RoutedEventArgs e)
         {

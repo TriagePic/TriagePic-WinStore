@@ -1562,23 +1562,57 @@ namespace TP8.Data
 
         
         // Essential mapping was described in Glenn's google doc "Proposed Search Results Revision to PLUS (People Locator User Services)"
+        // Returned format is YYYY-MM-DD HH:MM:SS [-]KK:KK
         private string MapWhenLocalTime(Search_Response_Toplevel_Row item)
         {
+/* Before June 2015:
             // Maybe need to chew off -04:00:
             if(item.edxl != null && item.edxl.Count() > 0 && !String.IsNullOrEmpty(item.edxl[0].last_posted))
                 return item.edxl[0].last_posted; // Assume same format and timezone as last_updated
             if (!String.IsNullOrEmpty(item.last_updated))
                 return item.last_updated;
-            return item.creation_time;
+            return item.creation_time; */
+            // Let us retain -04:00:
+            if (!String.IsNullOrEmpty(item.last_updated))
+                return MapWhenLocalTimeImpl(item.last_updated); // input example: 2015-06-21T22:11:11-04:00 .  Server time I guess
+
+            // It would be better to do client time, but we don't really know UTC offset for that (yet).  We could make some assumptions to infer UTC offset of last_posted and add it, by
+            // comparing it with last_updated, looking for differences that were (appx) intervals of 1 hr.
+            if (item.edxl != null && item.edxl.Count() > 0 && !String.IsNullOrEmpty(item.edxl[0].last_posted))
+                return item.edxl[0].last_posted; // example: 2015-06-21 22:11:11   Same(ish) value as last_updated, but with " " instead of "T" and no UTC offset. Client time I guess
+            // Really need to fabricate an original record too in some cases, which would be better for stat charts... to do
+            return MapWhenLocalTimeImpl(item.creation_time); // example input: 2015-06-21T22:11:11-04:00  Time casualty record first created (before any edits). Client time?
+        }
+
+        /// <summary>
+        /// Makes a slightly more readable format, used as the TP8 standard in the WhenLocalTime attribute of the XML files
+        /// </summary>
+        /// <param name="s">Assumes input format of YYYY-MM-DDTHH:MM:SS-KK:KK or YYYY-MM-DDTHH:MM:SS+KK:KK</param>
+        /// <returns>YYYY-MM-DD HH:MM:SS -KK:KK or YYYY-MM-DDTHH:MM:SS +KK:KK</returns>
+        private string MapWhenLocalTimeImpl(string s)
+        {
+            s = s.Replace("T", " ");
+            if(s.Length != 25)
+                return s;
+            string s1 = s.Substring(0, 19);
+            string s2 = s.Substring(19);
+            s2 = s2.Replace("-", " -");
+            s2 = s2.Replace("+", " +");
+            return s1+s2;
         }
 
         private string MapTimeZone(Search_Response_Toplevel_Row item)   // TO DO
         {
+            // There is not a unique mapping from UTC offset to time zone name or abbreviation
+            // So can only be done in context of location and date (for daylight savings vs standard)
+            // Really, too hard... it would be way better if TriageTrak retained the reported value
             string dt = MapDateEDXL(item);
             // Pathetic, will only work for east coast US:
             if(dt.Contains("-04:00"))
                 return "EDT";
-            return "EST";
+            if (dt.Contains("-05:00"))
+                return "EST";
+            return "";
         }
 
         private string MapDateEDXL(Search_Response_Toplevel_Row item)

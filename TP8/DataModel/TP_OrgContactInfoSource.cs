@@ -385,8 +385,11 @@ namespace TP8.Data // nah: .DataModel
             if (s.StartsWith("ERROR:") || u == -1)
             {
                 await ReadXML(); // in case call to web service wiped out App.CurrentOrgContactInfo
+///                if(s.StartsWith("ERROR: 1 "))// New release 3.4
+///                    App.DelayedMessageToUserOnStartup = s;  // "ERROR: 1 - invalid token, username, password, or api key
+///                else                                           // To solve this, go to Settings charm, 'My Credentials', and re-validate your username and password."
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - My organization's contact info\n"; 
+                    App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - My organization's contact info\n"; 
                 // MessageDialog dlg = new MessageDialog("Could not connect to web service to get my organization's contact info.  Using local cached version instead.");
                 // await dlg.ShowAsync();
             }

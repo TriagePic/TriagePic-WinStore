@@ -25,7 +25,7 @@ namespace TP8
     /// A page that displays details for a single item within a group while allowing gestures to
     /// flip through other items belonging to the same group.
     /// </summary>
-    public sealed partial class ItemDetailFlipViewPage : TP8.Common.LayoutAwarePage
+    public sealed partial class ItemDetailFlipViewPage : TP8.Common.BasicLayoutPage // WAS: LayoutAwarePage
     {
         private string _subtitleWithCount;
         public string subtitleWithCount
@@ -50,18 +50,22 @@ namespace TP8
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
         /// </summary>
+#if WAS
         /// <param name="navigationParameter">The parameter value passed to
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+#endif
+        protected override void LoadState(LoadStateEventArgs e) // WAS: LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
+            string navigationParameter = e.NavigationParameter.ToString();
+            var pageState = e.PageState;
             // navigationParameter will be timestamp of form: 2012-08-13 18:03:26 -04:00
             // Allow saved page state to override the initial item to display
             if (pageState != null && pageState.ContainsKey("SelectedItem"))
             {
-                navigationParameter = pageState["SelectedItem"];
+                navigationParameter = pageState["SelectedItem"].ToString();
             }
 
             // was, but didn't handle fact that same item can appear in multiple groups:
@@ -89,8 +93,9 @@ namespace TP8
         /// requirements of <see cref="SuspensionManager.SessionState"/>.
         /// </summary>
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
-        protected override void SaveState(Dictionary<String, Object> pageState)
+        protected override void SaveState(SaveStateEventArgs e) // WAS: SaveState(Dictionary<String, Object> pageState)
         {
+            var pageState = e.PageState;
             var selectedItem = this.flipView.SelectedItem;
             // TODO: Derive a serializable navigation parameter and assign it to pageState["SelectedItem"]
             pageState["SelectedItem"] = ((SampleDataItem)(this.flipView.SelectedItem)).UniqueId; // Problem on back from Edit if: = selectedItem;//Glenn just tries this
@@ -120,8 +125,8 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            // WAS: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");
@@ -261,7 +266,7 @@ namespace TP8
             }
 #endif
             Frame f = (Frame)Window.Current.Content;
-            LayoutAwarePage p = (LayoutAwarePage)f.Content;
+            BasicLayoutPage p = (BasicLayoutPage)f.Content;// WAS: LayoutAwarePage p = (LayoutAwarePage)f.Content;
             var tb = (TextBlock)p.FindName("SubtitleWithCount");
             if (tb != null)
             {

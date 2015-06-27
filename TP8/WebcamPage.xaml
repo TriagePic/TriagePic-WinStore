@@ -1,6 +1,6 @@
 ﻿<!--adapted from ImageHelper2 example in Jeremy Likness book.  Was x:Class="ImageHelper2.MainPage"-->
-<!--Glenn changed inheritence, from Page to common:LayoutAwarePage -->
-<common:LayoutAwarePage 
+<!--Glenn changed inheritence, from Page to common:LayoutAwarePage, then to common:BasicLayoutPage -->
+<common:BasicLayoutPage 
     x:Class="TP8.WebcamPage"
     IsTabStop="false"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -86,4 +86,4 @@
               Click="CaptureButton_Click"  Margin="20 0 0 0"/>
         </StackPanel>
     </Grid>
-</common:LayoutAwarePage>
+</common:BasicLayoutPage>

@@ -24,7 +24,7 @@ namespace TP8
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class BasicPageChecklist : TP8.Common.LayoutAwarePage
+    public sealed partial class BasicPageChecklist : TP8.Common.BasicLayoutPage //WAS before Release 3: TP8.Common.LayoutAwarePage
     {
         public static ProgressBar staticProgressBarChangedEvent; // kludge to access progressBarChangeEvent from other pages... in absence of MVVM with Message Bus or Event Aggregator and subscribe/publish
         public static TextBlock staticGettingAllStationsReports; // more kludge
@@ -39,6 +39,8 @@ namespace TP8
             //EventComboBox.DataContext = App.CurrentDisasterListForCombo;
         }
 
+        // Overrides of LoadState, SaveState not needed here
+#if WAS
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -61,6 +63,7 @@ namespace TP8
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
+#endif
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -77,9 +80,6 @@ namespace TP8
             /// No: EventComboBox.DataContext = App.CurrentDisasterList;  also crashes: App.CurrentDisasterListForCombo
             //foreach (TP_EventsDataItem i in App.CurrentDisasterList)
             //    EventComboBox.Items.Add(i);
-
-
-
 
             if(App.CurrentDisaster.EventName == "")
                 return;
@@ -147,8 +147,8 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
- //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            //WAS before Release 3: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");

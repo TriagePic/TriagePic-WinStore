@@ -26,7 +26,7 @@ namespace TP8 //was: ImageHelper2
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class WebcamPage : TP8.Common.LayoutAwarePage // Glenn adds inheritence from LayoutAwarePagewas: MainPage
+    public sealed partial class WebcamPage : TP8.Common.BasicLayoutPage // WAS before Release 3: TP8.Common.LayoutAwarePage // Glenn adds inheritence from LayoutAwarePagewas: MainPage
     {
         public WebcamPage()
         {
@@ -143,8 +143,8 @@ namespace TP8 //was: ImageHelper2
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            //WAS before Release 3: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");
@@ -164,8 +164,8 @@ namespace TP8 //was: ImageHelper2
             RoutedEventArgs e)
         {
             // WAS Win 8.0: Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since this doesn't work well while snapped
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            //WAS before Release 3: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to take a picture.");
                 await dlg.ShowAsync();

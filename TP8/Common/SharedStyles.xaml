@@ -1,4 +1,5 @@
-﻿<!-- StandardStyles.xaml was introduced for Win8.0.  What's now here is much reduced from that, and largely converted by Glenn into 8.1 form -->
+﻿<!-- This file renamed to SharedStyles.xaml in May 2015 -->
+<!-- StandardStyles.xaml was introduced for Win8.0.  What's now here is much reduced from that, and largely converted by Glenn into 8.1 form -->
 <!-- Many styles are now provided in the framework (within generic.xaml) -->
 <!-- For more, see http://timheuer.com/blog/archive/2013/10/29/remove-standardstyles-xaml-from-windows-8-1-winrt-projects.aspx -->
 
@@ -98,12 +99,14 @@
 
     <!-- Glenn adds Feb 2015 as replacement for Win 8.0 SnappedBackButtonStyle when used in snapped page Title
          Margins appropriate for the conventional page layout are included as part of the style.
-         JUST GUESSING ON MARGINS SO FAR
     -->
     <Style x:Key="NarrowTitleBackButtonStyle" TargetType="Button" BasedOn="{StaticResource NavigationBackButtonSmallStyle}">
-        <Setter Property="Margin" Value="20,0,0,0"/>
+        <Setter Property="Margin" Value="10,0,10,35"/>
+        <!-- original guess was 20,0,0,0-->
         <Setter Property="VerticalAlignment" Value="Bottom"/>
     </Style>
+
+
 
     <!-- Dropped: BackButtonStyle, PortraitBackButtonStyle, SnappedBackButtonStyle.
         These complex styles were used to style a Back Button and its margins for use in the title area of a page. -->

@@ -17,11 +17,12 @@ using System.Diagnostics;
 using TP8.Data;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using TP8.Common;
 
 
 namespace TP8
 {
-	public sealed partial class SortNonFlyout : TP8.Common.LayoutAwarePage
+	public sealed partial class SortNonFlyout : TP8.Common.BasicLayoutPage// WAS LayoutAwarePage
 	{
 		public SortNonFlyout()
 		{
@@ -37,7 +38,7 @@ namespace TP8
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        protected override void LoadState(LoadStateEventArgs e) // WAS: LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             Opened();
 #if TODOish
@@ -66,7 +67,7 @@ namespace TP8
         /// requirements of <see cref="SuspensionManager.SessionState"/>.
         /// </summary>
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
-        protected override void SaveState(Dictionary<String, Object> pageState)
+        protected override void SaveState(SaveStateEventArgs e) // WAS: SaveState(Dictionary<String, Object> pageState)
         {
         }
 

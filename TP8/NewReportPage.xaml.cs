@@ -27,6 +27,8 @@ using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Animation;
+using TP8.Common;
+using System.ComponentModel;
 // nah: using TP8.DataModel;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
@@ -36,7 +38,7 @@ namespace TP8
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class BasicPageNew : TP8.Common.LayoutAwarePage
+    public sealed partial class BasicPageNew : TP8.Common.BasicLayoutPage //, INotifyPropertyChanged // was: LayoutAwarePage
     {
         private string zoneSelected = "";
 
@@ -56,9 +58,31 @@ namespace TP8
 
         private ZoneButton[] zb = null;
         private int zbCount = 0;
-        private bool firstTime = true;
+ //IS_THIS_NECESSARY       private bool firstTime = true;
         private NavigationEventArgs latestNavigation = null;
-
+#if DIDNT_WORK_FOR_3_OBJECT_BIND
+        //public static string LastSentMessage { get; set; } // New June 2015 bind target
+        public event PropertyChangedEventHandler PropertyChanged;
+        private string _LastSentMessage;
+        public string LastSentMessage
+        {
+            get
+            {
+                return this._LastSentMessage;
+            }
+            set
+            {
+                this._LastSentMessage = value;
+                if (this.PropertyChanged != null)
+                    this.PropertyChanged(this, new PropertyChangedEventArgs("LastSentMessage"));
+            }
+        }
+        /*
+ <Rectangle x:Name="BlinkerTopRed" x:FieldModifier="public" Height="15" Width="15" Fill="DarkRed" />
+                        <Rectangle x:Name="BlinkerMiddleYellow" x:FieldModifier="public" Margin="0,4" Height="15" Width="15" Fill="DarkGoldenrod" />
+                        <Rectangle x:Name="BlinkerBottomGreen" x:FieldModifier="public" Height="15" Width="15" Fill="DarkGreen" />
+                        <TextBlock x:Name="CountInSendQueue" x:FieldModifier="public" Height="30" Width="40" Margin="0,10,0,0" FontSize="18" TextAlignment="Center" FontWeight="Bold" /> */
+#endif
         public BasicPageNew()
         {
             this.InitializeComponent();
@@ -100,6 +124,7 @@ namespace TP8
             ToolTip sendQueueTip = new ToolTip();
             sendQueueTip.Content = "Count of reports queued to send";
             ToolTipService.SetToolTip(CountInSendQueue, sendQueueTip);
+            LastSentMsg.DataContext = this;
         }
 
         private void InitiateZones()
@@ -144,11 +169,13 @@ namespace TP8
 
         private void VisualStateChanged(object sender, WindowSizeChangedEventArgs e)
         {
+            AdjustZoneButtonWidth();
+            /* WAS Win 8.0:
             string visualState = DetermineVisualState(ApplicationView.Value);
-            if (visualState == "Filled")
+            if (visualState == "vs673To1025Wide")
             {
                 MyZoneButtonItemWidth = "110";  // Can't change button width directly in XAML, because its set by ItemWidth in template, so not allowed.
-            }
+            } */
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -157,7 +184,56 @@ namespace TP8
             base.OnNavigatedTo(e); // This calls LoadState
         }
 
+        private void AdjustZoneButtonWidth()
+        {
+            // Broken out as separate function Sept 2014 in TP-8.1 project, moved here March 2015
+            string visualState = App.CurrentVisualState; // WAS Win 8.0: DetermineVisualState(ApplicationView.Value);
+            if (visualState == "vs673To1025Wide" || visualState == "vs501To672Wide")  // make filled and half the same, until we know better
+            {
+                MyZoneButtonItemWidth = "110";  // Can't change button width directly in XAML, because its set by ItemWidth in template, so not allowed.
+            }
+            else
+                MyZoneButtonItemWidth = "140";
+            // Narrow and snapped don't use buttons for zones, instead a pull-down
+        }
 
+        /// <summary>
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
+        /// </summary>
+        protected override void LoadState(LoadStateEventArgs e)
+        {
+            InitiateZones();
+            // was before Release 2:
+            // if (!String.IsNullOrEmpty(App.CurrentPatient.Zone)) // This test may need refinement
+            //    LoadReportFieldsFromObject(pr);
+            if (latestNavigation.NavigationMode == NavigationMode.Back) // probably back from webcam
+            {
+                // Assume there's content to reload
+                pr = App.CurrentPatient;
+                LoadReportFieldsFromObject(pr);
+            }
+            pageSubtitle.Text = " " + App.CurrentDisaster.EventName; // TO DO: binding in XAML instead of here?  Add space to separate from icon
+            if (App.CurrentDisaster.TypeIconUri.Length > EMBEDDED_FILE_PREFIX.Length)
+            {
+                eventTypeImage.Source = new BitmapImage(new Uri(App.CurrentDisaster.TypeIconUri));
+                // Tried XAML binding, didn't work:                 <Image x:Name="eventTypeImage" Source="{Binding CurrentDisasterEventTypeIcon}" Width="40" VerticalAlignment="Top"/>
+                // WAS before next call added: MyZoneButtonItemWidth = "140";
+            }
+            AdjustZoneButtonWidth();
+
+            UpdateImageLoad();
+#if IS_THIS_NECESSARY
+            if (firstTime)
+            {
+                firstTime = false;
+                UpdateStoryBoard();
+            }
+#endif
+            // Not needed: base.LoadState(e);
+        }
+
+#if WAS
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -202,26 +278,39 @@ namespace TP8
                 UpdateStoryBoard();
             }
         }
+#endif
 
-
-
+#if IS_THIS_NECESSARY
         private void UpdateStoryBoard()
         {
             for(int i = 0; i < zbCount; i++)
             {
-                // Make widths narrower for filled state:
-                ObjectAnimationUsingKeyFrames anim = new ObjectAnimationUsingKeyFrames();
-                DiscreteObjectKeyFrame kf = new DiscreteObjectKeyFrame();
-                kf.KeyTime = TimeSpan.FromSeconds(0);
-                //kf.Value = 100;
-                kf.SetValue(ZoneButton.ZoneButtonWidthProperty, 100);
-                anim.KeyFrames.Add(kf);
-                Storyboard.SetTargetName(anim, zb[i].Name);
-                // fails with exception when filled mode invoked: Storyboard.SetTargetProperty(anim, "(ZoneButton.ZoneButtonWidthProperty)");
-                Storyboard.SetTargetProperty(anim, "ZoneButtonWidth"); // doesn't throw exception but doesn't change width either.  Doesn't seem to call setter
-                Filled.Storyboard.Children.Add(anim);
+                // Make widths narrower for filled and half state:
+                ObjectAnimationUsingKeyFrames anim1 = new ObjectAnimationUsingKeyFrames();
+                anim1 = UpdateStoryBoardImpl(anim1, i);
+                Filled.Storyboard.Children.Add(anim1);
+                ObjectAnimationUsingKeyFrames anim2 = new ObjectAnimationUsingKeyFrames();
+                anim2 = UpdateStoryBoardImpl(anim2, i);
+                Half.Storyboard.Children.Add(anim2); // added May 2015
             }
         }
+
+        private ObjectAnimationUsingKeyFrames UpdateStoryBoardImpl(ObjectAnimationUsingKeyFrames anim, int i) // Broken out May 2015
+        {
+            // Make widths narrower for filled and half state:
+            DiscreteObjectKeyFrame kf = new DiscreteObjectKeyFrame();
+            kf.KeyTime = TimeSpan.FromSeconds(0);
+            //kf.Value = 100;
+            kf.SetValue(ZoneButton.ZoneButtonWidthProperty, 100);
+            anim.KeyFrames.Add(kf);
+            Storyboard.SetTargetName(anim, zb[i].Name);
+            // fails with exception when filled mode invoked: Storyboard.SetTargetProperty(anim, "(ZoneButton.ZoneButtonWidthProperty)");
+            Storyboard.SetTargetProperty(anim, "ZoneButtonWidth"); // doesn't throw exception but doesn't change width either.  Doesn't seem to call setter
+            return anim;
+        }
+#endif
+        // Override of SaveState not needed
+#if WAS
 
         /// <summary>
         /// Preserves state associated with this page in case the application is suspended or the
@@ -232,6 +321,7 @@ namespace TP8
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
+#endif
 
         private void UpdateImageLoad()
         {
@@ -273,6 +363,7 @@ namespace TP8
         private void SetPatientImageTextOverlay(string s)
         {
             patientImageTextOverlayLandscape.Text =
+            patientImageTextOverlayHalf.Text =
             patientImageTextOverlaySnapped.Text =
             patientImageTextOverlayPortrait.Text = s;
         }
@@ -280,6 +371,7 @@ namespace TP8
         private void SetPatientImageSource(ImageSource s)
         {
             patientImageLandscape.Source =
+            patientImageHalf.Source =
             patientImageSnapped.Source =
             patientImagePortrait.Source = s;
         }
@@ -298,14 +390,18 @@ namespace TP8
 
         private string SyncAndGetFirstNameTextBox()
         {
-            // Hmm, in Win 8.1, there's "Portrait" and "DefaultLayout" and page SizeChanged event handler
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            // Hmm, in standard Win 8.1, there's "Portrait" and "DefaultLayout" and page SizeChanged event handler.  We're using BasicLayoutPage categorization here instead.
+            string visualState = App.CurrentVisualState; // WAS Win 8.0:  DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": FirstNameTextBox.Text = FirstNameTextBoxPortrait.Text; break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide":
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: FirstNameTextBoxPortrait.Text = FirstNameTextBox.Text; break;
             }
             // All sync'd
@@ -314,13 +410,17 @@ namespace TP8
 
         private string SyncAndGetLastNameTextBox()
         {
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS Win 8.0:  DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": LastNameTextBox.Text = LastNameTextBoxPortrait.Text; break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide"
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: LastNameTextBoxPortrait.Text = LastNameTextBox.Text; break;
             }
             // All sync'd
@@ -334,13 +434,16 @@ namespace TP8
 
         private string SyncAndGetCaptionTextBox()
         {
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS Win 8.0:  DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": Caption.Text = CaptionPortrait.Text; break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
+                //case "vs1026To1365Wide":
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: CaptionPortrait.Text = Caption.Text; break;
             }
             // All sync'd
@@ -349,14 +452,17 @@ namespace TP8
 
         private void GiveCaptionFocus()
         {
-            string visualState = DetermineVisualState(ApplicationView.Value);
+            string visualState = App.CurrentVisualState; // WAS Win 8.0:  DetermineVisualState(ApplicationView.Value);
             switch (visualState)
             {// current visual state is the master, other states are slaves
                 case "FullScreenPortrait": CaptionPortrait.Focus(FocusState.Programmatic); break;
-                //case "Filled":
                 //case "FullScreenLandscape":
-                //case "Snapped":
-                
+                //case "vsOver1365Wide":
+                //case "vs1026To1365Wide":
+                //case "vs673To1025Wide":
+                //case "vs501To672Wide":
+                //case "vs321To500Wide":
+                //case "vs320Wide":
                 default: Caption.Focus(FocusState.Programmatic); break;
             }
         }
@@ -470,8 +576,7 @@ namespace TP8
             if (!await ConfirmOrReviseAgeGroup())
                 return;
 
-            progressBarSending.Visibility = Visibility.Visible;
-
+            AdjustProgressBarVisibility(Visibility.Visible);
             if (Notes.Text == NOTES_TEXT_HINT) // Must match string in XAML too
                 Notes.Text = "";
             if (App.RosterNames != "")
@@ -507,21 +612,45 @@ namespace TP8
             while (true)
             {
                 count = TP_SendQueue.reportsToSend.Count();
+                // Tried subsituting data-bound LastSentMessage for LastSentMsg.Text below, but didn't help with bindings that change with visual state
                 if (count > 0)
-                    LastSentMsg.Text = "Reports waiting to send:  " + count;
+                    AdjustLastSentMsgText("Reports waiting to send:  " + count);
                 else
                 {
-                    progressBarSending.Visibility = Visibility.Collapsed;
-                    LastSentMsg.Text = "Sent";
+                    AdjustProgressBarVisibility(Visibility.Collapsed);
+                    AdjustLastSentMsgText("Sent");
                 }
 
                 await Task.Delay(2000); // see message for 2 seconds
                 if (count == 0 || count <= TP_SendQueue.reportsToSend.Count()) // if count doesn't decrease after 2 seconds, then don't wait further in this loop
                     break;
             }
-            progressBarSending.Visibility = Visibility.Collapsed;
+            AdjustProgressBarVisibility(Visibility.Collapsed);
             // Maybe not: if(!LastSentMsg.Text.StartsWith("Reports waiting to send")) // Let count of waiting reports persist
-            LastSentMsg.Text = "";
+            /* was: LastSentMsg.Text */
+            AdjustLastSentMsgText("");
+        }
+
+        private void AdjustProgressBarVisibility(Visibility v) // New June 2015
+        {
+            progressBarSendingPortrait.Visibility = progressBarSendingPortrait.Visibility = progressBarSending.Visibility = v;
+            /*if (App.CurrentVisualState == "FullScreenPortrait")
+                progressBarSendingPortrait.Visibility = v;
+            else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+               progressBarSendingPortrait.Visibility = v; v;
+            else
+                progressBarSending.Visibility = v;*/
+        }
+
+        private void AdjustLastSentMsgText(string s)
+        {
+            LastSentMsgPortrait.Text = LastSentMsgSnapped.Text = LastSentMsg.Text = s;
+            /*if (App.CurrentVisualState == "FullScreenPortrait")
+                LastSentMsgPortrait.Text = s;
+            else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                LastSentMsgSnapped.Text = s;
+            else
+                LastSentMsgPortrait.Text = s;*/
         }
 
 
@@ -721,6 +850,7 @@ namespace TP8
         private void ZoneChoiceComboSnapped_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             zoneSelected = ZoneChoiceComboSnapped.SelectedItem.ToString();
+            EnableSendButtonIfPossible(); // added June 2015
         }
 
         private void EnableSendButtonIfPossible()
@@ -900,8 +1030,8 @@ namespace TP8
 
         private async void Statistics_Click(object sender, RoutedEventArgs e)
         {
-            //SOON           if (App.CurrentVisualState == "Snapped" || App.CurrentVisualState == "Narrow")
-            if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
+            if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+            // WAS before Release 3: if (Windows.UI.ViewManagement.ApplicationView.Value == Windows.UI.ViewManagement.ApplicationViewState.Snapped)
             {
                 // In 8.1, this replaces 8.0's TryToUnsnap:
                 MessageDialog dlg = new MessageDialog("Please make TriagePic wider in order to show charts.");

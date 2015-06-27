@@ -311,13 +311,14 @@ namespace TP8.Data // nah: .DataModel
                 u = -1;
             }
             if (u != -1)
-                s = await App.OrgPolicy.GetCurrentOrgPolicy(u); // puts results into App.OrgPolicy and first and only item of App.OrgPolicyList
+                s = await App.OrgPolicy.GetCurrentOrgPolicy(u); // puts results into App.OrgPolicy and first and only item of App.OrgPolicyList.  Also App.ZoneChoices (unless error).
             if (s.StartsWith("ERROR:") || u == -1)
             {
                 await ReadXML(); // in case call to web service wiped out App.OrgPolicy and App.OrgPolicyList
                 App.OrgPolicy = this.First();
+                await App.ZoneChoices.ParseJsonList(App.OrgPolicy.TriageZoneListJSON); // Added before Release 3
                 // For the user, this is not an error
-                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - My organization's policies for TriagePic settings\n";
+                App.DelayedMessageToUserOnStartup = App.NO_OR_BAD_WEB_SERVICE_PREFIX + "  - My organization's policies for TriagePic settings, including zone choices\n";
                 // MessageDialog dlg = new MessageDialog("Could not connect to web service to get my organization's policies for TriagePic settings.  Using local cached version instead.");
                 // await dlg.ShowAsync();
             }

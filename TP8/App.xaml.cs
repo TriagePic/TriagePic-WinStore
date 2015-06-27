@@ -35,6 +35,7 @@ using Windows.System.UserProfile;
 using Windows.Storage;
 using System.Threading;
 using Newtonsoft.Json;
+using Windows.Security.ExchangeActiveSyncProvisioning;
 
 
 
@@ -98,9 +99,9 @@ namespace TP8
             Gender,
             AgeGroup,
             TriageZone,
-            PLStatus,
-            DisasterEvent,
-            ReportingStation
+            // needs work: PLStatus,
+            DisasterEvent
+            // needs work: ,ReportingStation
         }
         public static string SearchResultsEventTitleTextBasedOnCurrentFilterProfile = ""; // may be summary text like "All Events" or "All Public Events", or specific event
 
@@ -148,6 +149,8 @@ namespace TP8
         public static TP_UsersAndVersions UserAndVersions = new TP_UsersAndVersions(); // local list of all user accounts on this device
         public static string UserWin8Account = "";
         public static string DeviceName = "";
+        public static string PingString = ""; // new June 2015, v 3.4
+        public static string StorePackageVersionMajorDotMinor = ""; // new June 2015, v 3.4
         public static TP_SendQueue sendQueue = new TP_SendQueue();
         public static bool goodWebServiceConnectivity = false; // until we know better.  Determined by pings.
         //public static List<string> SentStatusMessageAsSemaphore = new List<string>();
@@ -424,14 +427,16 @@ namespace TP8
 
             UserWin8Account = await GetUserWin8Account();  // May be empty string if PC Settings/Privacy/"Let apps use my name and account picture" is false
             DeviceName = GetDeviceName();
+            StorePackageVersionMajorDotMinor = GetStorePackageVersionMajorDotMinor();  // new June 2015 v 3.4
 
             // WAS BEFORE v33, but no longer have web service to allow get list without password:
               // await OrgDataList.Init(); // get list of all hospitals/organizations defined at our TriageTrak.  Don't need username/password for this.
               // Do this early so startup wizard has info it needs.
 
             await UserAndVersions.Init(); // Need PL password for web services to work.  Also init's pd.  Startup wiz called here.
-            // Also called within, after v32: OrgDataList.Init()
+            // Also called within, after v32: OrgDataList.Init().  June, 2015: will try to refresh token if it expired.
             // Initialize app model before navigating to home page, so groups will be set up
+            PingString = GetPingString(); // new June 2015 v 3.4
 #if MAYBE_NOT_ANY_MORE
             //DefaultFilterProfile.ResetFilterProfileToDefault();
             //Was here first, then moved to flyout, then moved back: 
@@ -571,6 +576,10 @@ namespace TP8
                 UserWin8Account = await GetUserWin8Account(); // Regenerate instead of: UserWin8Account = (string)SuspensionManager.SessionState["UserWin8Account"];
             if (String.IsNullOrEmpty(DeviceName))
                 DeviceName = GetDeviceName(); // Regenerate instead of: DeviceName = (string)SuspensionManager.SessionState["DeviceName"];
+            if (String.IsNullOrEmpty(StorePackageVersionMajorDotMinor))
+                StorePackageVersionMajorDotMinor = GetStorePackageVersionMajorDotMinor(); // Regenerate
+            if (String.IsNullOrEmpty(PingString))
+                PingString = GetPingString(); // Regenerate
             DelayedMessageToUserOnStartup = (string)SuspensionManager.SessionState["DelayedMessageToUserOnStartup"];
             // Probably don't need, since this is now in UserAndVersions: App.pd.plToken = (string)SuspensionManager.SessionState["TokenPL"];
 
@@ -814,14 +823,22 @@ namespace TP8
             // If user is logged on with Microsoft account, this additional info is available:
             string firstName = await UserInformation.GetFirstNameAsync();
             string lastName = await UserInformation.GetLastNameAsync();
+            // string domainName = await UserInformation.GetDomainNameAsync(); // Would need EnterpriseAuthentication capability to call this
+            // string principalName = await UserInformation.GetPrincipalNameAsync(); // ditto
             if (String.IsNullOrEmpty(displayName) && String.IsNullOrEmpty(firstName) && String.IsNullOrEmpty(lastName))
                 return "";
             if (String.IsNullOrEmpty(displayName))
                 return firstName + " " + lastName;
             if (String.IsNullOrEmpty(firstName) && String.IsNullOrEmpty(lastName))
                 return displayName;
-            return displayName + " (" + firstName + " " + lastName + ")"; // displayName is probably MS Live email address in this case
+            if (displayName.Contains(firstName) && displayName.Contains(lastName))
+                return displayName; // including separate first and last name would be redundant
+            return displayName + " (" + firstName + " " + lastName + ")";
+            // You might think displayName is probably MS Live email address in this case, but I don't know if we ever get here.
+            // Access to email name unclear
             // It is also possible to get user's account picture
+
+
         }
 
         /// <summary>
@@ -842,6 +859,60 @@ namespace TP8
                     return names[i].DisplayName.Substring(0, foundIdx);
             }
             return ""; // failed
+        }
+
+        /// <summary>
+        /// Gets the device manufacturer &/or model if available
+        /// </summary>
+        /// <returns>May be empty string</returns>
+        private static string GetDeviceModel()
+        {
+            var clientDeviceInformation = new EasClientDeviceInformation();
+            string s = clientDeviceInformation.SystemManufacturer;
+            string t = clientDeviceInformation.SystemProductName;
+            if (String.IsNullOrEmpty(s) && String.IsNullOrEmpty(t))
+                return "";
+            if (!String.IsNullOrEmpty(s) && !String.IsNullOrEmpty(t))
+                s += " " + t;
+            else
+                s += t; // Don't add space if only 1 field present
+            s.Replace(";", "/"); // Semi-colon is used as separator in pingEcho, so avoid here.
+            return s;
+        }
+
+        private static string GetStorePackageVersionMajorDotMinor()
+        {
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+            string forDeveloperToSeeInDebugger = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString() + "." + version.Revision.ToString();
+            return version.Major.ToString() + "." + version.Minor.ToString();
+            // Keep in mind that this is the package version number, set with Store/"Edit App Manifes"t and revision-incremented during Store/"Create App Packages"...
+            // NOT the VS Build number (editable in Project/TP8 Properties/Assembly Information).
+            // However, try to by hand:
+            // Keep Store.major = VS.major = currently 3 (and ideally matches TP7.Major)
+            // Keep Store.minor = VS.minor = (upcoming or done) Store release #
+            // Don't care about Build & Revision #s all that much, and compiling and packaging will use unrelated sets of values.
+            // For TP7, compiler generated them so that they represented the compile date, and that was conveyed to user.  Don't know if that makes sense for TP8.
+        }
+
+        /// <summary>
+        /// Formats the fixed string sent with every ping
+        /// </summary>
+        /// <returns></returns>
+        private static string GetPingString()
+        {
+            // Ideal format: "machinename;device id;app name;app version;operating system;device username;pl username"
+            // WAS before v3.4: pin.pingString = App.DeviceName + ";TriagePic-Win8.1"
+            // App.DeviceName is the local win 8 host name (not the hardware manufacturer or model). Might be empty if problem fetching.
+            // App.UserWin8Account will be empty string if PC Settings/Privacy/"Let apps use my name and account picture" is false.
+            // Otherwise, it will be windows logon, to which we have appended (if its a MS logon) " (firstName lastName)"
+            App.MyAssert(!String.IsNullOrEmpty(StorePackageVersionMajorDotMinor));
+            App.MyAssert(!String.IsNullOrEmpty(App.pd.plUserName));
+            string dm = GetDeviceModel();
+            string pingString = App.DeviceName + ";" + dm + ";TriagePic-WinStore;" + StorePackageVersionMajorDotMinor + ";Windows 8.1;" + App.UserWin8Account + ";" + App.pd.plUserName;
+
+            return pingString;
         }
 
     }

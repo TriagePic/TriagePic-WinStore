@@ -32,7 +32,7 @@ public class BasicLayoutPage : Page
         get { return this.navigationHelper; }
     }
 
- //   private List<Control> _layoutAwareControls; // Glenn copies from LayoutAwarePage
+    private List<Control> _layoutAwareControls; // Glenn copies from LayoutAwarePage
 
     public BasicLayoutPage()
     {
@@ -73,23 +73,144 @@ public class BasicLayoutPage : Page
 
     private void page_Loaded(object sender, RoutedEventArgs e)
     {
+        StartLayoutUpdates(sender, e);
         Window.Current.SizeChanged += Window_SizeChanged;
         DetermineVisualState();
     }
 
     private void page_Unloaded(object sender, RoutedEventArgs e)
     {
+        StopLayoutUpdates(sender, e);
         Window.Current.SizeChanged -= Window_SizeChanged;
+    }
+
+#if WAS_IN_LAYOUT_AWARE_PAGE
+    /// <summary>
+    /// Invoked as an event handler, typically on the <see cref="FrameworkElement.Loaded"/>
+    /// event of a <see cref="Control"/> within the page, to indicate that the sender should
+    /// start receiving visual state management changes that correspond to application view
+    /// state changes.
+    /// </summary>
+    /// <param name="sender">Instance of <see cref="Control"/> that supports visual state
+    /// management corresponding to view states.</param>
+    /// <param name="e">Event data that describes how the request was made.</param>
+    /// <remarks>The current view state will immediately be used to set the corresponding
+    /// visual state when layout updates are requested.  A corresponding
+    /// <see cref="FrameworkElement.Unloaded"/> event handler connected to
+    /// <see cref="StopLayoutUpdates"/> is strongly encouraged.  Instances of
+    /// <see cref="LayoutAwarePage"/> automatically invoke these handlers in their Loaded and
+    /// Unloaded events.</remarks>
+    /// <seealso cref="DetermineVisualState"/>
+    /// <seealso cref="InvalidateVisualState"/>
+    public void StartLayoutUpdates(object sender, RoutedEventArgs e)
+    {
+        var control = sender as Control;
+        if (control == null) return;
+        if (this._layoutAwareControls == null)
+        {
+            // Start listening to view state changes when there are controls interested in updates
+            Window.Current.SizeChanged += this.WindowSizeChanged;
+            this._layoutAwareControls = new List<Control>();
+        }
+        this._layoutAwareControls.Add(control);
+
+        // Set the initial visual state of the control
+        VisualStateManager.GoToState(control, DetermineVisualState(ApplicationView.Value), false);
+    }
+#endif
+
+    /// <summary>
+    /// Invoked as an event handler, typically on the <see cref="FrameworkElement.Loaded"/>
+    /// event of a <see cref="Control"/> within the page, to indicate that the sender should
+    /// start receiving visual state management changes that correspond to application view
+    /// state changes.
+    /// </summary>
+    /// <param name="sender">Instance of <see cref="Control"/> that supports visual state
+    /// management corresponding to view states.</param>
+    /// <param name="e">Event data that describes how the request was made.</param>
+    /// <remarks>The current view state will immediately be used to set the corresponding
+    /// visual state when layout updates are requested.  A corresponding
+    /// <see cref="FrameworkElement.Unloaded"/> event handler connected to
+    /// <see cref="StopLayoutUpdates"/> is strongly encouraged.  Instances of
+    /// <see cref="LayoutAwarePage"/> automatically invoke these handlers in their Loaded and
+    /// Unloaded events.</remarks>
+    /// <seealso cref="DetermineVisualState"/>
+    /// <seealso cref="InvalidateVisualState"/>
+    public void StartLayoutUpdates(object sender, RoutedEventArgs e)
+    {
+        var control = sender as Control;
+        if (control == null) return;
+        if (this._layoutAwareControls == null)
+        {
+            // Start listening to view state changes when there are controls interested in updates
+            // Window.Current.SizeChanged += this.Window_SizeChanged;
+            this._layoutAwareControls = new List<Control>();
+        }
+        this._layoutAwareControls.Add(control);
+
+        // Set the initial visual state of the control
+        VisualStateManager.GoToState(control, DetermineMappedVisualState(), false);
     }
 
     private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
     {
-        DetermineVisualState();
+        DetermineVisualState(); // check for physical state
+        InvalidateVisualState(); // check for mapped state
+    }
+
+#if WAS_IN_LAYOUT_AWARE_PAGE
+    /// <summary>
+    /// Invoked as an event handler, typically on the <see cref="FrameworkElement.Unloaded"/>
+    /// event of a <see cref="Control"/>, to indicate that the sender should start receiving
+    /// visual state management changes that correspond to application view state changes.
+    /// </summary>
+    /// <param name="sender">Instance of <see cref="Control"/> that supports visual state
+    /// management corresponding to view states.</param>
+    /// <param name="e">Event data that describes how the request was made.</param>
+    /// <remarks>The current view state will immediately be used to set the corresponding
+    /// visual state when layout updates are requested.</remarks>
+    /// <seealso cref="StartLayoutUpdates"/>
+    public void StopLayoutUpdates(object sender, RoutedEventArgs e)
+    {
+        var control = sender as Control;
+        if (control == null || this._layoutAwareControls == null) return;
+        this._layoutAwareControls.Remove(control);
+        if (this._layoutAwareControls.Count == 0)
+        {
+            // Stop listening to view state changes when no controls are interested in updates
+            this._layoutAwareControls = null;
+            Window.Current.SizeChanged -= this.WindowSizeChanged;
+        }
+    }
+#endif
+
+    /// <summary>
+    /// Invoked as an event handler, typically on the <see cref="FrameworkElement.Unloaded"/>
+    /// event of a <see cref="Control"/>, to indicate that the sender should start receiving
+    /// visual state management changes that correspond to application view state changes.
+    /// </summary>
+    /// <param name="sender">Instance of <see cref="Control"/> that supports visual state
+    /// management corresponding to view states.</param>
+    /// <param name="e">Event data that describes how the request was made.</param>
+    /// <remarks>The current view state will immediately be used to set the corresponding
+    /// visual state when layout updates are requested.</remarks>
+    /// <seealso cref="StartLayoutUpdates"/>
+    public void StopLayoutUpdates(object sender, RoutedEventArgs e)
+    {
+        var control = sender as Control;
+        if (control == null || this._layoutAwareControls == null)
+            return;
+        this._layoutAwareControls.Remove(control);
+        if (this._layoutAwareControls.Count == 0)
+        {
+            // Stop listening to view state changes when no controls are interested in updates
+            this._layoutAwareControls = null;
+            //Window.Current.SizeChanged -= this.Window_SizeChanged;
+        }
     }
 
 
-
-    private void DetermineVisualState()
+    public void DetermineVisualState()
     {
         var state = string.Empty;
         var applicationView = ApplicationView.GetForCurrentView();
@@ -106,16 +227,18 @@ public class BasicLayoutPage : Page
         {
 
             if (appSize.Width == 320)
-                state = "Snapped";
+                state = "vs320Wide";// was before June 2015: "Snapped";
             else if (appSize.Width <= 500)
-                state = "Narrow";
-            // Simplified versions follow, as opposed to "MAYBE_TOO_MUCH" that uses C++ dll
-            else if (appSize.Width <= 672) //Simplified version. 672 is screen split in half on 1366 wide (x 768) display.  Common widths: 1024, 1366, 1920, 2560.  Corresponding Half widths: 512, 672, 960, 1280
-                state = "Half";
-            else if (appSize.Width <= 1025)  // Simplified version. 1024.5 is 3/4 on 1366 wide display. Common 3/4 widths: 768, 1024.5, 1440, 1920 
-                state = "Filled"; //Simplified version
+                state = "vs321To500Wide"; // was: "Narrow";
+            // Simplified decision making follows, as opposed to "MAYBE_TOO_MUCH" that uses C++ dll "MetroAssist"
+            else if (appSize.Width <= 672) // 672 is screen split in half on 1366 wide (x 768) display.  Common widths: 1024, 1366, 1920, 2560.  Corresponding Half widths: 512, 672, 960, 1280
+                state = "vs501To672Wide"; // was: "Half";
+            else if (appSize.Width <= 1025)  // 1024.5 is 3/4 on 1366 wide display. Common 3/4 widths: 768, 1024.5, 1440, 1920 
+                state = "vs673To1025Wide"; // was: "Filled";
+            else if (appSize.Width <= 1365) // for benefit of split screen
+                state = "vs1026To1365Wide"; // was: "Wide"; // added June 2015
             else
-                state = "FullScreenLandscape";
+                state = "vsOver1365Wide"; // added June 2015
             // Silverlight would have used LayoutRoot.ActualWidth; // Will be zero until first call of LayoutUpdated
 
 #if MAYBE_TOO_MUCH
@@ -189,8 +312,8 @@ public class BasicLayoutPage : Page
         VisualStateManager.GoToState(this, state, true);
     }
 
-    // Next 2 funcions copied from Win8.0 LayoutAwarePage.cs:
-#if PROBABLY_NOT
+    // Next 2 functions copied from Win8.0 LayoutAwarePage.cs:
+#if WAS_IN_LAYOUT_AWARE_PAGES
     /// <summary>
     /// Translates <see cref="ApplicationViewState"/> values into strings for visual state
     /// management within the page.  The default implementation uses the names of enum values.
@@ -205,7 +328,22 @@ public class BasicLayoutPage : Page
         return viewState.ToString();
     }
 #endif
-#if MAYBE_NOT
+
+    /// <summary>
+    /// Returns the visual state within the page.  The default implementation returns the global state.
+    /// Subclasses may override this method to control the mapping scheme used.
+    /// </summary>
+    /// <returns>Visual state name used to drive the
+    /// <see cref="VisualStateManager"/></returns>
+    /// <seealso cref="InvalidateVisualState"/>
+    protected virtual string DetermineMappedVisualState()
+    {
+        if (String.IsNullOrEmpty(App.CurrentVisualState))
+            DetermineVisualState();
+        App.MyAssert(!String.IsNullOrEmpty(App.CurrentVisualState));
+        return App.CurrentVisualState;
+    }
+#if WAS_IN_LAYOUT_AWARE_PAGES
     /// <summary>
     /// Updates all controls that are listening for visual state changes with the correct
     /// visual state.
@@ -228,6 +366,26 @@ public class BasicLayoutPage : Page
         }
     }
 #endif
+
+    /// <summary>
+    /// Updates all controls that are listening for visual state changes with the correct visual state.
+    /// </summary>
+    /// <remarks>
+    /// Typically used in conjunction with overriding <see cref="DetermineVisualState"/> to
+    /// signal that a different value may be returned even though the view state has not changed.
+    /// </remarks>
+
+    public void InvalidateVisualState()
+    {
+        if (this._layoutAwareControls != null)
+        {
+            string visualState = DetermineMappedVisualState();
+            foreach (var layoutAwareControl in this._layoutAwareControls)
+            {
+                VisualStateManager.GoToState(layoutAwareControl, visualState, false);
+            }
+        }
+    }
     #endregion
 
 #if FOR_REF_FROM_LAYOUT_AWARE_PAGE

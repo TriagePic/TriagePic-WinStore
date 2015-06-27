@@ -171,7 +171,10 @@ namespace TP8.Data // nah .DataModel
             if (App.pd.plUserNameEncryptedAndBase64Encoded.Length > 0 && App.pd.plUserName.Length > 0 &&
                 App.pd.plPasswordEncryptedAndBase64Encoded.Length > 0 && App.pd.plPassword.Length > 0 &&
                 App.pd.plTokenEncryptedAndBase64Encoded.Length > 0 && App.pd.plToken.Length == 128) // New Dec 2014.
+            {
+                await VetCredentialsAndInitOrgDataList(o); // uses plToken.  Added June 2015
                 return;
+            }
 
             // We already have credentials from local file, just need to decrypt them
             // TO DO: multiple PL accounts for same Win login?
@@ -184,9 +187,9 @@ namespace TP8.Data // nah .DataModel
             if (inner[index].plToken.Length > 0)
             {
                 App.pd.plTokenEncryptedAndBase64Encoded = inner[index].plToken;
-                // If decryption fails, user gets a message.  Otherwise, pd.plToken is filled in.
+                // If decryption fails, user gets a message.  Otherwise, pd.plToken is filled in:
                 await App.pd.DecryptPL_Token();
-                await App.OrgDataList.Init(); // uses plToken
+                await VetCredentialsAndInitOrgDataList(o); // uses plToken
                 return;
             }
 
@@ -194,11 +197,12 @@ namespace TP8.Data // nah .DataModel
             if (!results.Contains("ERROR") && results.Length == 128) // token is 128 char long SHA-512
             {
                 App.pd.plToken = results;
-                await App.OrgDataList.Init(); // uses plToken
+                await App.OrgDataList.Init(); // uses plToken.  Con't have to call VetCredentialsAndInitOrgDataList() here,
+                    // since good results from GetUserToken is comparable.
+                await AddOrUpdateEncryptedDataRowInXML(o); // added June 2015
                 return;
             }
 
-            // TO DO - BETTER ERROR RECOVERY. FIRST PASS: 
             App.pd.plToken = "";
             await ShowStartupWiz();  // This should set App.pd.plUserName, App.pd.plPassword, App.pd.plToken, call OrgDataList.Init()
             App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
@@ -206,6 +210,44 @@ namespace TP8.Data // nah .DataModel
             App.MyAssert(App.pd.plPassword.Length > 0);
             // TO DO: handling case if user cancels startup wizard
             await AddOrUpdateEncryptedDataRowInXML(o);
+        }
+
+        private async Task VetCredentialsAndInitOrgDataList(TP_UserNameAndVersion o)
+        {
+            // Do this when NOT planning on calling ShowStartupWiz
+            await ConfirmOrFreshenCredentialsIfPossible(o);
+            await App.OrgDataList.Init(); // uses plToken
+        }
+
+        private async Task ConfirmOrFreshenCredentialsIfPossible(TP_UserNameAndVersion o)
+        {
+            // We're using GetHospitalList of as the test probe, but really, we could use any web service that isn't hurt by us calling it.
+            // We're throwing away the results if good, only really looking for errors here.
+            string jsonOrgList = await App.service.GetHospitalList();
+            if (jsonOrgList.StartsWith("COMMUNICATION ERROR:") || jsonOrgList.Length == 0)
+                return; // no communications with web service, so don't know
+
+            if (jsonOrgList.StartsWith("ERROR: 1 ")) // bad user name, password, token, or api key
+            {
+                // Assume first its expired token
+                string results = await App.service.GetUserToken();
+                if (!results.Contains("ERROR") && results.Length == 128) // token is 128 char long SHA-512
+                {
+                    App.pd.plToken = results;
+                }
+                else
+                {
+                    // Otherwise, get fresh username & password
+                    App.pd.plToken = "";
+                    await ShowStartupWiz();  // This should set App.pd.plUserName, App.pd.plPassword, App.pd.plToken, call OrgDataList.Init()
+                }
+                App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
+                App.MyAssert(App.pd.plUserName.Length > 0);
+                App.MyAssert(App.pd.plPassword.Length > 0);
+                // TO DO: handling case if user cancels startup wizard
+                await AddOrUpdateEncryptedDataRowInXML(o);
+            }
+            // if web service call returned good value, or ERROR other than "1", just return;
         }
 
         /// <summary>
@@ -252,7 +294,8 @@ namespace TP8.Data // nah .DataModel
 
         public async Task AddEncryptedDataRowInXML(TP_UserNameAndVersion u)
         {
-            await App.pd.EncryptAndBase64EncodePLCredentialsAsync(); // assigns App.pd.plUserNamePasswordEncryptedAndBase64Encoded, App.pd.plPasswordEncryptedAndBase64Encoded
+            await App.pd.EncryptAndBase64EncodePLCredentialsAsync(); // assigns App.pd.plUserNamePasswordEncryptedAndBase64Encoded,
+                // App.pd.plPasswordEncryptedAndBase64Encoded, App.pd.plTokenEncryptedAndBase64Encoded
             u.plUsername = App.pd.plUserNameEncryptedAndBase64Encoded;
             u.plPassword = App.pd.plPasswordEncryptedAndBase64Encoded;
             u.plToken = App.pd.plTokenEncryptedAndBase64Encoded; // New Dec 2014

@@ -238,16 +238,52 @@ namespace TP8.Data
             if (t.Name == "BasicPageNew")
             {
                 var p = (BasicPageNew)_Frame.Content;
-                p.BlinkerTopRed.Fill = darkRedBrush;
-                p.BlinkerMiddleYellow.Fill = darkYellowBrush;
-                p.BlinkerBottomGreen.Fill = darkGreenBrush;
+                p.BlinkerTopRedPortrait.Fill = p.BlinkerTopRedSnapped.Fill = p.BlinkerTopRed.Fill = darkRedBrush;
+                p.BlinkerMiddleYellowPortrait.Fill = p.BlinkerMiddleYellowSnapped.Fill = p.BlinkerMiddleYellow.Fill = darkYellowBrush;
+                p.BlinkerBottomGreenPortrait.Fill = p.BlinkerBottomGreenSnapped.Fill = p.BlinkerBottomGreen.Fill = darkGreenBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                {
+                    p.BlinkerTopRedPortrait.Fill = darkRedBrush;
+                    p.BlinkerMiddleYellowPortrait.Fill = darkYellowBrush;
+                    p.BlinkerBottomGreenPortrait.Fill = darkGreenBrush;
+                }
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                {
+                    p.BlinkerTopRedSnapped.Fill = darkRedBrush;
+                    p.BlinkerMiddleYellowSnapped.Fill = darkYellowBrush;
+                    p.BlinkerBottomGreenSnapped.Fill = darkGreenBrush;
+                }
+                else
+                {
+                    p.BlinkerTopRed.Fill = darkRedBrush;
+                    p.BlinkerMiddleYellow.Fill = darkYellowBrush;
+                    p.BlinkerBottomGreen.Fill = darkGreenBrush;
+                }*/
             }
             else if (t.Name == "BasicPageViewEdit")
             {
                 var p = (BasicPageViewEdit)_Frame.Content;
-                p.BlinkerTopRed.Fill = darkRedBrush;
-                p.BlinkerMiddleYellow.Fill = darkYellowBrush;
-                p.BlinkerBottomGreen.Fill = darkGreenBrush;
+                p.BlinkerTopRedPortrait.Fill = p.BlinkerTopRedSnapped.Fill = p.BlinkerTopRed.Fill = darkRedBrush;
+                p.BlinkerMiddleYellowPortrait.Fill = p.BlinkerMiddleYellowSnapped.Fill = p.BlinkerMiddleYellow.Fill = darkYellowBrush;
+                p.BlinkerBottomGreenPortrait.Fill = p.BlinkerBottomGreenSnapped.Fill = p.BlinkerBottomGreen.Fill = darkGreenBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                {
+                    p.BlinkerTopRedPortrait.Fill = darkRedBrush;
+                    p.BlinkerMiddleYellowPortrait.Fill = darkYellowBrush;
+                    p.BlinkerBottomGreenPortrait.Fill = darkGreenBrush;
+                }
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                {
+                    p.BlinkerTopRedSnapped.Fill = darkRedBrush;
+                    p.BlinkerMiddleYellowSnapped.Fill = darkYellowBrush;
+                    p.BlinkerBottomGreenSnapped.Fill = darkGreenBrush;
+                }
+                else
+                {
+                    p.BlinkerTopRed.Fill = darkRedBrush;
+                    p.BlinkerMiddleYellow.Fill = darkYellowBrush;
+                    p.BlinkerBottomGreen.Fill = darkGreenBrush;
+                }*/
             }
         }
 
@@ -266,12 +302,24 @@ namespace TP8.Data
             if (type.Name == "BasicPageNew")
             {
                 var p = (BasicPageNew)_Frame.Content;
-                p.CountInSendQueue.Text = displayedCount;
+                p.CountInSendQueuePortrait.Text = p.CountInSendQueueSnapped.Text = p.CountInSendQueue.Text = displayedCount;
+                /*if(App.CurrentVisualState == "FullScreenPortrait")
+                    p.CountInSendQueuePortrait.Text = displayedCount;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.CountInSendQueueSnapped.Text = displayedCount;
+                else
+                    p.CountInSendQueue.Text = displayedCount;*/
             }
             else if (type.Name == "BasicPageViewEdit")
             {
                 var p = (BasicPageViewEdit)_Frame.Content;
-                p.CountInSendQueue.Text = displayedCount;
+                p.CountInSendQueuePortrait.Text = p.CountInSendQueueSnapped.Text = p.CountInSendQueue.Text = displayedCount;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                    p.CountInSendQueuePortrait.Text = displayedCount;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.CountInSendQueueSnapped.Text = displayedCount;
+                else
+                    p.CountInSendQueue.Text = displayedCount;*/
             }
         }
 
@@ -281,12 +329,24 @@ namespace TP8.Data
             if (t.Name == "BasicPageNew")
             {
                 var p = (BasicPageNew)_Frame.Content;
-                p.BlinkerTopRed.Fill = redBrush;
+                p.BlinkerTopRedPortrait.Fill = p.BlinkerTopRedSnapped.Fill = p.BlinkerTopRed.Fill = redBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                    p.BlinkerTopRedPortrait.Fill = redBrush;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.BlinkerTopRedSnapped.Fill = redBrush;
+                else
+                    p.BlinkerTopRed.Fill = redBrush;*/
             }
             else if (t.Name == "BasicPageViewEdit")
             {
                 var p = (BasicPageViewEdit)_Frame.Content;
-                p.BlinkerTopRed.Fill = redBrush;
+                p.BlinkerTopRedPortrait.Fill = p.BlinkerTopRedSnapped.Fill = p.BlinkerTopRed.Fill = redBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                    p.BlinkerTopRedPortrait.Fill = redBrush;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.BlinkerTopRedSnapped.Fill = redBrush;
+                else
+                    p.BlinkerTopRed.Fill = redBrush;*/
             }
         }
 
@@ -296,12 +356,24 @@ namespace TP8.Data
             if (t.Name == "BasicPageNew")
             {
                 var p = (BasicPageNew)_Frame.Content;
-                p.BlinkerMiddleYellow.Fill = yellowBrush;
+                p.BlinkerMiddleYellowPortrait.Fill = p.BlinkerMiddleYellowSnapped.Fill = p.BlinkerMiddleYellow.Fill = yellowBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                    p.BlinkerMiddleYellowPortrait.Fill = yellowBrush;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.BlinkerMiddleYellowSnapped.Fill = yellowBrush;
+                else
+                    p.BlinkerMiddleYellow.Fill = yellowBrush;*/
             }
             else if (t.Name == "BasicPageViewEdit")
             {
                 var p = (BasicPageViewEdit)_Frame.Content;
-                p.BlinkerMiddleYellow.Fill = yellowBrush;
+                p.BlinkerMiddleYellowPortrait.Fill = p.BlinkerMiddleYellowSnapped.Fill = p.BlinkerMiddleYellow.Fill = yellowBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                    p.BlinkerMiddleYellowPortrait.Fill = yellowBrush;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.BlinkerMiddleYellowSnapped.Fill = yellowBrush;
+                else
+                    p.BlinkerMiddleYellow.Fill = yellowBrush;*/
             }
         }
 
@@ -311,12 +383,24 @@ namespace TP8.Data
             if (t.Name == "BasicPageNew")
             {
                 var p = (BasicPageNew)_Frame.Content;
-                p.BlinkerBottomGreen.Fill = greenBrush;
+                p.BlinkerBottomGreenPortrait.Fill = p.BlinkerBottomGreenSnapped.Fill = p.BlinkerBottomGreen.Fill = greenBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                     p.BlinkerBottomGreenPortrait.Fill = greenBrush;
+                 else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                     p.BlinkerBottomGreenSnapped.Fill = greenBrush;
+                 else
+                     p.BlinkerBottomGreen.Fill = greenBrush;*/
             }
             else if (t.Name == "BasicPageViewEdit")
             {
                 var p = (BasicPageViewEdit)_Frame.Content;
-                p.BlinkerBottomGreen.Fill = greenBrush;
+                p.BlinkerBottomGreenPortrait.Fill = p.BlinkerBottomGreenSnapped.Fill = p.BlinkerBottomGreen.Fill = greenBrush;
+                /*if (App.CurrentVisualState == "FullScreenPortrait")
+                    p.BlinkerBottomGreen.Fill = greenBrush;
+                else if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
+                    p.BlinkerBottomGreenSnapped.Fill = greenBrush;
+                else
+                    p.BlinkerBottomGreen.Fill = greenBrush;*/
             }
         }
 

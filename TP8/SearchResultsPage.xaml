@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:BasicLayoutPage
     x:Name="pageRoot"
     x:Class="TP8.SearchResultsPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
@@ -114,6 +114,15 @@
             </Setter>
         </Style>
 
+        <Style x:Key="SearchResultsNarrowTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource PageSubheaderTextBlockStyle}">
+            <Setter Property="Margin" Value="0,57,25,0"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+
+        <Style x:Key="SearchResultsNarrowPageHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource NarrowPageHeaderTextBlockStyle}">
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
         <!-- StandardSmallIcon300x70ItemTemplate was originally in Win8.0's StandardStyles.xaml -->
         <!-- Grid-appropriate 300 by 70 pixel item template as seen in TP8's SearchResultsPage -->
         <DataTemplate x:Key="StandardSmallIcon300x70ItemTemplate">
@@ -128,7 +137,8 @@
                     <!-- Glenn changes Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}  to #C17819 mustard-brown -->
                     <Image Source="{Binding Image}" Stretch="Uniform"/>
                 </Border>
-                <StackPanel Grid.Column="1" Margin="10,-10,0,0">
+                <StackPanel Grid.Column="1" Margin="10,-13,0,0">
+                    <!-- was before June 2015 Margin="10,-10,0,0", but that had clipping of bottom edge of Description text-->
                     <!-- 3 TextBlocks WERE BEFORE FEB 2015: Style="{StaticResource BodyTextStyle}" -->
                     <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap"/>
                     <TextBlock Text="{Binding Subtitle}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
@@ -151,7 +161,8 @@
                     <!-- Glenn changes Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}  to #C17819 mustard-brown -->
                     <Image Source="{Binding Image}" Stretch="Uniform"/>
                 </Border>
-                <StackPanel Grid.Column="1" Margin="10,-10,0,0">
+                <StackPanel Grid.Column="1" Margin="10,-13,0,0">
+                    <!-- was before June 2015 Margin="10,-10,0,0"-->
                     <!-- 3 TextBlocks WERE BEFORE FEB 2015: Style="{StaticResource BodyTextStyle}" -->
                     <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="NoWrap"/>
                     <TextBlock Text="{Binding Subtitle}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
@@ -184,8 +195,8 @@
 
         <Grid x:Name="resultsPanel" Grid.Row="1">
             <!--
-            The body of the page in most view states uses an items controls to create multiple radio buttons
-            for filtering above a horizontal scrolling grid of search results
+            The body of the page in most view states uses an items controls to create multiple "radio buttons" (actually like tabs)
+            for filtering (in our case choosing Outbox versus All Stations) above a horizontal scrolling grid of search results
         -->
             <Grid x:Name="typicalPanel">
                 <Grid.ColumnDefinitions>
@@ -246,7 +257,7 @@
             </Grid>
 
             <!--
-                The body of the page when snapped uses a combo box to select a filter above a
+                The body of the page when snapped uses a combo box to select a filter (Outbox vs All Stations) above a
                 vertical scrolling list of search results
             -->
             <Grid x:Name="snappedPanel" Visibility="Collapsed">
@@ -274,7 +285,7 @@
                     IsSwipeEnabled="false"
                     IsItemClickEnabled="True"
                     ItemsSource="{Binding Source={StaticResource resultsViewSource}}"
-                    ItemTemplate="{StaticResource StandardSmallIcon70ItemTemplate}">
+                    ItemTemplate="{StaticResource StandardSmallIcon70ItemTemplate}"  ItemClick="resultsGridView_ItemClick">
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="Control">
@@ -303,20 +314,34 @@
             <!-- WAS: <TextBlock x:Name="resultText" Grid.Column="2" Text="Results for&#x00a0;" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/> -->
             <Canvas Grid.Column="2">
                 <!-- WAS 3 -->
+                <TextBlock x:Name="debugVisState" Text="" Margin="0,0,0,0" FontSize="8"/>
+                <!-- don't hide this, will have no content unless in debug mode-->
                 <TextBlock x:Name="eventText" Canvas.Top="10" Text="[event(s)]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
                 <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
                 <!-- WAS: <TextBlock x:Name="queryText" Canvas.Top="70" Text="{Binding QueryText}" IsHitTestVisible="false" Style="{StaticResource PageSubheaderTextStyle}"/> -->
-                <TextBlock x:Name="queryText" Canvas.Top="50" IsHitTestVisible="false" TextWrapping="Wrap" Style="{StaticResource PageSubsubheaderTextBlockStyle}"> <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
-                    <Run Text="Results for&#x00a0;" />
+                <!--<TextBlock x:Name="queryText" Canvas.Top="50" IsHitTestVisible="false" TextWrapping="Wrap" Style="{StaticResource PageSubsubheaderTextBlockStyle}">--> <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
+                    <!--<Run Text="Results for&#x00a0;" />
                     <Run Text="{Binding QueryText}" />
-                </TextBlock>
+                </TextBlock> -->
+                <TextBlock x:Name="queryText" Canvas.Top="50" Text="{Binding QueryText}" IsHitTestVisible="false"  TextWrapping="Wrap" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
+
                 <TextBlock x:Name="otherFilterText" Canvas.Top="95" Text="[filtering]" IsHitTestVisible="false" Style="{StaticResource PageSubsubheaderTextBlockStyle}"/>
                 <!-- WAS BEFORE FEB 2015: PageSubsubheaderTextStyle-->
             </Canvas>
             <!-- was before Feb 2015: <Button x:Name="sortFlyout" Grid.Column="3" Click="sortFlyout_Click" Style="{StaticResource SortAppBarButtonStyle}" Margin="0,42,0,0"/> -->
-            <AppBarButton x:Name="sortFlyout" Grid.Column="3" Click="sortFlyout_Click" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <AppBarButton x:Name="sortFlyout" Grid.Column="3" Tapped="sortFlyout_Tapped" Icon="Sort" Label="Sort" Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <Canvas x:Name="sortControlSmall" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,73,3,0" Height="65" Width="50" Visibility="Collapsed">
+                <Button x:Name="SortSymbolSmall"  Content="&#xE174;" Tapped="sortFlyout_Tapped" FontFamily="Segoe UI Symbol" FontSize="16" BorderThickness="0" Width="50" FontWeight="Normal"/>
+                <Ellipse x:Name="sortOuterCircle" Canvas.Top="3" Canvas.Left="10" Stroke="White" StrokeThickness="2" Height="30" Width="30"/>
+                <TextBlock x:Name="SortButtonCaption" Canvas.Top="36" Canvas.Left="15" Text="Sort" FontSize="10"></TextBlock>
+            </Canvas>
             <!-- was before Feb 2015: <Button x:Name="filterFlyout" Grid.Column="4" Click="filterFlyout_Click" Style="{StaticResource FilterAppBarButtonStyle}" Margin="0,42,0,0"/> -->
-            <AppBarButton x:Name="filterFlyout" Grid.Column="4" Click="filterFlyout_Click" Icon="Filter" Label="Filter"  Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <AppBarButton x:Name="filterFlyout" Grid.Column="4" Tapped="filterFlyout_Tapped" Icon="Filter" Label="Filter"  Margin="0,42,0,0" VerticalAlignment="Stretch"/>
+            <Canvas x:Name="filterControlSmall" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-3,73,3,0" Height="65" Width="50" Visibility="Collapsed">
+                <Button x:Name="filterSymbolSmall"  Content="&#xE16E;" Tapped="filterFlyout_Tapped" FontFamily="Segoe UI Symbol" FontSize="16" BorderThickness="0" Width="50" FontWeight="Normal"/>
+                <Ellipse x:Name="filterOuterCircle" Canvas.Top="3" Canvas.Left="10" Stroke="White" StrokeThickness="2" Height="30" Width="30"/>
+                <TextBlock x:Name="FilterButtonCaption" Canvas.Top="36" Canvas.Left="15" Text="Filter" FontSize="10"></TextBlock>
+            </Canvas>
         </Grid>
 
         <TextBlock
@@ -333,7 +358,8 @@
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape"/>
-                <VisualState x:Name="Filled"/>
+                <VisualState x:Name="vsOver1365Wide"/>
+                <VisualState x:Name="vs1026To1365Wide"/>
 
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
                 <VisualState x:Name="FullScreenPortrait">
@@ -341,6 +367,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
                             <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <!-- new-->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowTitleTextBlockStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filtersItemsControl" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="100,-3,90,30"/>
@@ -359,22 +389,98 @@
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
+                
+                <!-- start with same as Portrait -->
+                <VisualState x:Name="vs673To1025Wide">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <!-- new-->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowTitleTextBlockStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filtersItemsControl" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="100,-3,90,30"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="-20,42,-20,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="-20,42,-20,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsGridView" Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="90,240,86,56"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="100,50,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>                        
+                    </Storyboard>
+                </VisualState>
+
+                <!-- start with same as Portrait -->
+                <VisualState x:Name="vs501to672Wide">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 PortraitBackButtonStyle -->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style"> <!-- new-->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowTitleTextBlockStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filtersItemsControl" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="100,-3,90,30"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- WAS, but change margins instead in small buttons 
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="-20,42,-20,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="-20,42,-20,0"/>
+                        </ObjectAnimationUsingKeyFrames> -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterControlSmall" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsGridView" Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="90,240,86,56"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="100,50,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
 
                 <!--
+                    Start with vs321To500Wide and vs320Wide the same
                     The back button and title have different styles when snapped in addition to more extensive changes:
                     * The query text becomes the page header
                     * A different representation for filter selection and search results is used
                 -->
-                <VisualState x:Name="Snapped">
+                <VisualState x:Name="vs321To500Wide">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
                             <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
                         </ObjectAnimationUsingKeyFrames>
-
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventText" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowPageHeaderTextBlockStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowPageHeaderTextBlockStyle}"/>
-                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle-->
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle. Before June 2015 was NarrowPageHeaderTextBlockStyle-->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="otherFilterText" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowPageHeaderTextBlockStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <!-- WAS BEFORE FEB 2015:
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Style">
@@ -383,18 +489,92 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource FilterSnappedFlyoutButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames> -->
+                        <!-- WAS:
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="IsCompact">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="IsCompact">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                        </ObjectAnimationUsingKeyFrames>  -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterControlSmall" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultText" Storyboard.TargetProperty="Visibility">
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="typicalPanel" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="snappedPanel" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="20,0,0,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BaseTextBlockStyle}"/>
+                            <!-- Win 8.0 was BaselineTextStyle}"-->
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <VisualState x:Name="vs320Wide">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource NarrowTitleBackButtonStyle}"/>
+                            <!-- Before Feb 2015, was Win8.0 SnappedBackButtonStyle -->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="eventText" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowPageHeaderTextBlockStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowPageHeaderTextBlockStyle}"/>
+                            <!-- WAS BEFORE FEB 2015: SnappedPageHeaderTextStyle. Before June 2015 was NarrowPageHeaderTextBlockStyle-->
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="otherFilterText" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SearchResultsNarrowPageHeaderTextBlockStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- WAS BEFORE FEB 2015:
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SortSnappedFlyoutButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource FilterSnappedFlyoutButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames> -->
+                        <!-- WAS:
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="IsCompact">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="IsCompact">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                        </ObjectAnimationUsingKeyFrames>  -->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortFlyout" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterFlyout" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="sortControlSmall" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="filterControlSmall" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="typicalPanel" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
@@ -430,4 +610,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</common:LayoutAwarePage>
+</common:BasicLayoutPage>
