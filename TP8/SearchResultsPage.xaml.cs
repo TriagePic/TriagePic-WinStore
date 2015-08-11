@@ -59,7 +59,7 @@ namespace TP8
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected override void LoadState(LoadStateEventArgs e) // WAS: LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        protected override async void LoadState(LoadStateEventArgs e) // WAS: LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             string navigationParameter = e.NavigationParameter.ToString();
             var pageState = e.PageState;
@@ -73,8 +73,8 @@ namespace TP8
                 eventText.Text += ", Any Org";
             App.CurrentSearchQuery = navigationParameter as String;
             //App.PatientDataGroups.ReFilter(); // filter or query has changed.  This will affect contents of groups fetched below.
-            App.PatientDataGroups.ReSortAndFilter();
-            SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
+            await App.PatientDataGroups.ReSortAndFilter(); // await added v 3.5
+            await SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here. Await added for v 3.5
             var gOut = SampleDataSource.GetGroup("Outbox");
             var gAll = SampleDataSource.GetGroup("AllStations");
 

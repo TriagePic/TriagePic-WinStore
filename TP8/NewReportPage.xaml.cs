@@ -104,7 +104,9 @@ namespace TP8
             else
             {
                 PatientIdTextBox.Text = App.CurrentPatient.PatientID; // cheap initialization
+                // This does not fire TextChanged, so we'll force it later in LoadState
             }
+            // We'll check if ID is already in use later, in LoadState
 
             //Move to LoadState: InitiateZones();
 
@@ -125,6 +127,7 @@ namespace TP8
             sendQueueTip.Content = "Count of reports queued to send";
             ToolTipService.SetToolTip(CountInSendQueue, sendQueueTip);
             LastSentMsg.DataContext = this;
+            patientID_ConflictStatus.Text = ""; // July 2015, v 5.  Clear design-time string "[conflict status]"
         }
 
         private void InitiateZones()
@@ -201,7 +204,7 @@ namespace TP8
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
         /// </summary>
-        protected override void LoadState(LoadStateEventArgs e)
+        protected override async void LoadState(LoadStateEventArgs e)
         {
             InitiateZones();
             // was before Release 2:
@@ -213,6 +216,7 @@ namespace TP8
                 pr = App.CurrentPatient;
                 LoadReportFieldsFromObject(pr);
             }
+            await PatientID_TextChanged(); // added July 2015. Will check if initial ID is already used, i.e., reported for current event. If so, colorize fields
             pageSubtitle.Text = " " + App.CurrentDisaster.EventName; // TO DO: binding in XAML instead of here?  Add space to separate from icon
             if (App.CurrentDisaster.TypeIconUri.Length > EMBEDDED_FILE_PREFIX.Length)
             {
@@ -856,6 +860,7 @@ namespace TP8
         private void EnableSendButtonIfPossible()
         {
             if (zoneSelected != "" && PatientIdTextBox.Text != "" &&
+                !patientID_ConflictStatus.Text.StartsWith("Used -") && // New July 2015 Revision 5.  Note that "Used?" is OK
                 PatientIdTextBox.Text != App.OrgPolicy.OrgPatientIdPrefixText) // not prefix alone
                 EnableSendButton();
         }
@@ -1147,7 +1152,12 @@ namespace TP8
             }
         }
 
-        private void PatientID_TextChanged(object sender, TextChangedEventArgs e)
+        private async void PatientID_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            await PatientID_TextChanged();
+        }
+
+        private async Task PatientID_TextChanged()
         {
             int ss = PatientIdTextBox.SelectionStart;
             //int sa = PatientIdTextBox.SelectionLength;
@@ -1168,7 +1178,176 @@ namespace TP8
                 else
                     PatientIdTextBox.Select(length, 0); // Cursor to far right
             }
+
+            await ColorizeBasedOnPatientID(); // new, July 2015, version 3.5
             EnableSendButtonIfPossible();
+        }
+
+        /// <summary>
+        /// Analyzes patientIdTextBox contents, and colors the backgrounds of all form entry fields
+        /// </summary>
+        /// <returns>Code from result of patient ID analysis</returns>
+        public async Task<int> ColorizeBasedOnPatientID() // new, July 2015, version 3.5.  Similar to TP7's FormTriagePic function of the same name
+        {
+            int nUsed = await WasPatientIdentifierAlreadyUsed(PatientIdTextBox.Text);
+            if (nUsed > 0)
+                FlagProblematicPatientID(nUsed); // Colorize Patient ID, do status message [different place than TP7]
+            else
+                UnflagProblematicPatientID(nUsed); // If 0 or -1. 
+            return nUsed;
+        }
+
+        /// <summary>
+        /// Checks local and remote resources, for match with ID with or without "AUTO" prepended.
+        /// </summary>
+        /// <param name="s">Mass Casualty ID</param>
+        /// <returns>-1 = don't know; 0 = no; 1 = yes, in outbox for this event; 2 = yes, known to TT (but not outbox) for this event</returns>
+        public async Task<int> WasPatientIdentifierAlreadyUsed(string s)
+        {
+            App.MyAssert(!s.StartsWith("AUTO")); // This is true in Release 5, but may change in future, in which case more changes needed here.
+
+            // TP7 has 2 additional states, which we'll hold off on:
+            // 3 = yes, in outbox for DIFFERENT event (allowed by delete of previous use in Outbox recommended)
+            // 4 = yes, in sent files (but not outbox) for same or different event. Would involve directory search of image file names
+            foreach (var pr_ in App.PatientDataGroups.GetOutbox())
+            {
+                if (App.CurrentDisaster.EventShortName != pr_.EventShortName)
+                    continue;
+                if (s == pr_.PatientID) // Will need to change this further if TP8 can reserve IDs with AUTO prefix
+                    return 1; // may or may not be from same org as current org
+            }
+            int i = await App.service.IsPatientIdAlreadyInUseForCurrentEvent(s); // returns -1 = don't know; 0 = no; 1 = yes
+            if (i == 1)
+                return 2;
+            // For now:
+            string s1 = "AUTO" + s;
+            if (i == 0)
+            {
+                i = await App.service.IsPatientIdAlreadyInUseForCurrentEvent(s1); // returns -1 = don't know; 0 = no; 1 = yes
+                if (i == 1)
+                    return 2;
+                if (i == 0)
+                    return 0;
+            }
+            // Need another web service, to know if AUTO ID was reserved by someone else, but not yet used.
+            App.MyAssert(i == -1);
+            // New in TP8 (not in TP7 I believe)
+            // If call to web service failed, check local All Stations cache. Data may be stale and (because of 250 size limit) incomplete, but still mostly valid.
+            // CAUTION: if you delete a record from outbox & TriageTrak, stale All Stations might still have it.
+            // This might be a rare case (fixable by deleting it from All Stations too)
+            foreach (var pr_ in App.PatientDataGroups.GetAllStations())
+            {
+                if (App.CurrentDisaster.EventShortName != pr_.EventShortName)
+                    continue;
+                if (s == pr_.PatientID || s1 == pr_.PatientID)
+                    return 2; // may or may not be from same org as current org
+            }
+            return -1; // we could return 0 here, but staleness issue intrudes.
+            // If searching for 3, do so here
+            // If searching for 4, do so here
+            //return 0;
+        }
+
+        public void FlagProblematicPatientID(int nUsed)
+        {
+            App.MyAssert(nUsed > 0 && nUsed < 5);
+            SetSpecialBackColors(nUsed);
+            switch(nUsed)
+            {
+                // If below text msgs are changed, see also EnableSendButtonIfPossible(), which looks at this field's value
+                case 1: patientID_ConflictStatus.Text = "Used - in Outbox"; break;
+                case 2: patientID_ConflictStatus.Text = "Used - TriageTrak"; break;
+                default: App.MyAssert(false); break; // no case 3 or 4 yet
+            }
+        }
+
+        private void SetSpecialBackColors(int nUsed) // new, July 2015, version 3.5.  Similar to TP7's FormTriagePic function of same name
+        {
+            App.MyAssert(nUsed > 0 && nUsed < 5);
+
+            // SOME DAY:
+            // if (newReport.practiceModeChecked)
+            //      ClearSpecialBackColors(); // Special case, then restore Patient ID color below.
+
+            SolidColorBrush c;
+            if (nUsed == 3) // DO WE NEED THIS IN TP8?
+            {
+                // Not forbidden by policy, but has operational problems
+                PatientIdTextBox.Background = new SolidColorBrush(Colors.Yellow); // make this field more saturated than others colored by c
+                c = new SolidColorBrush(Windows.UI.Colors.NavajoWhite);
+            }
+            else
+            {
+                // Forbidden by policy
+                PatientIdTextBox.Background = new SolidColorBrush(Colors.Orange); // make this field more saturated than others colored by c
+                c = new SolidColorBrush(Colors.NavajoWhite);
+            }
+            // SOME DAY:
+            // if (newReport.practiceModeChecked)
+            //      return;
+
+            FirstNameTextBox.Background = c;
+            LastNameTextBox.Background = c;
+            CheckBoxMale.Background = c;
+            CheckBoxFemale.Background = c;
+            CheckBoxAdult.Background = c;
+            CheckBoxPeds.Background = c;
+            Caption.Background = c;
+            Notes.Background = c;
+            // When we support multiple photos, will have to do photoRole too
+        }
+
+        private void ClearSpecialBackColors()
+        {
+            SolidColorBrush c = new SolidColorBrush(Colors.White); // In TP7 version, checkbox bkgds were set to white,
+                // textboxs' to Color.Empty (as "usual enable/disble colors"). Unclear if latter necessary here (or possible.. leave unset? or .Transparent?).
+            PatientIdTextBox.Background = c;
+            FirstNameTextBox.Background = c;
+            LastNameTextBox.Background = c;
+            Caption.Background = c;
+            Notes.Background = c;
+            // When we support multiple photos, will have to do photoRole too
+            c = new SolidColorBrush(Colors.Transparent); // In TP7 version, checkbox bkgds were set to white,
+            CheckBoxMale.Background = c;
+            CheckBoxFemale.Background = c;
+            CheckBoxAdult.Background = c;
+            CheckBoxPeds.Background = c;
+        }
+
+        private void UnflagProblematicPatientID(int nUsed)
+        {
+            App.MyAssert(nUsed == -1 || nUsed == 0);
+            ClearSpecialBackColors();
+            switch (nUsed)
+            {
+                // If below text msgs are changed, see also EnableSendButtonIfPossible(), which looks at this field's value
+                case -1: patientID_ConflictStatus.Text = "Used? Assume not"; break;
+                case 0: patientID_ConflictStatus.Text = ""; break;
+                default: App.MyAssert(false); break;
+            }
+        }
+
+        public bool IsProblematicPatientID()
+        {
+            SolidColorBrush b = (SolidColorBrush)PatientIdTextBox.Background; // hope this works
+            return (bool)((b.Color == Colors.Orange) || (b.Color == Colors.Yellow));
+        }
+
+        private bool VerifyNotProblematicPatientID()
+        {
+            if (!IsProblematicPatientID())
+                return true;
+/* not yet
+            SolidColorBrush b = (SolidColorBrush)PatientIdTextBox.Background; // hope this works
+            if(b.Color == Colors.Yellow)
+            {
+                // TO DO MAYBE
+            }
+            else
+            {
+                // TO DO
+            } */
+            return false;
         }
 
         private void PatientIdTextBox_LostFocus(object sender, RoutedEventArgs e)

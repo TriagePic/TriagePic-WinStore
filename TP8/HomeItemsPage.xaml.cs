@@ -23,7 +23,7 @@ using TP8.Common;
 namespace TP8
 {
     /// <summary>
-    /// A page that displays a collection of item previews.  In the Split Application this page
+    /// A page that displays a collection of item previews.  In the Split Application this page 
     /// is used to display and select one of the available groups.
     /// </summary>
     public sealed partial class HomeItemsPage : TP8.Common.BasicLayoutPage //was: LayoutAwarePage
@@ -156,5 +156,34 @@ namespace TP8
         }
         #endregion
 
+        #region BottomAppBar
+        private void Help_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            // The URI to launch
+            string uriToLaunch = @"https://github.com/TriagePic/TriagePic-WinStore/wiki/User-Guide-to-TriagePic-from-the-Windows-Store";
+            var uri = new Uri(uriToLaunch);
+            LaunchDefaultBrowser(uri);
+        }
+
+
+        private async void LaunchDefaultBrowser(Uri uri)
+        {
+           // Set the desired remaining view.
+           var options = new Windows.System.LauncherOptions();
+           options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseHalf;
+
+           // Launch the URI 
+           var success = await Windows.System.Launcher.LaunchUriAsync(uri, options);
+
+           if (success)
+           {
+              // URI launched
+           }
+           else
+           {
+              // URI launch failed
+           }
+        }
+        #endregion
     }
 }

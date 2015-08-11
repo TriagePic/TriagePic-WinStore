@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:BasicLayoutPage
     x:Name="pageRoot"
     x:Class="TP8.HomeItemsPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
@@ -67,7 +67,12 @@
         </AppBar>
     </Page.TopAppBar> -->
 
-   <!-- At moment don't need bottom bar  -->
+   <!-- Added bottom bar with Help July 2015 for release 5 -->
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Help" Icon="Help" Tapped="Help_Tapped"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <Page.Resources>
         <!-- Grid-appropriate 250 pixel square item template as seen in the GroupedItemsPage and ItemsPage.
@@ -219,4 +224,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</common:LayoutAwarePage>
+</common:BasicLayoutPage>

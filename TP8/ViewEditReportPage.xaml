@@ -132,12 +132,19 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1">
-                <TextBlock x:Name="patientID_Prompt" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Patient/Mass Casualty ID" VerticalAlignment="Top" FontFamily="Global User Interface" FontSize="20"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="patientID_Prompt" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Mass Casualty ID" VerticalAlignment="Top" FontFamily="Global User Interface" FontSize="20"/>
+                    <TextBlock x:Name="patientID_ConflictStatus" Margin="15,0,0,0" Foreground="Orange" Text="[conflict status]"  FontFamily="Global User Interface" FontSize="20"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
                     <!-- Patient ID is read-only here in first Win 8 release, and increment/decrement are disabled -->
                     <TextBox x:Name="PatientIdTextBox" HorizontalAlignment="Left" Text="911-" Width="236" VerticalAlignment="Top" TextChanged="PatientID_TextChanged" FontSize="20" AllowDrop="True" MinHeight="40" IsReadOnly="True" Tapped="PatientIdTextBox_Tapped"/>
+                    <!-- Plus, MinusButton Styles introduced July 2015 version 3.5-->
+                    <!--
                     <Button x:Name="incrementPatientID" Content="+" HorizontalAlignment="Left" Margin="20,0,0,0" Height="40" VerticalAlignment="Top" Width="40" Background="{x:Null}" RenderTransformOrigin="7.239,0.417" Padding="2" FontSize="20" FontWeight="Normal" Tapped="incrementPatientID_Tapped" PointerPressed="incrementPatientID_PointerPressed" PointerReleased="incrementPatientID_PointerReleased" IsEnabled="False"/>
-                    <Button x:Name="decrementPatientID" Content="-" HorizontalAlignment="Left" Margin="20,0,0,0" Height="40" VerticalAlignment="Top" Width="40" Background="{x:Null}" Padding="2,2,2,3" FontSize="20" Tapped="decrementPatientID_Tapped" PointerPressed="decrementPatientID_PointerPressed" PointerReleased="decrementPatientID_PointerReleased" IsEnabled="False"/>
+                    <Button x:Name="decrementPatientID" Content="-" HorizontalAlignment="Left" Margin="20,0,0,0" Height="40" VerticalAlignment="Top" Width="40" Background="{x:Null}" Padding="2,2,2,3" FontSize="20" Tapped="decrementPatientID_Tapped" PointerPressed="decrementPatientID_PointerPressed" PointerReleased="decrementPatientID_PointerReleased" IsEnabled="False"/> -->
+                    <Button x:Name="incrementPatientID" Style="{StaticResource PlusButtonNormalStyle}"  Tapped="incrementPatientID_Tapped" PointerPressed="incrementPatientID_PointerPressed" PointerReleased="incrementPatientID_PointerReleased" IsEnabled="False"/>
+                    <Button x:Name="decrementPatientID" Style="{StaticResource MinusButtonNormalStyle}" Tapped="decrementPatientID_Tapped" PointerPressed="decrementPatientID_PointerPressed" PointerReleased="decrementPatientID_PointerReleased" IsEnabled="False"/>
                 </StackPanel>
                 <StackPanel x:Name="NamesStackedLandscape" Margin="0,7,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
                     <TextBlock x:Name="firstNamePrompt" TextWrapping="Wrap" Text="First Name" FontFamily="Global User Interface" FontSize="20"/>
@@ -263,7 +270,8 @@
 
                 <Grid x:Name="BottomControlsColumn3" Margin="0,20,0,0">
                     <!-- toggle visibility to show either LastSentMsg or ProgressBar but not both-->
-                    <TextBlock x:Name="LastSentMsg" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" FontSize="16"/>
+                    <!-- Tried Text="{Binding LastSentMessage}" but didn't work, presumably because 3 object binding not allowed? -->
+                    <TextBlock x:Name="LastSentMsg" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="16"/>
                     <ProgressBar x:Name="progressBarSending" HorizontalAlignment="Left" Height="10" Margin="0,40,0,0" Grid.Row="1" VerticalAlignment="Top" Width="424"
                                  RenderTransformOrigin="0.5,0.5" IsEnabled="False" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False" IsIndeterminate="True" Visibility="Collapsed">
                         <ProgressBar.RenderTransform>
@@ -323,6 +331,19 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Next 4 added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="incrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PlusButtonSmallStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="decrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MinusButtonSmallStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <!-- Additional animations to narrow zone button widths added to here in code-behind -->
                     </Storyboard>
                 </VisualState>
@@ -354,14 +375,30 @@
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="patientID_ConflictStatus" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!--
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="incrementPatientID" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="2,0,0,0"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="decrementPatientID" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="2,0,0,0"/>
+                        </ObjectAnimationUsingKeyFrames> -->
+                        <!-- Next 2 added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="incrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PlusButtonSmallStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="decrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MinusButtonSmallStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <!-- Additional animations to narrow zone button widths added to here in code-behind -->
                         <!-- use smaller visual area of portrait image for half landscape too-->
@@ -496,6 +533,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="patientID_Prompt" Storyboard.TargetProperty="FontSize">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="patientID_ConflictStatus" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="firstNamePrompt" Storyboard.TargetProperty="FontSize">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -505,8 +546,19 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lastNamePrompt" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Next 2 added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="incrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PlusButtonSmallStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="decrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MinusButtonSmallStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxLandscape" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
@@ -600,6 +652,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="patientID_Prompt" Storyboard.TargetProperty="FontSize">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="patientID_ConflictStatus" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="firstNamePrompt" Storyboard.TargetProperty="FontSize">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -611,6 +667,17 @@
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="Width">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientIdTextBox" Storyboard.TargetProperty="FontSize">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="15"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <!-- Next 2 added July 2015, v 5:-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="incrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PlusButtonSmallStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="decrementPatientID" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MinusButtonSmallStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxLandscape" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>

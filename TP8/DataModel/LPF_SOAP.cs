@@ -1501,6 +1501,55 @@ INSTEAD: */
             return ChangeToErrorIfNull(srout.resultSet); // WAS before v33: sarout
         }
 
+
+        // NEW July, 2015:
+        /// <summary>
+        /// Does a quick checks if candidate Patient ID is already in use for current event, independent of submitter or submitting organization.
+        /// This is to supplement check of local data (which is limited to this submitter in the case of Outbox, or may be stale in the case of All Stations.
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <returns>-1 = don't know; 0 = no; 1 = yes</returns>
+        public async Task<int> IsPatientIdAlreadyInUseForCurrentEvent(string patientID)
+        {
+            // This is a variant of GetReportsFromAllStationsCurrentEvent()
+            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
+            searchRequest srin = new searchRequest();
+            searchResponse srout = new searchResponse();
+            srin.token = App.pd.plToken;
+            srin.eventShortname = App.CurrentDisaster.EventShortName;
+            // NOT WORKING AS CLAIMED, ACTS AS IF hasImage=true
+            // srin.filters = ""; // Spec says this means all filters are true, except hasImage is false and hospital defaults to "all".
+            // Equivalently in effect, if not in verbosity:
+            srin.filters = PackageFiltersIntoSearchParameter("all");
+            srin.pageStart = 0;
+            srin.perPage = 250;
+            srin.sortBy = ""; // = updated desc, score desc
+            srin.query = patientID;
+            srin.photo = ""; // if empty, means "use query instead".
+            try
+            {
+                SetPLEndpointAddress(App.pl); //read the configured endpoint address
+
+                if (App.BlockWebServices)
+                    throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
+
+                srout = await App.pl.searchAsync(srin);
+            }
+            // Also available with v34, but not used here: srout.recordsFound; srout.timeElapsed
+            catch (Exception)
+            {
+                return -1; // Error. Don't know
+            }
+            if (srout.resultSet == null || srout.errorCode != 0)
+                return -1; // Error. Don't know
+
+            if ((srout.resultSet == "") || (srout.recordsFound == 0))
+                return 0;
+
+            return 1; // 1 or more records found. In theory multiple means some problem, but let's ignore that for now
+        }
+
+
         private string PackageFiltersIntoSearchParameter(string orgUuid)
         {
             // Call this function to search for a specific hospital, e.g., orgUuid != "all".

@@ -18,11 +18,13 @@ using Windows.UI.Xaml.Navigation;
 using System.Text.RegularExpressions;
 using Windows.UI.Popups;
 using TP8.Common;
+using System.Threading.Tasks;
 
 // The Split Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234234
 
 namespace TP8
 {
+
     /// <summary>
     /// A page that displays a group title, a list of items within the group, and details for the
     /// currently selected item.
@@ -33,12 +35,20 @@ namespace TP8
 // WAS:        private Popup discardMenuPopUp = null;
 // WAS:        private Popup whyDiscardedPopUp = null;
 // WAS:        private string uuid = "";
-//        DispatcherTimer dt = null;
+        //        DispatcherTimer dt = null;
+        // maybe: public static ProgressBar staticProgressBarChangedEvent; // kludge to access progressBarChangeEvent from other pages...
+        // in absence of MVVM with Message Bus or Event Aggregator and subscribe/publish
+        // maybe public static TextBlock staticLoadingAllStationsReports; // more kludge.  Compare ChecklistPage.staticGettingAllStationsReports
+
         private bool isOutbox = true;
+        //public static ProgressBar staticProgressBarChangedEvent; // kludge to access progressBarChangeEvent from other pages...
+        // in absence of MVVM with Message Bus or Event Aggregator and subscribe/publish
+        public static TextBlock staticSortedByOrLoadingText; // more kludge
 
         public SplitPage()
         {
             this.InitializeComponent();
+            staticSortedByOrLoadingText = sortedByText; // copy pointer
         }
 
         #region Page state management
@@ -65,47 +75,10 @@ namespace TP8
             App.MyAssert(App.CurrentSearchResultsGroupName == "Outbox" || App.CurrentSearchResultsGroupName == "AllStations");
             isOutbox = (bool)(App.CurrentSearchResultsGroupName == "Outbox");
 
-            // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
-            App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
-            SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
-
-            UpdateSortedBySubtitle(); // broken out as function June 2015
-            // Either the user naviagated here, or we are resuming from a suspend.  In either case, all stations data may be old.  Refresh if possible:
             if (isOutbox)
-            {
-                SetOutboxEventAndOrgText(); // Based on App.OutboxCheckBoxCurrentEventOnly
-                CheckBoxCurrentEventOnly.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
-                CheckBoxMyOrgOnly.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
-                // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
-                App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
-                SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
-                UpdateCountInTitle();
-            }
+                await LoadStateOutbox();
             else
-            {
-                // June 2015, CheckBoxCurrentEventOnlyPortrait dropped, only need CheckBoxCurrentEvent.  Likewise MyOrgOnly
-                CheckBoxCurrentEventOnly.Visibility = Visibility.Collapsed;
-                SetAllStationsEventAndOrgText();
-                CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
-                if (App.PatientDataGroups.GetAllStations().Count() == 0)
-                {
-                    // Provide local stale data as backup in case connectivity is no good:
-                    await App.PatientDataGroups.ReadCachedAllStationsList();
-                    if (App.PatientDataGroups.GetAllStations().Count() != 0)
-                    {
-                        App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
-                        SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
-                    }
-                }
-                UpdateCountInTitle();
-                if (App.goodWebServiceConnectivity)
-                {
-                    pageTitle.Text = "(...)"; // WAS, but now combined: countOfItems.Text = "(...)";
-                    await App.PatientDataGroups.ReloadAllStationsListAsync();
-                    UpdateCountInTitle();
-                }
-                // else show stale data & its count from when app was started or last refreshed during this session.
-            }
+                await LoadStateAllStations();
 
             if (pageState == null)
             {
@@ -140,14 +113,125 @@ namespace TP8
         //    SampleDataSource.RefreshOutboxAndAllStationsItems();
         //}
 
+        private async Task LoadStateOutbox()
+        {
+            // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
+            await App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes. Await added for v 3.5
+            await SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here. Await added for v 3.5
+
+            UpdateSortedBySubtitle(); // broken out as function June 2015
+            // Either the user naviagated here, or we are resuming from a suspend.  In either case, all stations data may be old.  Refresh if possible:
+            
+            //if (isOutbox)
+            //{
+            SetOutboxEventAndOrgText(); // Based on App.OutboxCheckBoxCurrentEventOnly
+            CheckBoxCurrentEventOnly.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
+            CheckBoxMyOrgOnly.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
+            // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
+            await App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes.  Await added for v 3.5
+            await SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here. Await added for v 3.5
+            UpdateCountInTitle();
+            //}
+        }
+        
+        /// <summary>
+        /// Load State when viewing All Stations
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadStateAllStations()
+        {
+#if SUPPRESS
+            // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
+            await App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes. Await added for v 3.5
+            await SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here. Await added for v 3.5
+#endif
+            UpdateSortedBySubtitle(); // broken out as function June 2015
+            // Either the user naviagated here, or we are resuming from a suspend.  In either case, all stations data may be old.  Refresh if possible:
+            //if(!IsOutbox)
+            //{
+            // June 2015, CheckBoxCurrentEventOnlyPortrait dropped, only need CheckBoxCurrentEvent.  Likewise MyOrgOnly
+            CheckBoxCurrentEventOnly.Visibility = Visibility.Collapsed;
+            SetAllStationsEventAndOrgText();
+            CheckBoxMyOrgOnly.IsChecked = App.AllStationsCheckBoxMyOrgOnly;
+            /* WAS thru v 3.4, but causes Count() == 0 test causes duplicate of all items in All Stations list if visited right after startup:
+                            if (App.PatientDataGroups.GetAllStations().Count() == 0)
+                            {
+                                // Provide local stale data as backup in case connectivity is no good:
+                                await App.PatientDataGroups.ReadCachedAllStationsList();
+                                if (App.PatientDataGroups.GetAllStations().Count() != 0)
+                                {
+                                    App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes
+                                    SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here
+                                }
+                            }
+                            UpdateCountInTitle();
+                            if (App.goodWebServiceConnectivity)
+                            {
+                                pageTitle.Text = "(...)"; // WAS, but now combined: countOfItems.Text = "(...)";
+                                await App.PatientDataGroups.ReloadAllStationsListAsync();
+                                UpdateCountInTitle();
+                            }
+                            // else show stale data & its count from when app was started or last refreshed during this session. */
+
+            /*if(App.ReloadingAllStationsList)
+            {
+                ShowCountAsDotsInTitle();
+                while(App.ReloadingAllStationsList)
+                {
+                    //UpdateCountInTitle();
+                    await Task.Delay(100); // milliseconds
+                }
+                await Task.Delay(900); // Kludge, just wait a second for groups to finish
+                await SampleDataSource.RefreshAllStationsItems(); // Propagate here.  Await added for v 3.5
+                UpdateCountInTitle();
+            }*/
+            // Broken out as separate function and reworked, v 3.5
+            // New loop, v 3.5:
+            if (App.ReloadingAllStationsList)
+            {
+                ShowCountAsDotsInTitle();
+                while (App.ReloadingAllStationsList)
+                {
+                    await Task.Delay(100); // milliseconds
+                }
+            }
+            else
+            {
+                // Force update, helps with stale data problem
+                if (App.goodWebServiceConnectivity)
+                {
+                    ShowCountAsDotsInTitle();// WAS before v 3.5: pageTitle.Text = "(...)"; // WAS, but now combined: countOfItems.Text = "(...)";
+                    await App.PatientDataGroups.ReloadAllStationsListAsync(true); // for all stations, includes cache purge, load, scrub, build filter&sorted lists, SampleDataSource.RefreshAllStationsItems();
+                }
+                else
+                {
+                    // Provide local stale data as backup in case connectivity is no good:
+                    await App.PatientDataGroups.ReadCachedAllStationsList();
+                    if (App.PatientDataGroups.GetAllStations().Count() != 0)
+                    {
+                        await App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes. Await added for v 3.5
+                        //SampleDataSource.RefreshOutboxAndAllStationsItems();
+                        await SampleDataSource.RefreshAllStationsItems();  // Propagate here.  Await added for v 3.5
+                    }
+                }
+            }
+            UpdateCountInTitle();
+            UpdateSortedBySubtitle();
+        }
+
         private void pageTitle_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateSortedBySubtitle();
-            UpdateCountInTitle(); // Mainly calling this to update title format, preceding count text
+            if (pageTitle.Text.Contains("(...)"))
+                ShowCountAsDotsInTitle();
+            else
+                UpdateCountInTitle(); // Mainly calling this to update title format, preceding count text
         }
 
-        private void UpdateSortedBySubtitle()
+        private void UpdateSortedBySubtitle() // also called from TP_PatientReportsSource.UpdateAllStationsLoadMessage
         {
+            App.PatientDataGroups.UpdateSortedBySubtitle();
+#if SUPERCEDED_BY_SHARED_FUNC
             // June 2015, sortedByTextPortrait dropped, only need sortedByText
             if (App.CurrentVisualState == "FullScreenLandscape" || App.CurrentVisualState == "FullScreenPortrait" ||
                 App.CurrentVisualState == "Over1365Wide" || App.CurrentVisualState == "vs1026To1365Wide")
@@ -161,10 +245,28 @@ namespace TP8
                 //s = s.Replace("triage ", ""); // just say "zone (alphabetic)"
                 sortedByText.Text = s;
             }
+#endif
         }
 
         private void UpdateCountInTitle()
         {
+            string title = PrepTitle();
+            int count;
+            if (isOutbox)
+                count = App.PatientDataGroups.GetOutboxSortedAndFiltered().Count();
+            else
+                count = App.PatientDataGroups.GetAllStationsSortedAndFiltered().Count();
+            pageTitle.Text = title + "(" + count + ")"; // was: countOfItems.Text = "(" + count + ")";
+        }
+
+        private void ShowCountAsDotsInTitle()
+        {
+            pageTitle.Text = PrepTitle() + "(...)";
+        }
+
+        private string PrepTitle()
+        {
+            // Broken out as separate function for v 3.5
             string titleGlyph = "👪  "; // same as group.Title, but broken into its 2 elements.  group.Title also has 2 spaces as separator
             string titleText = "All Stations";
             if (isOutbox)
@@ -175,14 +277,8 @@ namespace TP8
             string title = titleText;
             if (App.CurrentVisualState == "FullScreenLandscape" || App.CurrentVisualState == "FullScreenPortrait" ||
                 App.CurrentVisualState == "Over1365Wide" || App.CurrentVisualState == "vs1026To1365Wide") // but not vs673To1025Wide, part of 2ColumnsTight
-                    title = titleGlyph + "  " + titleText + " ";
-
-            int count;
-            if (isOutbox)
-                count = App.PatientDataGroups.GetOutboxSortedAndFiltered().Count();
-            else
-                count = App.PatientDataGroups.GetAllStationsSortedAndFiltered().Count();
-            pageTitle.Text = title + "(" + count + ")"; // was: countOfItems.Text = "(" + count + ")";
+                title = titleGlyph + "  " + titleText + " ";
+            return title;
         }
 
         /// <summary>

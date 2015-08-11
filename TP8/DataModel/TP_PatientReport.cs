@@ -557,7 +557,7 @@ namespace TP8.Data
                 //LastSentMsg.Text = "Discard from Outbox: Done.";
                 for (int i = v; i > 0; i-- ) // loop added Dec 2014.  Delete all reports for this pid
                     App.PatientDataGroups.GetOutbox().Discard(pid, i); // Note that reports previously marked as "superceded" will not be in the Outbox list, and may still be present elsewhere in spite of this loop.
-                App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind
+                await App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind. Await added v 3.5
                 await App.PatientDataGroups.GetOutbox().WriteXML();
                 App.PatientDataGroups.UpdateListsAfterReportDelete(true); // = DeletedAtTriageTrakToo
             }
@@ -672,11 +672,25 @@ namespace TP8.Data
         public string FormatSubtitle()
         {
             string patientID = PatientID;
-            string prefix = "";
-            if (!String.IsNullOrEmpty(App.OrgPolicy.OrgPatientIdPrefixText))
-                prefix = App.OrgPolicy.OrgPatientIdPrefixText;
-            if (!patientID.StartsWith(prefix))
-                patientID = prefix + patientID; // Treatment may not be adequate
+            // WAS BEFORE JULY 2015, BUT NOT GOOD ENUF
+            //string prefix = "";
+            //if (!String.IsNullOrEmpty(App.OrgPolicy.OrgPatientIdPrefixText))
+            //    prefix = App.OrgPolicy.OrgPatientIdPrefixText;
+            //if (!patientID.StartsWith(prefix))
+            //    patientID = prefix + patientID; // Treatment may not be adequate
+
+            // NEW verion 3.5: If prefix is from a different org than current one, or has the stupid AUTO preamble, don't mess with it:
+            if (OrgName == App.CurrentOrgContactInfo.OrgName)
+            {
+                // We can do a little more fixup, since we know current org's prefix (and its non-empty)
+                string prefix = App.OrgPolicy.OrgPatientIdPrefixText;
+                if(
+                    !String.IsNullOrEmpty(prefix) &&
+                    !(patientID.StartsWith(prefix) || patientID.StartsWith("AUTO"+prefix)) &&
+                     Char.IsDigit(patientID,0) // belt & suspenders here
+                )
+                patientID = prefix + patientID; // add missing prefix
+            }
 
             return String.Format("Mass Casualty ID {0}", patientID); // Change further as this evolves
         }

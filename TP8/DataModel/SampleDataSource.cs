@@ -1,5 +1,4 @@
-﻿#define EXPERIMENT
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -139,7 +138,6 @@ namespace TP8.Data
     /// </summary>
     public class SampleDataItem : SampleDataCommon
     {
-#if EXPERIMENT
         public SampleDataItem(String uniqueId, String title, String subtitle, String imagePath, string /*Color*/ imageBorderColor, String description, String content, SampleDataGroup group)
             : base(uniqueId, title, subtitle, imagePath, description)
         {
@@ -147,14 +145,14 @@ namespace TP8.Data
             this._group = group;
             this._imageBorderColor = imageBorderColor; // Glenn adds
         }
-#else
+/* WAS:
         public SampleDataItem(String uniqueId, String title, String subtitle, String imagePath, String description, String content, SampleDataGroup group)
             : base(uniqueId, title, subtitle, imagePath, description)
         {
             this._content = content;
             this._group = group;
         }
-#endif
+*/
 
         private string _content = string.Empty;
         public string Content
@@ -170,14 +168,12 @@ namespace TP8.Data
             set { this.SetProperty(ref this._group, value); }
         }
 
-#if EXPERIMENT
         private string /*Color*/ _imageBorderColor = Colors.Transparent.ToString(); // Glenn adds
         public string /*Color*/ ImageBorderColor
         {
             get { return this._imageBorderColor; }
             set { this.SetProperty(ref this._imageBorderColor, value); }
         }
-#endif
 
     }
 
@@ -362,20 +358,21 @@ namespace TP8.Data
             return true;
         }
 
-        public static void RefreshOutboxItems() // Glenn adds
+        // v 3.5, next 3 functions made async Task return type, and await call added to DefineItemsFiltered
+        public static async Task RefreshOutboxItems() // Glenn adds
         {
-            _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
         }
 
-        public static void RefreshAllStationsItems() // Glenn adds
+        public static async Task RefreshAllStationsItems() // Glenn adds
         {
-            _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
         }
 
-        public static void RefreshOutboxAndAllStationsItems() // Glenn adds
+        public static async Task RefreshOutboxAndAllStationsItems() // Glenn adds
         {
-            _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
-            _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
         }
 
         public SampleDataSource()
@@ -407,7 +404,7 @@ namespace TP8.Data
                     "Assets/LightGray.png",
                     "Group Description: not used");
 // Evidently we have to have at least 1 item in group to show up:
-#if EXPERIMENT
+
             group2.Items.Add(new SampleDataItem("Group-2-Item-1",
                     "Item Title: 1",
                     "Item Subtitle: 1",
@@ -417,7 +414,7 @@ namespace TP8.Data
                     "Item Content: not used",
                     group2));
             this.AllGroups.Add(group2);
-#else
+/* WAS:
             group2.Items.Add(new SampleDataItem("Group-2-Item-1",
                     "Item Title: 1",
                     "Item Subtitle: 1",
@@ -426,7 +423,7 @@ namespace TP8.Data
                     "Item Content: not used",
                     group2));
             this.AllGroups.Add(group2);
-#endif
+*/
 
             var groupOutbox = new SampleDataGroup("Outbox",
                     "📮  Outbox",
@@ -434,7 +431,7 @@ namespace TP8.Data
                     "Assets/MediumGray.png",
                     "Group Description: not used");
 
-            DefineItemsFiltered(groupOutbox);
+            DefineItemsFiltered(groupOutbox).Wait();  // Wait added for v 3.5. Since we're in constructor, can't use "await"
 
             this.AllGroups.Add(groupOutbox);
 
@@ -449,7 +446,7 @@ namespace TP8.Data
                     "Assets/LightGray.png",
                     "Group Description: not used");
 
-            DefineItemsFiltered(groupAllStations);
+            DefineItemsFiltered(groupAllStations).Wait();  //Wait added for v 3.5.  Since we're in constructor, can't use "await"
 
             this.AllGroups.Add(groupAllStations);
 
@@ -461,7 +458,8 @@ namespace TP8.Data
             this.AllGroups.Add(group5);
         }
 
-        public void DefineItemsFiltered(SampleDataGroup g)
+        // was before 3.5: public void DefineItemsFiltered(SampleDataGroup g)
+        public async Task DefineItemsFiltered(SampleDataGroup g)
         {
             // if (App.PatientDataGroups == null) {
             //   App.PatientDataGroups = new TP_PatientDataGroups();
@@ -475,7 +473,7 @@ namespace TP8.Data
                 //lpfi = App.PatientDataGroups.GetOutboxSorted();
                 //LoadSampleDataGroupFromPatientDataList(g, lpfi);
                 lpfi = App.PatientDataGroups.GetOutboxSortedAndFiltered();
-                LoadSampleDataGroupFromPatientDataList(g, lpfi);
+                await LoadSampleDataGroupFromPatientDataList(g, lpfi); // v 3.5 add await
             }
             else if (g.UniqueId == "AllStations")
             {
@@ -484,7 +482,7 @@ namespace TP8.Data
                 //lpfi = App.PatientDataGroups.GetAllStationsSorted();
                 //LoadSampleDataGroupFromPatientDataList(g, lpfi);
                 lpfi = App.PatientDataGroups.GetAllStationsSortedAndFiltered();
-                LoadSampleDataGroupFromPatientDataList(g, lpfi);
+                await LoadSampleDataGroupFromPatientDataList(g, lpfi); // v 3.5 add await
             }
             else
             {
@@ -492,7 +490,8 @@ namespace TP8.Data
             }
         }
 
-        private async void LoadSampleDataGroupFromPatientDataList(SampleDataGroup g, TP_PatientReports p)
+        // was before v 3.5: private async void LoadSampleDataGroupFromPatientDataList(SampleDataGroup g, TP_PatientReports p)
+        private async Task LoadSampleDataGroupFromPatientDataList(SampleDataGroup g, TP_PatientReports p)
         {
             g.Items.Clear();
             //string encodedTemp;
@@ -504,9 +503,7 @@ namespace TP8.Data
                     pdi.FormatTitle(),
                     pdi.FormatSubtitle(),
                     pdi.ImageEncoded, // freshened above
-#if EXPERIMENT
                     pdi.FormatImageBorderColor(),
-#endif
                     pdi.FormatDescription(),
                     pdi.FormatContent(),
                     g));

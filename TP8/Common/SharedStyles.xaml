@@ -110,6 +110,36 @@
 
     <!-- Dropped: BackButtonStyle, PortraitBackButtonStyle, SnappedBackButtonStyle.
         These complex styles were used to style a Back Button and its margins for use in the title area of a page. -->
+    
+    <!-- Plus & Minus Button styles added July 2015, Release 5, version 3.5: -->
+    <Style x:Key="PlusButtonNormalStyle" TargetType="Button">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Margin" Value="20,0,0,0"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="Padding" Value="2,1,2,2"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Content" Value="+"/>
+    </Style>
+
+    <Style x:Key="MinusButtonNormalStyle" TargetType="Button" BasedOn="{StaticResource PlusButtonNormalStyle}">
+        <Setter Property="Padding" Value="2,0,2,3"/>
+        <Setter Property="Content" Value="-"/>
+    </Style>
+
+    <Style x:Key="PlusButtonSmallStyle" TargetType="Button" BasedOn="{StaticResource PlusButtonNormalStyle}">
+        <Setter Property="Margin" Value="2,0,0,0"/>
+        <!-- <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Padding" Value="1,0,1,1"/>
+        <Setter Property="FontSize" Value="15"/> -->
+    </Style>
+
+    <Style x:Key="MinusButtonSmallStyle" TargetType="Button" BasedOn="{StaticResource MinusButtonNormalStyle}">
+        <Setter Property="Margin" Value="2,0,0,0"/>
+    </Style>
 
     <!-- Item templates -->
 

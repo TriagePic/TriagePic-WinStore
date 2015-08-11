@@ -97,6 +97,7 @@ namespace TP8
             //discardMenuPopUp.Closed += (o, e) => this.GetParentOfType<AppBar>().IsOpen = false; // When popup closes, close app bar too.
             //discardMenuPopUp.Closed += (o, e) => TopAppBar.IsOpen = false;
             //discardMenuPopUp.Closed += (o, e) => BottomAppBar.IsOpen = false;
+            patientID_ConflictStatus.Text = ""; // July 2015, v 5
         }
 
         private void InitiateZones()
@@ -1383,7 +1384,7 @@ namespace TP8
             LastSentMsg.Text = "Discard from Outbox: Done.";
             for (int i = v; i > 0; i-- ) // loop added Dec 2014.  Delete all reports for this pid
                 App.PatientDataGroups.GetOutbox().Discard(pid, i);
-            App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind
+            await App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind.  Await added v 3.5
             await App.PatientDataGroups.GetOutbox().WriteXML();
 // WAS:     App.PatientDataGroups.Init2(); // resort, refilter, refresh
             App.PatientDataGroups.UpdateListsAfterReportDelete(true); // = DeletedAtTriageTrakToo

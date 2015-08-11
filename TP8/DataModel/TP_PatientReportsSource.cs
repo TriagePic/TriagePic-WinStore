@@ -282,7 +282,11 @@ namespace TP8.Data
         {
             if(_outbox.Count() == 0)
                 await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword, true); // startup is true
+
+            // Rest here is similar to ReloadAllStationsList, but also includes Outbox
+            App.ReloadingAllStationsList = true; // added v 3.5, supercedes App.ProcessingAllStationsList
             await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, true, false); // startup is true, invalid Cache first is false (unnecessary)
+            UpdateAllStationsLoadMessage(5); // Scrub, Filter, Sort. new v 3.5
 /* WAS:
             await _allstations.ReadXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             if(_allstations.Count() == 0)
@@ -295,11 +299,14 @@ namespace TP8.Data
                 await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             }
 */
-            Scrub(); // Remove bad data
+            await Scrub(); // Remove bad data. Await added v 3.5
             //ReFilter();
-            ReSortAndFilter();  // includes OutboxForStatisticsRefresh() as of June 2015
+            await ReSortAndFilter();  // includes OutboxForStatisticsRefresh() as of June 2015. Await added for v 3.5
             // must follow ReSortAndFilter:
-            SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
+            // was: await SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox. Await added for v 3.5
+            await SampleDataSource.RefreshOutboxAndAllStationsItems();
+            UpdateAllStationsLoadMessage(0); // new here v 3.5
+            App.ReloadingAllStationsList = false;
         }
 
         public async void UpdateListsAfterReportDelete(bool DeletedAtTriageTrakToo) // New Dec 2014
@@ -314,17 +321,37 @@ namespace TP8.Data
             }
             // Caller has already done post-delete outbox list scrub, and save to XML file.
             // Not necessary to call service for this: await ProcessOutboxList(App.pd.plUserName, App.pd.plPassword, false); // startup is false
-            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
+            await ReSortAndFilterImplAsync(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true); // Await added v 3.5
             OutboxForStatisticsRefresh(); // new June 2015
-            SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
+            await SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox.  Await added for v 3.5
         }
 
         public async Task ReloadAllStationsListAsync()
         {
-            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword); // caches too
-            ScrubAllStations();
-            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false); // as in ReSortAndMinimallyFilter
-            SampleDataSource.RefreshAllStationsItems(); // For benefit of next peek
+            await ReloadAllStationsListAsync(false);
+        }
+
+        public async Task ReloadAllStationsListAsync(bool invalidateCacheFirst) // parameter added v 3.5
+        {
+            App.ReloadingAllStationsList = true; // added v 3.5, supercedes App.ProcessingAllStationsList
+            await ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, false, invalidateCacheFirst);
+            UpdateAllStationsLoadMessage(5); // Scrub, Filter, Sort. new v 3.5
+            await ScrubAllStations(); // await added for v 3.5
+            await ReSortAndFilterImplAsync(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false); // as in ReSortAndMinimallyFilter. Await added v 3.5
+            await SampleDataSource.RefreshAllStationsItems(); // For benefit of next peek. Await added for v 3.5
+            /* Tried following as alternative to previous line, to see if it would refresh UI.  Loop only executed once.
+            int lastCount = _allstationssortedandfiltered.Count(); /// EXPERIMENT LOOP
+            int thisCount = 0;
+            while (true)
+            {
+                SampleDataSource.RefreshAllStationsItems(); // For benefit of next peek
+                thisCount = _allstationssortedandfiltered.Count();
+                if (lastCount == thisCount)
+                    break;
+                lastCount = thisCount;
+            } */
+            UpdateAllStationsLoadMessage(0); // move here v 3.5
+            App.ReloadingAllStationsList = false; 
         }
 
         public async Task ReadCachedAllStationsList()
@@ -356,36 +383,107 @@ namespace TP8.Data
 
         public async Task ProcessAllStationsList(string plname, string plpass, bool onStartup, bool invalidateCacheFirst)
         {
-            App.ProcessingAllStationsList = true;
+            //App.ProcessingAllStationsList = true;
             await ProcessAllStationsListImpl(plname, plpass, onStartup, invalidateCacheFirst);
-            App.ProcessingAllStationsList = false;
+            //App.ProcessingAllStationsList = false;
 
             if (TP8.BasicPageChecklist.staticProgressBarChangedEvent != null)
                 TP8.BasicPageChecklist.staticProgressBarChangedEvent.Visibility = Visibility.Collapsed;
+            /* Moved to ReloadAllStations (call) and UpdateAllStationsLoadMessag for v 3.5:
             if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
             {
                 TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = ""; // cleanup
                 TP8.BasicPageChecklist.staticGettingAllStationsReports.Visibility = Visibility.Collapsed;
+            }*/
+        }
+
+
+        /// <summary>
+        /// Show loading status on Checklist page of All Stations data. 
+        /// </summary>
+        /// <param name="step">If 0, clear & hide message box</param>
+        private void UpdateAllStationsLoadMessage(int step)
+        {
+            UpdateAllStationsLoadMessage(step, "");
+        }
+
+        /// <summary>
+        /// Show loading status on Checklist page of All Stations data. 
+        /// </summary>
+        /// <param name="step">If 0, clear & hide message box</param>
+        /// <param name="extra">if present for step 3, should be of form "3 of 14" or "45 of 250 (max)"</param>
+        private void UpdateAllStationsLoadMessage(int step, string extra)
+        {
+            App.MyAssert(step >= 0 && step < 6);
+            // Step 3 has 2 variant messages. We handle the plain variant here; the caller handles the bells & whistles cases
+            // Broken out as separate function July 2015 release 5 version 3.4
+            string updateMsg = "";
+            if(step !=0)
+            {
+                //was, but shorten further: updateMsg = "Updating reports ";
+                updateMsg = "Get reports ";
+                if (App.CurrentVisualState != "vs321To500Wide" && App.CurrentVisualState != "vs320Wide") // Added for Release 3, revised further for 5
+                    updateMsg += "from all stations for this event ";
+
+                updateMsg += "[Step " + step.ToString() + " of 5";
+                if (step == 3 && !String.IsNullOrEmpty(extra))
+                    updateMsg += "; report " + extra;
+                updateMsg += "]";
+            }
+
+            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+            {
+                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg;
+                if (step == 0)
+                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Visibility = Visibility.Collapsed; // cleanup
+            }
+
+            if(TP8.SplitPage.staticSortedByOrLoadingText != null)
+            {
+                App.MyAssert(App.CurrentSearchResultsGroupName == "Outbox" || App.CurrentSearchResultsGroupName == "AllStations");
+                if(App.CurrentSearchResultsGroupName == "Outbox")
+                    return;
+
+                updateMsg = updateMsg.Replace("from all stations ", ""); // not necessary to say this context of All Stations page. Good to shorten
+                TP8.SplitPage.staticSortedByOrLoadingText.Text = updateMsg;
+                if (step == 0)
+                    UpdateSortedBySubtitle(); // cleanup
+            }
+        }
+
+        public void UpdateSortedBySubtitle() // See also similar function in SplitPage.cs. This is callable throughout because of static pointer to field
+        {
+            // June 2015, sortedByTextPortrait dropped, only need sortedByText
+            if (App.CurrentVisualState == "FullScreenLandscape" || App.CurrentVisualState == "FullScreenPortrait" ||
+                App.CurrentVisualState == "Over1365Wide" || App.CurrentVisualState == "vs1026To1365Wide")
+                TP8.SplitPage.staticSortedByOrLoadingText.Text = "Sorted " + App.PatientDataGroups.GetShortSortDescription(); // Similar to DefaultViewModel["QueryText"] in SearchResultsPage
+            else
+            {
+                string s = App.PatientDataGroups.GetVeryShortSortDescription();
+                //string s = App.PatientDataGroups.GetShortSortDescription();
+                //s = s.Replace(", ascending", ""); // just leave uparrow or downarrow to indicate sort method
+                //s = s.Replace(", descending", "");
+                //s = s.Replace("triage ", ""); // just say "zone (alphabetic)"
+                TP8.SplitPage.staticSortedByOrLoadingText.Text = s;
             }
         }
 
         private async Task ProcessAllStationsListImpl(string plname, string plpass, bool onStartup, bool invalidateCacheFirst) 
         {
-            string updateMsg = "Updating reports from all stations for this event ";
-            if (App.CurrentVisualState == "vs321To500Wide" || App.CurrentVisualState == "vs320Wide") // Added for Release 3
-                updateMsg = "Updating reports ";
+            // now done in UpdateAllStationsLoadMessage:
+            //   string updateMsg = "Updating reports from all stations for this event ";
+            //   if (App.CurrentVisualState == "vs321To500Wide" || App.CurrentVisualState == "vs320Wide") // Added for Release 3
+            //      updateMsg = "Updating reports ";
 
             // Compare Win 7 FormTriagePic.ProcessEventList(...)
             MessageDialog ImmediateDlg = new MessageDialog("");
             if (invalidateCacheFirst) // do this only if current event has changed
             {
-                if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 1 of 4]"; //"Purging cache";
+                UpdateAllStationsLoadMessage(1);  // Purging cache;
                 await PurgeCachedAllStationsList();
             }
 
-            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 2 of 4]"; //"Calling web service";
+            UpdateAllStationsLoadMessage(2); // Calling web service;
 
             List<Search_Response_Toplevel_Row> responseRows = null; // likewise
             string s;
@@ -417,8 +515,7 @@ namespace TP8.Data
                 return;
             }
 
-            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 3 of 4]";// "Reading web service results into memory";
+            UpdateAllStationsLoadMessage(3); // Reading web service results into memory;
             responseRows = JsonConvert.DeserializeObject<List<Search_Response_Toplevel_Row>>(s);
             // Hopefully don't have to add more filtering here... we'll see.
             if (responseRows == null) // Assume this is an error, not just zero reports
@@ -444,9 +541,11 @@ namespace TP8.Data
             foreach (var item in responseRows)
             {
                 i++;
-                if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 3 of 4; report " +
-                        i.ToString() + " of " + count + "]";// "Reading web service results into memory";
+                //if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
+                //    TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 3 of 5; report " +
+                //        i.ToString() + " of " + count + "]";// "Reading web service results into memory";
+                string x = i.ToString() + " of " + count; // Function will make it read "...[Step 3 of 5; report 14 of 45]"
+                UpdateAllStationsLoadMessage(3, x);// "Reading web service results into memory";
 
                 // TO DO:  In future version, support Practice.  For now, skip any records so labeled
                 if (item.edxl != null && item.edxl.Count() > 0 && item.edxl[0].mass_casualty_id.StartsWith("Practice-"))
@@ -489,8 +588,7 @@ namespace TP8.Data
                     await LoadNewPatientReportImage(p);
             }
 #endif
-            if (TP8.BasicPageChecklist.staticGettingAllStationsReports != null)
-                TP8.BasicPageChecklist.staticGettingAllStationsReports.Text = updateMsg + "[Step 4 of 4]"; //"Also caching results to file";
+            UpdateAllStationsLoadMessage(4); // Also caching results to file;
             await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             // Caller will take care of _allstationssorted, _allstationssortedandfiltered
         }
@@ -601,20 +699,20 @@ namespace TP8.Data
             return pr;
         }
 
-        private void Scrub()
+        private async Task Scrub() //was: private void Scrub(), without awaits
         {
-            ScrubOutbox();
-            ScrubAllStations();
+            await ScrubOutbox();
+            await ScrubAllStations();
         }
 
-        public void ScrubOutbox()
+        public async Task ScrubOutbox()//was: public void ScrubOutbox(), without await Task.Run...
         {
-            ScrubImpl(_outbox);
+            await Task.Run( () => ScrubImpl(_outbox));
         }
 
-        public void ScrubAllStations()
+        public async Task ScrubAllStations() //was: public void ScrubAllStations(), without await Task.Run...
         {
-            ScrubImpl(_allstations);
+            await Task.Run( () => ScrubImpl(_allstations));
         }
 
         private void ScrubImpl(TP_PatientReports l)
@@ -629,19 +727,35 @@ namespace TP8.Data
             l.ReplaceWithList(scrubL);
         }
 
-        public void ReSortAndFilter()
+        public async Task ReSortAndFilter() // was: public void ReSortAndFilter(). Change & Task.Run's added for v 3.5
         {
-            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
+            await ReSortAndFilterImplAsync(_outbox, _outboxsorted, _outboxsortedandfiltered, true, true);
             OutboxForStatisticsRefresh(); // new June 2015
-            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, true, false);
+            await ReSortAndFilterImplAsync(_allstations, _allstationssorted, _allstationssortedandfiltered, true, false);
         }
 
-        public void ReSortAndMinimallyFilter() // used by SplitPage, filter is only "current event only" checkbox
+        public async Task ReSortAndMinimallyFilter() // used by SplitPage, filter is only "current event only" checkbox
         {
-            ReSortAndFilterImpl(_outbox, _outboxsorted, _outboxsortedandfiltered, false, true);
+            // was: public void ReSortAndFilter(). Change & Task.Run's added for v 3.5
+            await ReSortAndFilterImplAsync(_outbox, _outboxsorted, _outboxsortedandfiltered, false, true);
             OutboxForStatisticsRefresh(); // new June 2015
-            ReSortAndFilterImpl(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false);
+            await ReSortAndFilterImplAsync(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false);
         }
+
+        /// <summary>
+        /// Create background task for sort & filtering
+        /// </summary>
+        /// <param name="origL"></param>
+        /// <param name="sortL"></param>
+        /// <param name="sortfiltL"></param>
+        /// <param name="useFullFilter"></param>
+        /// <param name="isOutbox"></param>
+        /// <returns></returns>
+        public async Task ReSortAndFilterImplAsync(TP_PatientReports origL, TP_PatientReports sortL, TP_PatientReports sortfiltL, bool useFullFilter, bool isOutbox)
+        {
+            await Task.Run(() => ReSortAndFilterImpl(origL, sortL, sortfiltL, useFullFilter, isOutbox));
+        }
+
         /// <summary>
         /// When called, converts TP_PatientReports to List<TP_PatientReport>
         /// </summary>
@@ -986,7 +1100,7 @@ namespace TP8.Data
             return desc;
         }
 
-
+#if DONT_NEED
         /// <summary>
         /// Dummy data for _outbox and _allstations
         /// </summary>
@@ -1218,7 +1332,7 @@ namespace TP8.Data
                 ));
 
         }
-
+#endif
         /// <summary>
         /// Applies flyout filters to candidate items for listing
         /// </summary>
@@ -1382,9 +1496,9 @@ namespace TP8.Data
                     await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
 
                 // Assume at some point we will allow filtering/ordering on send code, so resort here
-                ReSortAndFilter();
+                await ReSortAndFilter(); //  Await added for v 3.5
                 // must follow ReSortAndFilter:
-                SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
+                await SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox. Await added for v 3.5
             }
         }
 
@@ -1474,9 +1588,9 @@ namespace TP8.Data
             if (UpdateSendHistoryImpl(_allstations, patientID, targetSentCodeVersion, revisedSentCode, revisedSuperceded))
                 await _allstations.WriteXML(PATIENT_REPORTS_ALL_STATIONS_FILENAME);
             // Assume at some point we will allow filtering/ordering on send code, so resort here
-            ReSortAndFilter();
+            await ReSortAndFilter(); // Await added for v 3.5
             // must follow ReSortAndFilter:
-            SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox
+            await SampleDataSource.RefreshOutboxItems(); // For benefit of next peek at Outbox. Await added for v 3.5
         }
 
         public async Task UpdateSendHistoryAfterOutbox(string patientID, SentCodeObj revisedObjSentCode)

@@ -175,37 +175,63 @@ namespace TP8.Data
                     //Type type = frame.GetType();
                     //string name = Window.Current.Content.ToString();
                     //if(name.Contains("BasicPageNew") || name.Contains("BasicPageViewEdit")) // use contains because of TP8. prefix
-                    if (type != null && (type.Name == "BasicPageNew" || type.Name == "BasicPageViewEdit"))
+                    // was before v 3.5, only pinged during Report pages: if (type != null && (type.Name == "BasicPageNew" || type.Name == "BasicPageViewEdit"))
+                    if(type != null)
                     {
-                        //if (_Frame.Content.GetType() != typeof(BasicPageNew))
-                        //    return;
-                        string s = type.ToString();
-                        //var bpn = (BasicPageNew)_Frame.Content;
-                        //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.dark_traffic;
-                        DarkenTrafficLightOnReportPage(type);
-                        sw.Reset();
-                        sw.Start();
-                        results = await App.service.GetPing(pingLatencyInTenthsOfSeconds); // Thread.Sleep(50); // total delay would be around 62 milliseconds
-                        sw.Stop();
-                        pingLatencyInTenthsOfSeconds = Convert.ToInt32(Math.Round(Convert.ToDouble(sw.ElapsedMilliseconds) / 100.0));
-                        if (sw.Elapsed.TotalMilliseconds > (double)3000.0 || results.Contains("ERROR:")) // > 3 seconds or error
+                        if(type.Name == "BasicPageNew" || type.Name == "BasicPageViewEdit")
                         {
-                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.red_traffic;
-                            LightUpRed(type);
-                            App.goodWebServiceConnectivity = false;
-                        }
-                        else if (sw.Elapsed.TotalMilliseconds > (double)500.0) // 1/2 second
-                        {
-                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.yellow_traffic;
-                            LightUpYellow(type);
-                            App.goodWebServiceConnectivity = true; // good but not great
+                            //if (_Frame.Content.GetType() != typeof(BasicPageNew))
+                            //    return;
+                            // string s = type.ToString();
+                            //var bpn = (BasicPageNew)_Frame.Content;
+                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.dark_traffic;
+                            DarkenTrafficLightOnReportPage(type);
+                            sw.Reset();
+                            sw.Start();
+                            results = await App.service.GetPing(pingLatencyInTenthsOfSeconds); // Thread.Sleep(50); // total delay would be around 62 milliseconds
+                            sw.Stop();
+                            pingLatencyInTenthsOfSeconds = Convert.ToInt32(Math.Round(Convert.ToDouble(sw.ElapsedMilliseconds) / 100.0));
+                            if (sw.Elapsed.TotalMilliseconds > (double)3000.0 || results.Contains("ERROR:")) // > 3 seconds or error
+                            {
+                                //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.red_traffic;
+                                LightUpRed(type);
+                                App.goodWebServiceConnectivity = false;
+                            }
+                            else if (sw.Elapsed.TotalMilliseconds > (double)500.0) // 1/2 second
+                            {
+                                //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.yellow_traffic;
+                                LightUpYellow(type);
+                                App.goodWebServiceConnectivity = true; // good but not great
+                            }
+                            else
+                            {
+                                //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.green_traffic;
+                                LightUpGreen(type);
+                                App.goodWebServiceConnectivity = true;
+                            }
                         }
                         else
                         {
-                            //parent.pictureBoxConnect2PL.BackgroundImage = TriagePic.Properties.Resources.green_traffic;
-                            LightUpGreen(type);
-                            App.goodWebServiceConnectivity = true;
+                            // Ping constantly once app is running. Here to support SplitPage test of App.goodWebServiceConnectivity, and any future cases
+                            sw.Reset();
+                            sw.Start();
+                            results = await App.service.GetPing(pingLatencyInTenthsOfSeconds); // Thread.Sleep(50); // total delay would be around 62 milliseconds
+                            sw.Stop();
+                            pingLatencyInTenthsOfSeconds = Convert.ToInt32(Math.Round(Convert.ToDouble(sw.ElapsedMilliseconds) / 100.0));
+                            if (sw.Elapsed.TotalMilliseconds > (double)3000.0 || results.Contains("ERROR:")) // > 3 seconds or error
+                            {
+                                App.goodWebServiceConnectivity = false;
+                            }
+                            else if (sw.Elapsed.TotalMilliseconds > (double)500.0) // 1/2 second
+                            {
+                                App.goodWebServiceConnectivity = true; // good but not great
+                            }
+                            else
+                            {
+                                App.goodWebServiceConnectivity = true;
+                            }
                         }
+
                     }
                 }
                 //Thread.Sleep(pingInterval);

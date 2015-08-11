@@ -158,7 +158,8 @@ namespace TP8
         public const string NO_OR_BAD_WEB_SERVICE_PREFIX =
             "Could not connect to TriageTrak web service.  Using previous information, cached locally, instead for:\n"; // Often used with delayed message
         public static bool AppFinishedLaunching = false; // set to true during home page launch
-        public static bool ProcessingAllStationsList = false;
+        // was before v3.5, then replaced by next item: public static bool ProcessingAllStationsList = false;
+        public static bool ReloadingAllStationsList = false;
         public static SemaphoreSlim LocalStorageDataSemaphore = new SemaphoreSlim(1); // LocalStorage.Data is a static shared resource; serialize read/write access to it.
         public static string CurrentVisualState = ""; // New win 8.1
 
@@ -558,8 +559,8 @@ namespace TP8
             // Probably not: goodWebServiceConnectivity = false; // Determined by pings.  Don't bother with stale data:
             //   (bool)SuspensionManager.SessionState["goodWebServiceConnectivity"];
             SuspensionManager.SessionState["AppFinishedLaunching"] = AppFinishedLaunching;
-            SuspensionManager.SessionState["ProcessingAllStationsList"] = ProcessingAllStationsList;
-
+            // replaced by: SuspensionManager.SessionState["ProcessingAllStationsList"] =  ProcessingAllStationsList;
+            SuspensionManager.SessionState["ReloadingAllStationsList"] = ReloadingAllStationsList;
             // followed by SuspensionManager.SaveAsync();
         }
 
@@ -592,7 +593,8 @@ namespace TP8
             BlockWebServices = (bool)SuspensionManager.SessionState["BlockWebServices"];
             // Probably not: goodWebServiceConnectivity = false; // Determined by pings.  Don't bother with stale data: (bool)SuspensionManager.SessionState["goodWebServiceConnectivity"];
             AppFinishedLaunching = (bool)SuspensionManager.SessionState["AppFinishedLaunching"];
-            ProcessingAllStationsList = (bool)SuspensionManager.SessionState["ProcessingAllStationsList"];
+            // replaced by next item: ProcessingAllStationsList = (bool)SuspensionManager.SessionState["ProcessingAllStationsList"];
+            ReloadingAllStationsList = (bool)SuspensionManager.SessionState["ReloadingAllStationsList"];
 
             // Complex types:
             // Most of restoration of these is handled in DoStartup, but we'll see what's needed here.

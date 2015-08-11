@@ -26,7 +26,8 @@ namespace TP8
     /// </summary>
     public sealed partial class BasicPageChecklist : TP8.Common.BasicLayoutPage //WAS before Release 3: TP8.Common.LayoutAwarePage
     {
-        public static ProgressBar staticProgressBarChangedEvent; // kludge to access progressBarChangeEvent from other pages... in absence of MVVM with Message Bus or Event Aggregator and subscribe/publish
+        public static ProgressBar staticProgressBarChangedEvent; // kludge to access progressBarChangeEvent from other pages...
+        // in absence of MVVM with Message Bus or Event Aggregator and subscribe/publish
         public static TextBlock staticGettingAllStationsReports; // more kludge
         public BasicPageChecklist()
         {
@@ -173,7 +174,7 @@ namespace TP8
                 TP8.Data.TP_EventsDataItem tpEvent = (TP_EventsDataItem)EventListView.SelectedItem;
                 // This was put in to prevent multiple calls to ProcessAllStationsList, which can cause file lockups.
                 // But "return" causes its own problems, if App.ProcessingAllStationsList isn't reset to false (e.g., if abnormally terminated during debugging
-                if (App.ProcessingAllStationsList)
+                if (App.ReloadingAllStationsList)
                 {
                     progressBarChangedEvent.Visibility = Visibility.Visible;
                     gettingAllStationsReports.Visibility = Visibility.Visible;
@@ -208,7 +209,8 @@ namespace TP8
                 // Invalid cache data when current event changes
                 // WAS, but this now included in next step: await App.PatientDataGroups.PurgeCachedAllStationsList();
                 //DebugEventsList.Text = "Processing all stations list";
-                await App.PatientDataGroups.ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, false, true); // = on startup; invalidate cache first
+                // WAS before v 3.5, but replaced by next line: await App.PatientDataGroups.ProcessAllStationsList(App.pd.plUserName, App.pd.plPassword, false, true); // = on startup; invalidate cache first
+                await App.PatientDataGroups.ReloadAllStationsListAsync(true); // = invalidateCacheFirst
                 //DebugEventsList.Text = "";
                 progressBarChangedEvent.Visibility = Visibility.Collapsed;
                 gettingAllStationsReports.Visibility = Visibility.Collapsed;

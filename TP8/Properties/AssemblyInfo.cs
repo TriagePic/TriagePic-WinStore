@@ -24,6 +24,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.4.0.0")]
-[assembly: AssemblyFileVersion("3.4.0.0")]
+// That was useful in TP7, where the build and revision numbers were decoded to show the user the build date
+// Not being used here, just default to 0.0.  See also Store/Edit App Manifest, that has separate version #
+[assembly: AssemblyVersion("3.5.0.0")]
+[assembly: AssemblyFileVersion("3.5.0.0")]
 [assembly: ComVisible(false)]
