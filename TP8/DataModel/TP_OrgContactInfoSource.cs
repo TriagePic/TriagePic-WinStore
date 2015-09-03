@@ -229,7 +229,7 @@ namespace TP8.Data // nah: .DataModel
 
         public async Task<string> GetCurrentOrgContactInfo(int orgUuid, string orgName) // was v33: string orgUuid, ...
         {
-            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512.  
+            App.MyAssert(App.pd.plToken != null && App.pd.plToken.Length == 128); // token is 128 char long SHA-512.  
 
             string status = await App.service.GetHospitalData(orgUuid, orgName); // Function call puts results directly into App.CurrentOrgContactInfo
             // could check status for "ERROR:" or "COMMUNICATIONS ERROR:"

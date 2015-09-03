@@ -293,6 +293,7 @@ namespace TP8.Data
             // Simple linear search is acceptable for small data sets
             var matches = _sampleDataSource.AllGroups.Where((group) => group.UniqueId.Equals(uniqueId));
             if (matches.Count() == 1) return matches.First();
+            App.MyAssert(false);
             return null;
         }
 
@@ -301,6 +302,7 @@ namespace TP8.Data
             // Simple linear search is acceptable for small data sets
             var matches = _sampleDataSource.AllGroups.Where((group) => group.UniqueId.Equals(uniqueId));
             if (matches.Count() == 1) return matches.First();
+            App.MyAssert(false);
             return null;
         }
 
@@ -359,20 +361,21 @@ namespace TP8.Data
         }
 
         // v 3.5, next 3 functions made async Task return type, and await call added to DefineItemsFiltered
+        // v 3.6, calls GetGroup2 instead of GetGroup, to avoid access conflict
         public static async Task RefreshOutboxItems() // Glenn adds
         {
-            await _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup2("Outbox"));
         }
 
         public static async Task RefreshAllStationsItems() // Glenn adds
         {
-            await _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup2("AllStations"));
         }
 
         public static async Task RefreshOutboxAndAllStationsItems() // Glenn adds
         {
-            await _sampleDataSource.DefineItemsFiltered(GetGroup("Outbox"));
-            await _sampleDataSource.DefineItemsFiltered(GetGroup("AllStations"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup2("Outbox"));
+            await _sampleDataSource.DefineItemsFiltered(GetGroup2("AllStations"));
         }
 
         public SampleDataSource()

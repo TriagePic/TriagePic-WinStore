@@ -66,7 +66,7 @@ namespace TP8
         {
             string navigationParameter = e.NavigationParameter.ToString();
             var pageState = e.PageState;
-            var group = SampleDataSource.GetGroup(navigationParameter);
+            SampleDataGroup group = SampleDataSource.GetGroup(navigationParameter);
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
 
@@ -96,7 +96,8 @@ namespace TP8
                 if (pageState.ContainsKey("SelectedItem") && this.itemsViewSource.View != null)
                 {
                     var selectedItem = SampleDataSource.GetItem((String)pageState["SelectedItem"]);
-                    this.itemsViewSource.View.MoveCurrentTo(selectedItem);
+                    if (!this.itemsViewSource.View.MoveCurrentTo(selectedItem)) // may fail if selected item was deleted elsewhere
+                        this.itemsViewSource.View.MoveCurrentToFirst(); // New Aug 2015, Release 6 (v 3.6)
                 }
             }
 
@@ -115,10 +116,11 @@ namespace TP8
 
         private async Task LoadStateOutbox()
         {
+#if REDUNDANT
             // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
             await App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes. Await added for v 3.5
             await SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here. Await added for v 3.5
-
+#endif
             UpdateSortedBySubtitle(); // broken out as function June 2015
             // Either the user naviagated here, or we are resuming from a suspend.  In either case, all stations data may be old.  Refresh if possible:
             
@@ -128,8 +130,12 @@ namespace TP8
             CheckBoxCurrentEventOnly.IsChecked = CheckBoxCurrentEventOnly.IsChecked = App.OutboxCheckBoxCurrentEventOnly;
             CheckBoxMyOrgOnly.IsChecked = CheckBoxMyOrgOnly.IsChecked = App.OutboxCheckBoxMyOrgOnly;
             // maybe "current event only" checkbox or sort order has changed.  This will affect contents of groups fetched below.
+/* MAYBE NOT, TOO MUCH CONFLICT WITH STARTUP
             await App.PatientDataGroups.ReSortAndMinimallyFilter(); // filter is only "current event only" and "my org only" checkboxes.  Await added for v 3.5
             await SampleDataSource.RefreshOutboxAndAllStationsItems(); // Propagate here. Await added for v 3.5
+ */
+            await App.PatientDataGroups.ReSortAndMinimallyFilterOutbox(); // filter is only "current event only" and "my org only" checkboxes.  Await added for v 3.5
+            await SampleDataSource.RefreshOutboxItems(); // Propagate here. Await added for v 3.5
             UpdateCountInTitle();
             //}
         }

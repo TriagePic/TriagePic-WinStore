@@ -15,175 +15,185 @@ namespace TP8.PLWS {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://tempuri.org", ConfigurationName="PLWS.plusWebServicesPortType")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", ConfigurationName="PLWS.plusWebServicesPortType")]
     public interface plusWebServicesPortType {
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#requestUserToken", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#requestUserToken", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.requestUserTokenResponse> requestUserTokenAsync(TP8.PLWS.requestUserTokenRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#requestAnonToken", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#requestAnonToken", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.requestAnonTokenResponse> requestAnonTokenAsync(TP8.PLWS.requestAnonTokenRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#purgeUserTokens", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#purgeUserTokens", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.purgeUserTokensResponse> purgeUserTokensAsync(TP8.PLWS.purgeUserTokensRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#pingEcho", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#pingEcho", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.pingEchoResponse> pingEchoAsync(TP8.PLWS.pingEchoRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getEventList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getEventList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getEventListResponse> getEventListAsync(TP8.PLWS.getEventListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getGroupList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getGroupList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getGroupListResponse> getGroupListAsync(TP8.PLWS.getGroupListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#registerUserCaptcha", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#registerUserCaptcha", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerUserCaptchaResponse> registerUserCaptchaAsync(TP8.PLWS.registerUserCaptchaRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#registerUser", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#registerUser", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerUserResponse> registerUserAsync(TP8.PLWS.registerUserRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#changeUserPassword", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#changeUserPassword", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.changeUserPasswordResponse> changeUserPasswordAsync(TP8.PLWS.changeUserPasswordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#resetUserPassword", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#resetUserPassword", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.resetUserPasswordResponse> resetUserPasswordAsync(TP8.PLWS.resetUserPasswordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#forgotUsername", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#forgotUsername", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.forgotUsernameResponse> forgotUsernameAsync(TP8.PLWS.forgotUsernameRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getSessionCookie", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getSessionCookie", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getSessionCookieResponse> getSessionCookieAsync(TP8.PLWS.getSessionCookieRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#search", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#search", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.searchResponse> searchAsync(TP8.PLWS.searchRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#report", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#report", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reportResponse> reportAsync(TP8.PLWS.reportRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#updateRecord", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#updateRecord", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.updateRecordResponse> updateRecordAsync(TP8.PLWS.updateRecordRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#reportAbuse", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#reportAbuse", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reportAbuseResponse> reportAbuseAsync(TP8.PLWS.reportAbuseRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#addComment", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#addComment", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.addCommentResponse> addCommentAsync(TP8.PLWS.addCommentRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getImageCountsAndTokens", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#followRecord", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.followRecordResponse> followRecordAsync(TP8.PLWS.followRecordRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#followList", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.followListResponse> followListAsync(TP8.PLWS.followListRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getImageCountsAndTokens", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageCountsAndTokensResponse> getImageCountsAndTokensAsync(TP8.PLWS.getImageCountsAndTokensRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getImageList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getImageList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageListResponse> getImageListAsync(TP8.PLWS.getImageListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getImageListBlock", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getImageListBlock", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getImageListBlockResponse> getImageListBlockAsync(TP8.PLWS.getImageListBlockRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getNullTokenList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getNullTokenList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getNullTokenListResponse> getNullTokenListAsync(TP8.PLWS.getNullTokenListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#appCheck", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#appCheck", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#registerApplePushToken", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#registerApplePushToken", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.registerApplePushTokenResponse> registerApplePushTokenAsync(TP8.PLWS.registerApplePushTokenRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getHospitalList", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalListResponse> getHospitalListAsync(TP8.PLWS.getHospitalListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getHospitalData", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalData", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalDataResponse> getHospitalDataAsync(TP8.PLWS.getHospitalDataRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getHospitalPolicy", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalPolicy", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalPolicyResponse> getHospitalPolicyAsync(TP8.PLWS.getHospitalPolicyRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getHospitalLegalese", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalLegalese", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseResponse> getHospitalLegaleseAsync(TP8.PLWS.getHospitalLegaleseRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getHospitalLegaleseAnon", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalLegaleseAnon", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseAnonResponse> getHospitalLegaleseAnonAsync(TP8.PLWS.getHospitalLegaleseAnonRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getHospitalLegaleseTimestamps", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalLegaleseTimestamps", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseTimestampsResponse> getHospitalLegaleseTimestampsAsync(TP8.PLWS.getHospitalLegaleseTimestampsRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#getUuidByMassCasualtyId", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getUuidByMassCasualtyId", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="?wsdl&api=34#reservePatientIds", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#reservePatientIds", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reservePatientIdsResponse> reservePatientIdsAsync(TP8.PLWS.reservePatientIdsRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="requestUserToken", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestUserToken", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class requestUserTokenRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string password;
         
@@ -198,26 +208,26 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="requestUserTokenResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestUserTokenResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class requestUserTokenResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int group_id;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string group_name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -235,7 +245,7 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="requestAnonToken", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestAnonToken", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class requestAnonTokenRequest {
         
         public requestAnonTokenRequest() {
@@ -244,18 +254,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="requestAnonTokenResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="requestAnonTokenResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class requestAnonTokenResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -271,18 +281,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="purgeUserTokens", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="purgeUserTokens", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class purgeUserTokensRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string password;
         
@@ -298,14 +308,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="purgeUserTokensResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="purgeUserTokensResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class purgeUserTokensResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -320,18 +330,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="pingEcho", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="pingEcho", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class pingEchoRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string pingString;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int latency;
         
@@ -347,18 +357,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="pingEchoResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="pingEchoResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class pingEchoResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string time;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -374,10 +384,10 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getEventList", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getEventList", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getEventListRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
@@ -391,18 +401,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getEventListResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getEventListResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getEventListResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string eventList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -418,10 +428,10 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getGroupList", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getGroupList", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getGroupListRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
@@ -435,18 +445,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getGroupListResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getGroupListResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getGroupListResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string groupList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -462,22 +472,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserCaptcha", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserCaptcha", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class registerUserCaptchaRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string email;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string password;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string captcha;
         
@@ -494,26 +504,26 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserCaptchaResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserCaptchaResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class registerUserCaptchaResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string sessionCookieUrl;
+        public string newToken;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
         public registerUserCaptchaResponse() {
         }
         
-        public registerUserCaptchaResponse(string sessionCookieUrl, int errorCode, string errorMessage) {
-            this.sessionCookieUrl = sessionCookieUrl;
+        public registerUserCaptchaResponse(string newToken, int errorCode, string errorMessage) {
+            this.newToken = newToken;
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
         }
@@ -521,30 +531,30 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUser", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUser", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class registerUserRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string emailAddress;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string password;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string givenName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string familyName;
         
@@ -563,18 +573,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerUserResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class registerUserResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool registered;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -590,22 +600,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="changeUserPassword", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="changeUserPassword", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class changeUserPasswordRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string oldPassword;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string newPassword;
         
@@ -622,18 +632,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="changeUserPasswordResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="changeUserPasswordResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class changeUserPasswordResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool changed;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -649,14 +659,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="resetUserPassword", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="resetUserPassword", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class resetUserPasswordRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string email;
         
@@ -671,18 +681,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="resetUserPasswordResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="resetUserPasswordResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class resetUserPasswordResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool sent;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -698,14 +708,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="forgotUsername", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="forgotUsername", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class forgotUsernameRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string email;
         
@@ -720,18 +730,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="forgotUsernameResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="forgotUsernameResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class forgotUsernameResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool sent;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -747,10 +757,10 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getSessionCookie", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getSessionCookie", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getSessionCookieRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
@@ -764,22 +774,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getSessionCookieResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getSessionCookieResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getSessionCookieResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string SESSION_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string SESS_KEY;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -796,42 +806,42 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="search", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="search", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class searchRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string eventShortname;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string query;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string photo;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string filters;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int pageStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=6)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int perPage;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=7)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=7)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string sortBy;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=8)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=8)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool countOnly;
         
@@ -853,26 +863,26 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="searchResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="searchResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class searchResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string resultSet;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int recordsFound;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public double timeElapsed;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -890,22 +900,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="report", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="report", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class reportRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string payload;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string payloadFormat;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string shortname;
         
@@ -922,18 +932,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="reportResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reportResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class reportResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string uuid;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -949,26 +959,26 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updateRecord", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updateRecord", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class updateRecordRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string payload;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string payloadFormat;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string shortname;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string uuid;
         
@@ -986,14 +996,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="updateRecordResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="updateRecordResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class updateRecordResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1008,18 +1018,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="reportAbuse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reportAbuse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class reportAbuseRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string uuid;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string explanation;
         
@@ -1035,14 +1045,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="reportAbuseResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reportAbuseResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class reportAbuseResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1057,30 +1067,30 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="addComment", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="addComment", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class addCommentRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string uuid;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string comment;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string suggested_status;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string suggested_location;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string suggested_image;
         
@@ -1099,14 +1109,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="addCommentResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="addCommentResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class addCommentResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1121,10 +1131,103 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageCountsAndTokens", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="followRecord", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class followRecordRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string uuid;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int sub;
+        
+        public followRecordRequest() {
+        }
+        
+        public followRecordRequest(string token, string uuid, int sub) {
+            this.token = token;
+            this.uuid = uuid;
+            this.sub = sub;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="followRecordResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class followRecordResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public followRecordResponse() {
+        }
+        
+        public followRecordResponse(int errorCode, string errorMessage) {
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="followList", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class followListRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        public followListRequest() {
+        }
+        
+        public followListRequest(string token) {
+            this.token = token;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="followListResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class followListResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string subs;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public followListResponse() {
+        }
+        
+        public followListResponse(string subs, int errorCode, string errorMessage) {
+            this.subs = subs;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageCountsAndTokens", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getImageCountsAndTokensRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string key;
         
@@ -1138,30 +1241,30 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageCountsAndTokensResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageCountsAndTokensResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getImageCountsAndTokensResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int imageCount;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int firstToken;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int lastToken;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int nullTokenCount;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1180,18 +1283,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageList", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageList", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getImageListRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int tokenStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int tokenEnd;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string key;
         
@@ -1207,18 +1310,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageListResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageListResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getImageListResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string imageList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1234,18 +1337,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageListBlock", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageListBlock", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getImageListBlockRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int tokenStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int stride;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string key;
         
@@ -1261,18 +1364,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageListBlockResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getImageListBlockResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getImageListBlockResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string imageList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1288,18 +1391,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getNullTokenList", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getNullTokenList", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getNullTokenListRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int tokenStart;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int tokenEnd;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string key;
         
@@ -1315,18 +1418,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getNullTokenListResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getNullTokenListResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getNullTokenListResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string nullTokenList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1342,14 +1445,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheck", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheck", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class appCheckRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string query_string;
         
@@ -1364,22 +1467,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheckResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheckResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class appCheckResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string url;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string text;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1396,26 +1499,26 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushToken", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushToken", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class registerApplePushTokenRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string deviceID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string pushToken;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string username;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string deviceName;
         
@@ -1433,14 +1536,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushTokenResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushTokenResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class registerApplePushTokenResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1455,10 +1558,10 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalList", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalList", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalListRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
@@ -1472,18 +1575,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalListResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalListResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalListResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string hospitalList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1499,14 +1602,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalData", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalData", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalDataRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int hospital_uuid;
         
@@ -1521,78 +1624,78 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalDataResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalDataResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalDataResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string shortname;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string street1;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string street2;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string city;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string county;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=6)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string state;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=7)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=7)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string country;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=8)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=8)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string zip;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=9)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=9)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string phone;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=10)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=10)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string fax;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=11)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=11)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string email;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=12)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=12)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string www;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=13)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=13)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string npi;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=14)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=14)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string latitude;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=15)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=15)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string longitude;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=16)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=16)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=17)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=17)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1641,14 +1744,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicy", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicy", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalPolicyRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int hospital_uuid;
         
@@ -1663,42 +1766,42 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicyResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalPolicyResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalPolicyResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string patientIdPrefix;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool patientIdSuffixVariable;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int patientIdSuffixFixedLength;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string triageZoneList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool photoRequired;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool honorNoPhotoRequest;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=6)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=6)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public bool photographerNameRequired;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=7)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=7)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=8)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=8)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1720,14 +1823,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegalese", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegalese", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalLegaleseRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int hospital_uuid;
         
@@ -1742,18 +1845,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalLegaleseResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string legalese;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1769,14 +1872,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnon", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnon", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalLegaleseAnonRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int hospital_uuid;
         
@@ -1791,18 +1894,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnonResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseAnonResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalLegaleseAnonResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string legaleseAnon;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1818,14 +1921,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestamps", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestamps", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalLegaleseTimestampsRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int hospital_uuid;
         
@@ -1840,22 +1943,22 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestampsResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getHospitalLegaleseTimestampsResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getHospitalLegaleseTimestampsResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string legaleseTimestamp;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string legaleseAnonTimestamp;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1872,18 +1975,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyId", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyId", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getUuidByMassCasualtyIdRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string mcid;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string shortname;
         
@@ -1899,18 +2002,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyIdResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyIdResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class getUuidByMassCasualtyIdResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string uuid;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -1926,14 +2029,14 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="reservePatientIds", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reservePatientIds", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class reservePatientIdsRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string token;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int hospital_uuid;
         
@@ -1948,18 +2051,18 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="reservePatientIdsResponse", WrapperNamespace="http://tempuri.org", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reservePatientIdsResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
     public partial class reservePatientIdsResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string idList;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public int errorCode;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
@@ -2084,6 +2187,14 @@ namespace TP8.PLWS {
             return base.Channel.addCommentAsync(request);
         }
         
+        public System.Threading.Tasks.Task<TP8.PLWS.followRecordResponse> followRecordAsync(TP8.PLWS.followRecordRequest request) {
+            return base.Channel.followRecordAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.followListResponse> followListAsync(TP8.PLWS.followListRequest request) {
+            return base.Channel.followListAsync(request);
+        }
+        
         public System.Threading.Tasks.Task<TP8.PLWS.getImageCountsAndTokensResponse> getImageCountsAndTokensAsync(TP8.PLWS.getImageCountsAndTokensRequest request) {
             return base.Channel.getImageCountsAndTokensAsync(request);
         }
@@ -2163,7 +2274,7 @@ namespace TP8.PLWS {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.plusWebServicesPort)) {
-                return new System.ServiceModel.EndpointAddress("https://triagetrak.nlm.nih.gov/?wsdl&api=34");
+                return new System.ServiceModel.EndpointAddress("https://triagetrak.nlm.nih.gov/plus1");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

@@ -205,9 +205,9 @@ namespace TP8.Data // nah .DataModel
 
             App.pd.plToken = "";
             await ShowStartupWiz();  // This should set App.pd.plUserName, App.pd.plPassword, App.pd.plToken, call OrgDataList.Init()
-            App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
-            App.MyAssert(App.pd.plUserName.Length > 0);
-            App.MyAssert(App.pd.plPassword.Length > 0);
+            App.MyAssert(App.pd.plToken != null && App.pd.plToken.Length == 128); // token is 128 char long SHA-512
+            App.MyAssert(!String.IsNullOrEmpty(App.pd.plUserName));
+            App.MyAssert(!String.IsNullOrEmpty(App.pd.plPassword));
             // TO DO: handling case if user cancels startup wizard
             await AddOrUpdateEncryptedDataRowInXML(o);
         }
@@ -241,9 +241,9 @@ namespace TP8.Data // nah .DataModel
                     App.pd.plToken = "";
                     await ShowStartupWiz();  // This should set App.pd.plUserName, App.pd.plPassword, App.pd.plToken, call OrgDataList.Init()
                 }
-                App.MyAssert(App.pd.plToken.Length == 128); // token is 128 char long SHA-512
-                App.MyAssert(App.pd.plUserName.Length > 0);
-                App.MyAssert(App.pd.plPassword.Length > 0);
+                App.MyAssert(App.pd.plToken != null && App.pd.plToken.Length == 128); // token is 128 char long SHA-512
+                App.MyAssert(!String.IsNullOrEmpty(App.pd.plUserName));
+                App.MyAssert(!String.IsNullOrEmpty(App.pd.plPassword));
                 // TO DO: handling case if user cancels startup wizard
                 await AddOrUpdateEncryptedDataRowInXML(o);
             }

@@ -32,6 +32,8 @@ namespace TP8.Data
         // Serializer will ignore private fields without having to be told.
         private String _whenLocalTime = string.Empty;
         private String _timezone = string.Empty;
+        private String _whenLocalTimeMsg1 = string.Empty; // new Release 6 (v 3.6) Aug 2015
+        private String _timezoneMsg1 = string.Empty; // new Release 6 (v 3.6) Aug 2015
         private String _dateEDXL = string.Empty;
         private String _distributionID_EDXL = string.Empty;
         private String _senderID_EDXL = string.Empty;
@@ -78,6 +80,18 @@ namespace TP8.Data
         {
             get { return this._timezone; }
             set { this._timezone = value; }
+        }
+
+        public String WhenLocalTimeMsg1
+        {
+            get { return this._whenLocalTimeMsg1; }
+            set { this._whenLocalTimeMsg1 = value; }
+        }
+        //public String dateEDXL,
+        public String TimezoneMsg1
+        {
+            get { return this._timezoneMsg1; }
+            set { this._timezoneMsg1 = value; }
         }
 
         public String DateEDXL
@@ -253,62 +267,70 @@ namespace TP8.Data
             CopyFrom(pr);
         }
 
-        // Constructor used for dummy generated data.  Additional fields filled in later.
+        /* DUMMY DATA GENERATION PROBABLY NO LONGER NEEDED. SETASIDE Aug 2015
+                // Constructor used for dummy generated data.  Additional fields filled in later.
+                public TP_PatientReport(
+                    String whenLocalTime,
+                    String timezone,
+                    String whenLocalTimeMsg1,
+                    String timezoneMsg1,
+                    String dateEDXL,
+                    String patientID, // includes prefix
+                    String zone,
+                    String gender,
+                    String ageGroup,
+                    String firstName,
+                    String lastName,
+                    String eventShortName,
+                    String eventName, // w/o suffix
+                    String eventType, // suffix
+                    String comments
+                    )
+                {
+                    _whenLocalTime = whenLocalTime;
+                    _timezone = timezone;
+                    _whenLocalTimeMsg1 = whenLocalTimeMsg1;
+                    _timezoneMsg1 = timezoneMsg1;
+                    _dateEDXL = dateEDXL;
+                    _patientID = patientID; // includes prefix
+                    _zone = zone;
+                    _gender = gender;
+                    _ageGroup = ageGroup;
+                    _firstName = firstName;
+                    _lastName = lastName;
+                    _eventShortName = eventShortName;
+                    _eventName = eventName; // w/o suffix
+                    _eventType = eventType; // suffix
+                    _comments = comments;
+                }
+
+                public void CompleteGeneratedRecord()
+                {
+                    // Dummy data, mostly unchanging and hard-coded
+                    SentCode = "Y"; // also fills in OrgSentCode
+                    Superceded = false;
+                    OrgID = "1234567890";
+                    DistributionID_EDXL = OrgID + " " + DateEDXL;
+                    SenderID_EDXL = "disaster@nlm.nih.gov";
+                    DeviceName = App.DeviceName;
+                    UserNameForDevice = App.UserWin8Account; //"myMSLiveAccount";
+                    UserNameForWebService = App.pd.plUserName; //"hs";
+                    OrgName = "NLM (testing)";
+                    nPicCount = 0;
+                    ImageName ="";
+                    ImageEncoded = "";
+                    ImageCaption = "";
+                    ImageWriteableBitmap = null;
+                    WhyNoPhotoReason = "";
+                    FullNameEDXL_and_LP2 = "";
+                }
+        */
+
         public TP_PatientReport(
             String whenLocalTime,
             String timezone,
-            String dateEDXL,
-            String patientID, // includes prefix
-            String zone,
-            String gender,
-            String ageGroup,
-            String firstName,
-            String lastName,
-            String eventShortName,
-            String eventName, // w/o suffix
-            String eventType, // suffix
-            String comments
-            )
-        {
-            _whenLocalTime = whenLocalTime;
-            _timezone = timezone;
-            _dateEDXL = dateEDXL;
-            _patientID = patientID; // includes prefix
-            _zone = zone;
-            _gender = gender;
-            _ageGroup = ageGroup;
-            _firstName = firstName;
-            _lastName = lastName;
-            _eventShortName = eventShortName;
-            _eventName = eventName; // w/o suffix
-            _eventType = eventType; // suffix
-            _comments = comments;
-        }
-
-        public void CompleteGeneratedRecord()
-        {
-            // Dummy data, mostly unchanging and hard-coded
-            SentCode = "Y"; // also fills in OrgSentCode
-            Superceded = false;
-            OrgID = "1234567890";
-            DistributionID_EDXL = OrgID + " " + DateEDXL;
-            SenderID_EDXL = "disaster@nlm.nih.gov";
-            DeviceName = App.DeviceName;
-            UserNameForDevice = App.UserWin8Account; //"myMSLiveAccount";
-            UserNameForWebService = App.pd.plUserName; //"hs";
-            OrgName = "NLM (testing)";
-            nPicCount = 0;
-            ImageName ="";
-            ImageEncoded = "";
-            ImageCaption = "";
-            ImageWriteableBitmap = null;
-            WhyNoPhotoReason = "";
-            FullNameEDXL_and_LP2 = "";
-        }
-
-        public TP_PatientReport(
-            String whenLocalTime,
-            String timezone,
+            String whenLocalTimeMsg1, // added Release 6
+            String timezoneMsg1, // added Release 6
             String dateEDXL,
             String distributionID_EDXL,
             String senderID_EDXL,
@@ -353,6 +375,8 @@ namespace TP8.Data
 
             _whenLocalTime = whenLocalTime;
             _timezone = timezone;
+            _whenLocalTimeMsg1 = whenLocalTimeMsg1;
+            _timezoneMsg1 = timezoneMsg1;
             _dateEDXL = dateEDXL;
             _distributionID_EDXL = distributionID_EDXL;
             _senderID_EDXL = senderID_EDXL;
@@ -387,8 +411,8 @@ namespace TP8.Data
 
         public void Clear()
         {
-            _whenLocalTime = "";
-            _timezone = "";
+            _whenLocalTime = _whenLocalTimeMsg1 = "";
+            _timezone = _timezoneMsg1 = "";
             _dateEDXL = "";
             _distributionID_EDXL = "";
             _senderID_EDXL = "";
@@ -425,6 +449,8 @@ namespace TP8.Data
         {
             WhenLocalTime = pdi.WhenLocalTime;
             Timezone = pdi.Timezone;
+            WhenLocalTimeMsg1 = pdi.WhenLocalTimeMsg1;
+            TimezoneMsg1 = pdi.TimezoneMsg1;
             DateEDXL = pdi.DateEDXL;
             DistributionID_EDXL = pdi.DistributionID_EDXL;
             SenderID_EDXL = pdi.SenderID_EDXL;
@@ -468,6 +494,18 @@ namespace TP8.Data
                 await App.PatientDataGroups.UpdateSendHistory(this.PatientID, this.ObjSentCode.GetVersionCount(), this.SentCode, true /*superceded*/);
             }
             await GetCurrentOrgAndDeviceData(); // and time
+            if (newPatientReportObject)
+            {
+                // copy values just retrieved from GetCurrentOrgAndDeviceData:
+                WhenLocalTimeMsg1 = WhenLocalTime;
+                TimezoneMsg1 = Timezone;
+            }
+            else
+            {
+                // retain inherited values
+                App.MyAssert(!String.IsNullOrEmpty(WhenLocalTimeMsg1));
+                // Hmm, maybe TT can't support this yet: App.MyAssert(!String.IsNullOrEmpty(TimezoneMsg1));
+            }
             if (String.IsNullOrEmpty(ImageEncoded) || ImageEncoded.StartsWith("Assets/"))
             {
                 ImageEncoded = ""; // remove "Assets..."
@@ -647,6 +685,11 @@ namespace TP8.Data
                 tzname = TimeZoneInfo.Local.DaylightName;
             else
                 tzname = TimeZoneInfo.Local.StandardName;
+            return AbbreviateTimeZone(tzname);
+        }
+
+        private string AbbreviateTimeZone(string tzname)
+        {
             // Hack to convert time zone name to abbreviation by just taking the first letter of each word.
             // This will not work 100% for time zones worldwide.  Results are typically 3 letter (e.g., always if US) or 4 letter.
             // For a somewhat full list, see www.timeanddate.com/lbirary/abbreviations/timezones/
@@ -655,6 +698,41 @@ namespace TP8.Data
             foreach (string word in words)
                 tzabbr += word[0];
             return tzabbr;
+        }
+
+        // For more about timezone data see
+        //https://en.wikipedia.org/wiki/Tz_database
+        //http://web.cs.ucla.edu/~eggert/tz/tz-link.htm
+        //http://home.kpn.nl/vanadovv/time/TZworld.html
+        // 
+        public string InferTimeZoneFromOffset(string offset) // offset is of form "+00:00" or "00:00" or "-04:00"
+        {
+            // This assumes that the current location of the device is in the same timezone as the reporting location of the device.
+            // In other words, this is a hack because TT isn't retaining timezone info and we have to infer it instead.
+            string tzDT = AbbreviateTimeZone(TimeZoneInfo.Local.DaylightName);
+            string tzST = AbbreviateTimeZone(TimeZoneInfo.Local.StandardName);
+            if (TimeZoneInfo.Local.BaseUtcOffset.ToString() == offset) // difference between UTC and locale standard time
+                return tzST;
+
+            TimeSpan ts;
+            offset = offset.Replace("+",""); // TryParse doesn't want to see leading +
+            if (!TimeSpan.TryParse(offset, out ts))
+                return "";
+
+            TimeSpan ts1 = new TimeSpan(1,0,0); // 1 hours, 0 minutes, 0 seconds
+            ts = ts.Subtract(ts1); //ts.Add(ts1);
+            if (TimeZoneInfo.Local.SupportsDaylightSavingTime && TimeZoneInfo.Local.BaseUtcOffset == ts)
+                return tzDT;
+            return "";
+        }
+
+        public string InferAndFormatTimeZone(string offset)
+        {
+            // Formatting for FormatContent
+            string itz = InferTimeZoneFromOffset(offset);
+            if (String.IsNullOrEmpty(itz))
+                return offset;
+            return offset + " " + itz + "*";
         }
 
 
@@ -888,8 +966,8 @@ namespace TP8.Data
             string ageGroup = AgeGroup;
             if (ageGroup == "Unknown Age Group")
                 ageGroup = "Age Group?";
-            DateTimeOffset dto = ParseWhenLocalTime(WhenLocalTime);
-            string date = dto.ToString("f") + " " + Timezone;
+            DateTimeOffset dto = ParseWhenLocalTime(WhenLocalTimeMsg1); // was before Release 6: (WhenLocalTime)
+            string date = dto.ToString("f") + " " + TimezoneMsg1; // was before Release 6: (Timezone)
             string status = "";
             if (!ObjSentCode.IsDoneOK())
                 status = " - Not Sent"; // shorter than StatusMessageFromSentCode
@@ -907,32 +985,65 @@ namespace TP8.Data
                 gender += " Gender";
             //if (ageGroup == "Unknown Age Group")
             //    ageGroup = "Age Group?";
-            string date;
-            string dateUTC = "";
+            string dateArrived = "Arrived:\n"; // Optional in some sense, if about the same as dateUpdated
+            string dateUpdated = ""; // Only add "Updated:\n" below if optional Arrived was added
+            string updated = "";
             if(String.IsNullOrEmpty(WhenLocalTime))
-                date = "No date or time for send given.";
+                dateUpdated = "No date or time for send given.";
             else
             {
-                DateTimeOffset dto = ParseWhenLocalTime(WhenLocalTime);
-                if ((dto.DateTime == DateTimeOffset.MinValue) && (dto.Offset == TimeSpan.Zero))
+                if(!String.IsNullOrEmpty(WhenLocalTimeMsg1) && !AboutTheSameTime(WhenLocalTime, WhenLocalTimeMsg1)) // Could check timezones too, but this is complicated enough
                 {
-                    date = "For timezone " + Timezone + ", unreadable datetime: " + WhenLocalTime;
+                    // This block new Release 6 (v 3.6) Aug 2015
+                    dateArrived += FormatLocalAndUtcDates(WhenLocalTimeMsg1, TimezoneMsg1); // in local and UTC timezones
+                    updated = "\nUpdated:\n"; // Only see this in next section if there's also Arrival info
                 }
-                else
-                {
-                    date = dto.ToString() + " " + Timezone;
-                    dateUTC = dto.UtcDateTime.ToString() + " UTC";
-                }
+                dateUpdated = updated + FormatLocalAndUtcDates(WhenLocalTime, Timezone);
             }
             string status = "";
             if (ObjSentCode.GetVersionCount() > 1)
                 status += " - " + ObjSentCode.GetVersionSuffixFilenameForm(); // Normal resend
             if (!ObjSentCode.IsDoneOK())
                 status += " - Sent code: " + ObjSentCode.StatusMessageFromSentCode(false /*email only request*/); // Unusual
-            return String.Format("{0}, {1}\n{2} Zone at {3}\n\n{4}{5}\n{6}\n\n{7}\n\n{8}",
-                gender, AgeGroup, Zone, OrgName, date, status, dateUTC, EventName, Comments);
+            string timezoneNote = "";
+            if (dateArrived.Contains("*") || dateUpdated.Contains("*"))
+                timezoneNote = "  * Timezone when reported is inferred.";
+            return String.Format("{0}, {1}\n{2} Zone at {3}\n{4}{5}{6}\n{7}\nEvent: {8}\n{9}",
+                gender, AgeGroup, Zone, OrgName, dateArrived, dateUpdated, status, timezoneNote, EventName, Comments); // dateArrived may be empty
             //dto.ToString uses the current culture's default format for short date and long time.
             //ToString can take other pattern parameters too
+        }
+
+        private string FormatLocalAndUtcDates(string WhenLocalTime_, string TimezoneMsg_) // New Release 6
+        {
+            // Ordinarily returns a 2-line result. Can be 1 line if problem.
+            // If timezone inferred, it will have "*" after it.
+            string date = "  ";
+            DateTimeOffset dto = ParseWhenLocalTime(WhenLocalTime_);
+            if ((dto.DateTime == DateTimeOffset.MinValue) && (dto.Offset == TimeSpan.Zero))
+            {
+                date += "Unreadable datetime of " + WhenLocalTime_ + " " + TimezoneMsg_; // latter may be empty
+            }
+            else
+            {
+                date += dto.DateTime.ToString() + " "; // Extract DateTime to drop offset (last 6 characters like " +00:00" or " -04:00")
+                //elaboration of: date = "Arrived: " + dto1.ToString() + " " + TimezoneMsg_;
+                if (!String.IsNullOrEmpty(TimezoneMsg_))
+                    date += TimezoneMsg_; // We have an actual timezone in the data
+                else
+                {
+                    // Try to infer a timezone instead
+                    string offsetFormat = (dto.Offset < TimeSpan.Zero ?  "\\-" : "") + "hh\\:mm"; // Unclear whether we should add "\\+" here in positive case. Don't need seconds, timezone offsets don't use.
+                    string offset = dto.Offset.ToString(offsetFormat);
+                    string inferredTimeZoneAbbr = offset;
+                    string itz = InferTimeZoneFromOffset(offset); // If inferred, will be of form "offset timezone*". Otherwise just offset
+                    if (!String.IsNullOrEmpty(itz))
+                        inferredTimeZoneAbbr += " " + itz + "*";
+                    date += inferredTimeZoneAbbr; // If can't infer, back to original form of dto1.ToString()
+                }
+                date += "\n  " + dto.UtcDateTime.ToString() + " UTC";
+            }
+            return date;
         }
 
         private DateTimeOffset ParseWhenLocalTime(string localtime)
@@ -957,6 +1068,30 @@ namespace TP8.Data
                 // dto will return with .DateTime == DateTimeOffset.MinValue and .Offset == TimeSpan.Zero
             }
             return dto;
+        }
+
+        private bool AboutTheSameTime(string LocalTime1, string LocalTime2) // New Release 6
+        {
+            int MaxSecondsApart = 60;
+            // Could check timezones too, but this is complicated enough
+            App.MyAssert(!String.IsNullOrEmpty(LocalTime1));
+            App.MyAssert(!String.IsNullOrEmpty(LocalTime2));
+            if (LocalTime1 == LocalTime2)
+                return true;
+
+            DateTimeOffset dto1 = ParseWhenLocalTime(LocalTime1);
+            if ((dto1.DateTime == DateTimeOffset.MinValue) && (dto1.Offset == TimeSpan.Zero))
+                return false; // unreadable datetime
+
+            DateTimeOffset dto2 = ParseWhenLocalTime(LocalTime2);
+            if ((dto2.DateTime == DateTimeOffset.MinValue) && (dto2.Offset == TimeSpan.Zero))
+                return false; // unreadable datetime
+
+            var seconds = (dto1.DateTime < dto2.DateTime)? (dto2.DateTime- dto1.DateTime).TotalSeconds: (dto1.DateTime - dto2.DateTime).TotalSeconds;
+            App.MyAssert(seconds >= 0);
+            if(seconds <= MaxSecondsApart)
+                return true;
+            return false;
         }
 
         public void AdjustBeforeWriteXML()
@@ -1478,7 +1613,9 @@ namespace TP8.Data
        public void LoadFromJsonSearchResponse(Search_Response_Toplevel_Row item)
        {
            WhenLocalTime = MapWhenLocalTime(item);
-           Timezone = MapTimeZone(item);
+           Timezone = MapTimeZone(item); // As of Release 6, this is a no-op, just gets empty string. See function comments for why.
+           WhenLocalTimeMsg1 = MapWhenLocalTimeMsg1(item);
+           TimezoneMsg1 = Timezone; // So lame, but best we can do for now. //MapTimeZoneMsg1(item);
            DateEDXL = MapDateEDXL(item);
            DistributionID_EDXL = MapDistributionID_EDXL(item);
            SenderID_EDXL = MapSenderID_EDXL(item);
@@ -1617,6 +1754,8 @@ namespace TP8.Data
 
         private string MapTimeZone(Search_Response_Toplevel_Row item)   // TO DO
         {
+/* Made a no-op for Release 6 (v 3.6). Will leave it blank, to indicate that there's no time-zone info available from TT.
+ * Instead, we'll do an inference of time zone at display time. See FormatContent, particularly FormatLocalAndUtcDates, above.
             // There is not a unique mapping from UTC offset to time zone name or abbreviation
             // So can only be done in context of location and date (for daylight savings vs standard)
             // Really, too hard... it would be way better if TriageTrak retained the reported value
@@ -1626,8 +1765,28 @@ namespace TP8.Data
                 return "EDT";
             if (dt.Contains("-05:00"))
                 return "EST";
+ */
             return "";
         }
+
+        // Essential mapping was described in Glenn's google doc "Proposed Search Results Revision to PLUS (People Locator User Services)"
+        // Returned format is YYYY-MM-DD HH:MM:SS [-]KK:KK
+        private string MapWhenLocalTimeMsg1(Search_Response_Toplevel_Row item)
+        {
+            /* Before June 2015:
+                        // Maybe need to chew off -04:00:
+                        if(item.edxl != null && item.edxl.Count() > 0 && !String.IsNullOrEmpty(item.edxl[0].last_posted))
+                            return item.edxl[0].last_posted; // Assume same format and timezone as last_updated
+                        if (!String.IsNullOrEmpty(item.last_updated))
+                            return item.last_updated;
+                        return item.creation_time; */
+            // Let us retain -04:00:
+            if (!String.IsNullOrEmpty(item.creation_time))
+                return MapWhenLocalTimeImpl(item.creation_time); // input example: 2015-06-21T22:11:11-04:00 .  Server time I guess
+            // A case could be made for leaving this null, as that would be accurate. But it will cause problems later
+            return MapWhenLocalTimeImpl(item.last_updated); // example input: 2015-06-21T22:11:11-04:00  Time casualty record first created (before any edits). Client time?
+        }
+
 
         private string MapDateEDXL(Search_Response_Toplevel_Row item)
         {

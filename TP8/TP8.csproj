@@ -224,7 +224,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\PLWS\item1.wsdl" />
-    <None Include="Service References\PLWS\item2.wsdl" />
+    <None Include="Service References\PLWS\plus1.wsdl" />
     <None Include="TP8_StoreKey.pfx" />
     <None Include="TP8_TemporaryKey.pfx" />
   </ItemGroup>

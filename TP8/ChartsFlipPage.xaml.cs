@@ -48,7 +48,8 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
         }
 
         // As of late June 2015, replace throughout App.PatientDataGroups.GetOutbox() with App.PatientDataGroups.GetOutboxForStatistics()
-        // Later is private clone with shortened WhenLocalTime (no UTC offset) and guaranteed to be sorted from oldest to newest time.
+        // Later is private clone with - before Release 6 - shortened WhenLocalTime (no UTC offset) and guaranteed to be sorted from oldest to newest arrival/update time.
+        // Later is private clone with - after Release 6 - shortened WhenLocalTime and WhenLocalTimeMsg1 (no UTC offset) and guaranteed to be sorted from oldest to newest arrival time.
         private Random _random = new Random();
 
         public int outboxCountPerZoneAllEvents(string zone)
@@ -173,7 +174,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
 
             var grouped = outbx //outbx2
                 .Where(s => s.EventName == App.CurrentDisaster.EventName) // Maybe should be using this througout: .Where(s => s.EventID == App.CurrentDisasterEventID)
-                .GroupBy(s => s.WhenLocalTime)
+                .GroupBy(s => s.WhenLocalTimeMsg1)  // was (s => s.WhenLocalTime) before Release 6
                 .Select(group => new NameValueItem { Name = group.Key, Value = group.Count() });
             // Can't figure out cast, so copy instead:
             foreach (var thing in grouped)
@@ -198,7 +199,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
 
             var grouped = outbx //outbx2
                 .Where(s => s.EventName == App.CurrentDisaster.EventName) // Maybe should be using this througout: .Where(s => s.EventID == App.CurrentDisasterEventID)
-                .GroupBy(s => s.WhenLocalTime)
+                .GroupBy(s => s.WhenLocalTimeMsg1) // (s => s.WhenLocalTime) before Release 6
                 .Select(group => new NameValueItem { Name = group.Key, Value = group.Count() });
             // Can't figure out cast, so copy instead:
             foreach (var thing in grouped)
@@ -207,99 +208,7 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             }
 
         }
-#if first_try
-        /// <summary>
-        /// Returns a list with the start time of each bucket (even hours) and the count within the bucket
-        /// </summary>
-        /// <param name="arrivalsByDateCurrentEvent"></param>
-        public void outboxCountPerHourCurrentEvent(List<DateValueItem> arrivalsByDateCurrentEvent)
-        {
-            var outbx = App.PatientDataGroups.GetOutbox(); // assumes outbox order is oldest to newest
-            if (outbx.Count<TP_PatientReport>() == 0)
-                return;
-            DateTimeOffset startOfBucket;
-            DateTimeOffset firstInBucket;
-            DateTimeOffset currentItem;
-            bool firstloop = true;
-            int inBucket = 0;
-            foreach (var i in outbx)
-            {
-                if (firstloop)
-                {
-                    firstloop = false;
-                    firstInBucket = DateTimeOffset.Parse(i.WhenLocalTime);
-                    // Zero out anything under 1 hour
-                    startOfBucket = new DateTimeOffset(firstInBucket.Year, firstInBucket.Month, firstInBucket.Day, firstInBucket.Hour, 0, 0, firstInBucket.Offset);
-                    inBucket = 1;
-                    continue;
-                }
-                currentItem = DateTime.Parse(i.WhenLocalTime);
-                if (currentItem.Year > startOfBucket.Year || currentItem.Month > startOfBucket.Month || currentItem.Day > startOfBucket.Day)
-                {
-                    arrivalsByDateCurrentEvent.Add(new DateValueItem { DateTimeBucket = startOfBucket.DateTime, Value = inBucket });
-                    // New bucket starting
-                    firstInBucket = currentItem;
-                    // Zero out anything under 1 hour
-                    startOfBucket = new DateTimeOffset(firstInBucket.Year, firstInBucket.Month, firstInBucket.Day, firstInBucket.Hour, 0, 0, firstInBucket.Offset);
-                    inBucket = 1;
-                    continue;
-                }
-                else
-                    inBucket++;
-            }
-            // Last bucket:
-            arrivalsByDateCurrentEvent.Add(new DateValueItem { DateTimeBucket = startOfBucket.DateTime, Value = inBucket });
-        }
-#endif
 
-#if FIRST_IMPL_WORK_BUT_THEN_GENERALIZED
-        /// <summary>
-        /// Returns a list with the start time of each bucket (even hours) and the count within the bucket
-        /// </summary>
-        /// <param name="arrivalsByDateCurrentEvent"></param>
-        public void outboxCountPerDayCurrentEvent(List<DateValueItem> arrivalsByDateCurrentEvent)
-        {
-            var outbx = App.PatientDataGroups.GetOutbox(); // assumes outbox order is oldest to newest
-            if (outbx.Count<TP_PatientReport>() == 0)
-                return;
-            DateTimeOffset startOfBucket;
-            DateTimeOffset currentItem;
-            bool firstloop = true;
-            int inBucket = 0;
-            foreach (var i in outbx)
-            {
-                if (firstloop)
-                {
-                    firstloop = false;
-                    DateTimeOffset firstInBucket = DateTimeOffset.Parse(i.WhenLocalTime);
-                    // Zero out anything under 1 day
-                    startOfBucket = new DateTimeOffset(firstInBucket.Year, firstInBucket.Month, firstInBucket.Day, 0, 0, 0, firstInBucket.Offset);
-                    inBucket = 1;
-                    continue;
-                }
-                currentItem = DateTime.Parse(i.WhenLocalTime);
-                if (currentItem.DayOfYear == startOfBucket.DayOfYear)
-                {
-                    inBucket++;
-                    continue;
-                }
-                arrivalsByDateCurrentEvent.Add(new DateValueItem { DateTimeBucket = startOfBucket.DateTime, Value = inBucket });
-  
-                startOfBucket = startOfBucket.AddDays(1.0);
-                // Generate buckets with zeros:
-                while(currentItem.Year > startOfBucket.Year || currentItem.DayOfYear > startOfBucket.DayOfYear)
-                {
-                    arrivalsByDateCurrentEvent.Add(new DateValueItem { DateTimeBucket = startOfBucket.DateTime, Value = 0 });
-                    startOfBucket = startOfBucket.AddDays(1.0);
-                }
-
-                // New bucket starting
-                inBucket = 1;
-            }
-            // Last bucket:
-            arrivalsByDateCurrentEvent.Add(new DateValueItem { DateTimeBucket = startOfBucket.DateTime, Value = inBucket });
-        }
-#endif
         /// <summary>
         /// Returns a list with the start time of each bucket (even hours) and the count within the bucket,
         /// for current event
@@ -359,20 +268,21 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
             int inBucket = 0;
             foreach (var i in arrivalsIn)
             {
-                if (String.IsNullOrEmpty(i.WhenLocalTime))
+                // For Release 6, use of i.WhenLocalTime in this loop replaced by i.WhenLocalTimeMsg1, i.e., arrival time
+                if (String.IsNullOrEmpty(i.WhenLocalTimeMsg1))
                     continue; // assume weird empty record
 
                 if (firstloop)
                 {
                     firstloop = false;
 
-                    DateTimeOffset firstInBucket = DateTimeOffset.Parse(i.WhenLocalTime);
+                    DateTimeOffset firstInBucket = DateTimeOffset.Parse(i.WhenLocalTimeMsg1);
                     // Zero out anything under 1 day
                     startOfBucket = new DateTimeOffset(firstInBucket.Year, firstInBucket.Month, firstInBucket.Day, 0, 0, 0, firstInBucket.Offset);
                     inBucket = 1;
                     continue;
                 }
-                currentItem = DateTime.Parse(i.WhenLocalTime);
+                currentItem = DateTime.Parse(i.WhenLocalTimeMsg1);
                 if (currentItem.Year == startOfBucket.Year && currentItem.DayOfYear == startOfBucket.DayOfYear)
                 {
                     inBucket++;
@@ -1010,9 +920,10 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
                 eventName = edi.EventName;
                 foreach (var pdi in outbx) // outbx2)
                 {
+                    // As of Release 6, pdi.WhenLocalTime in this loop replaced by pdi.WhenLocalTimeMsg1, i.e., arrival time
                     if (pdi.EventName == eventName)
-                        if (DateTime.Parse(pdi.WhenLocalTime) < results) // might work
-                            results = DateTime.Parse(pdi.WhenLocalTime);
+                        if (DateTime.Parse(pdi.WhenLocalTimeMsg1) < results) // might work
+                            results = DateTime.Parse(pdi.WhenLocalTimeMsg1);
                 }
             }
             return results;
@@ -1043,9 +954,10 @@ namespace TP8  //WinRTXamlToolkit.Sample.Views
                 eventName = edi.EventName;
                 foreach (var pdi in outbx) //outbx2)
                 {
+                    // As of Release 6, pdi.WhenLocalTime in this loop replaced by pdi.WhenLocalTimeMsg1, i.e., arrival time
                     if (pdi.EventName == eventName)
-                        if (DateTime.Parse(pdi.WhenLocalTime) > results) // might work
-                            results = DateTime.Parse(pdi.WhenLocalTime);
+                        if (DateTime.Parse(pdi.WhenLocalTimeMsg1) > results) // might work
+                            results = DateTime.Parse(pdi.WhenLocalTimeMsg1);
                 }
             }
             return results;

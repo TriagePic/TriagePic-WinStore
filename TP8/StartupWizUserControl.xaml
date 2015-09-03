@@ -34,8 +34,9 @@
             <TextBlock x:Name="StartupPasswordStatus" Style="{StaticResource BodyTextBlockStyle}" Margin="15,0,0,0" Foreground="Black" Text="[Password status]" FontSize="12" />
             <!-- Win 8.0 was BodyTextStyle-->
             <StackPanel Orientation="Horizontal" Margin="10,5" >
-                <Button x:Name="StartupCancel" Content="I'll get that info and try again later" Click="StartupCancelButton_Click" Foreground="Black" BorderBrush="#FF991111" Margin="0,10" Padding="6,4"/>
-                <Button x:Name="StartupValidateAndContinue" Content="Validate and Continue" Click="StartupValidateAndContinueButton_Click" Foreground="Black" BorderBrush="#FF991111" Margin="30,10" Padding="6,4"/>
+                <Button x:Name="StartupCancel" Content="I'll get that info and try again later" Click="StartupCancelButton_Click" Foreground="DarkRed" BorderBrush="DarkRed" Margin="0,10" Padding="6,4"/>
+                <!-- was BorderBrush="#FF991111"-->
+                <Button x:Name="StartupValidateAndContinue" Content="Validate and Continue" Click="StartupValidateAndContinueButton_Click" Foreground="DarkRed" BorderBrush="DarkRed" Margin="30,10" Padding="6,4"/>
             </StackPanel>
             <Grid MinHeight="30">
                 <TextBlock x:Name="StartupOrgChoice" HorizontalAlignment="Left" Margin="0,20,0,10" TextWrapping="Wrap" Text="My Organization, Hospital, or Facility" VerticalAlignment="Top" Width="298" FontSize="18" Foreground="#FFEC1414"/>
@@ -50,7 +51,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button x:Name="StartupContinue" Content="Continue" Foreground="Black" BorderBrush="#FF991111" Margin="20,0,4,0" Click="StartupContinue_Click"/>
+            <Button x:Name="StartupContinue" Content="Continue" Foreground="DarkRed" BorderBrush="DarkRed" Margin="20,0,4,0" Click="StartupContinue_Click"/>
            </StackPanel>
         </StackPanel>
     </Grid>

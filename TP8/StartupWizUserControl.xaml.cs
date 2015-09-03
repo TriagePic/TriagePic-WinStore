@@ -120,7 +120,7 @@ namespace TP8
             if (StartupPasswordStatus.Text != "User name and password are valid") // may instead be INVALID, or some other message if Enter hit
                 return;
 
-            App.MyAssert(App.pd.plToken.Length == 128); // App.pd.plToken was set by Validate() above
+            App.MyAssert(App.pd.plToken != null && App.pd.plToken.Length == 128); // App.pd.plToken was set by Validate() above
             StartupCancel.IsEnabled = false; // new PLUS v33
             StartupValidateAndContinue.IsEnabled = false; // new PLUS v33
             App.MyAssert(App.pd.plUserName == StartupTextBoxUserNamePLUS.Text); // already assigned in UpdateCredentialsAndCheckSyntax()
@@ -130,6 +130,30 @@ namespace TP8
             //m_startupWiz.CloseAsync();
             // Rest of function is new with PLUS v33:
             await App.OrgDataList.Init(); // uses App.pd.plToken
+            if(App.OrgDataList.Count() == 0) // New Release 6
+            {
+                // Fatal error... no web connectivity and no org cache file
+                if (App.DelayedMessageToUserOnStartup != "") // Got content during App.OnLaunched, but can't be easily shown until now
+                {
+                    // Message will be:
+                        // Could not connect to TriageTrak web service.  Using previous information, cached locally, instead for:
+                        // - List of organizations (e.g., hospitals)
+                        // Nor was this list available from a cache file on this machine!
+                        //
+                        // PLEASE EXIT, establish an internet connection, then retry TriagePic.
+                    // Let's rewrite so not so clunky:
+                    App.DelayedMessageToUserOnStartup =
+                        "Could not connect to TriageTrak web service, nor find previous information (remembered on this device) that would let us continue.\n" +
+                        "PLEASE EXIT, establish an internet connection, then retry TriagePic.";
+                    StartupCancel.IsEnabled = true;
+                    StartupCancel.Content = "EXIT";
+                    StartupPasswordStatus.Text = App.DelayedMessageToUserOnStartup; // User will be told to EXIT
+                    //MessageDialog dlg = new MessageDialog(App.DelayedMessageToUserOnStartup);
+                    //await dlg.ShowAsync();
+                    App.DelayedMessageToUserOnStartup = "";
+                }
+                return;
+            }
             StartupOrgChoice.Visibility = Visibility.Visible;
             StartupOrgComboBox.IsEnabled = true;
             StartupContinue.IsEnabled = true;

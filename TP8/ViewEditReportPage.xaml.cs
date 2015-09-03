@@ -1382,6 +1382,7 @@ namespace TP8
             int v = App.CurrentPatient.ObjSentCode.GetVersionCount();
             ClearEntryAll();  // Will indirectly mark as altered
             LastSentMsg.Text = "Discard from Outbox: Done.";
+            /// didn't work was view was null: string nextItemInView = FindNextItemInView(pid); // See also similar code in see TP_PatientReport, with variable deleteNow
             for (int i = v; i > 0; i-- ) // loop added Dec 2014.  Delete all reports for this pid
                 App.PatientDataGroups.GetOutbox().Discard(pid, i);
             await App.PatientDataGroups.ScrubOutbox(); // Discard itself doesn't seem to do it, leaves empty record behind.  Await added v 3.5
@@ -1389,10 +1390,45 @@ namespace TP8
 // WAS:     App.PatientDataGroups.Init2(); // resort, refilter, refresh
             App.PatientDataGroups.UpdateListsAfterReportDelete(true); // = DeletedAtTriageTrakToo
 // WAS:     discardMenuPopUp.IsOpen = false;
+            /// didin't work 'cuz view was null: this.itemsViewSource.View.MoveCurrentTo(nextItemInView);
             TopAppBar.IsOpen = false;
             BottomAppBar.IsOpen = false;
         }
 
+/* DIDN'T WORK CUZ VIEW WAS NULL:
+        /// <summary>
+        /// Used to find new selection in anticipation of deletion of current selection
+        /// </summary>
+        /// <param name="mcid"></param>
+        /// <returns>the MCID of the next item, or "" if unsuccessful</returns>
+        private string FindNextItemInView(string mcid)
+        {
+            // We want to find the next item in the sorted itemsViewSource
+            var view = this.itemsViewSource.View;
+            if (view == null)
+                return "";
+
+            //SampleDataItem selectedItem = (SampleDataItem)view.CurrentItem;
+            var count = view.Count;
+            bool matchFound = false;
+            foreach(SampleDataItem sdi in view)
+            {
+                if (matchFound == true)
+                    return sdi.UniqueId; // return next id in line
+
+                if(sdi.UniqueId == mcid)
+                {
+                    matchFound = true;
+                    continue;
+                }
+            }
+
+            return ""; // No next item, we're at end of list with no match, or match for last item. Don't need to distinguish those.
+            //var enumerator = view.GetEnumerator();
+            //enumerator.MoveNext(); // sets it to the first element
+            //var firstElement = enumerator.Current;
+        }
+*/
         private async void DeleteRemoteToo_Click(object sender, RoutedEventArgs e)
         {
             TopAppBar.IsOpen = false;
@@ -1415,7 +1451,7 @@ namespace TP8
                 "It is suggested you further edit 'Notes' to say why you deleted it.\n" +
                 "Finally, hit 'Send' to tell TriageTrak to delete it.");
             await md.ShowAsync();
-            // Don't call DeleteLocal here... instead, wait for successful dequeue and send, and then cleanup
+            // Don't call DeleteLocal here... instead, wait for successful dequeue and send, and then cleanup: see TP_PatientReport, variable deleteNow
         }
 
         private async void Webcam_Click(object sender, RoutedEventArgs e)

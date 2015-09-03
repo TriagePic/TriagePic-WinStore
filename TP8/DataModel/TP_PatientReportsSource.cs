@@ -52,12 +52,17 @@ namespace TP8.Data
             inner.Remove(o);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <param name="targetVersion"></param>
         public void Discard(string patientID, int targetVersion)
         {
             int index = FindIndexByPatientIDAndSentCodeVersion(patientID, targetVersion);
             if (index >= 0)
                 Remove(inner[index]);
+            //return index;
         }
 
         public void Clear()
@@ -736,10 +741,16 @@ namespace TP8.Data
 
         public async Task ReSortAndMinimallyFilter() // used by SplitPage, filter is only "current event only" checkbox
         {
+            await ReSortAndMinimallyFilterOutbox();
+            await ReSortAndFilterImplAsync(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false);
+        }
+
+        public async Task ReSortAndMinimallyFilterOutbox() // used by SplitPage, filter is only "current event only" checkbox
+        {
+            // Broken out as separate function version 3.6 August 2015
             // was: public void ReSortAndFilter(). Change & Task.Run's added for v 3.5
             await ReSortAndFilterImplAsync(_outbox, _outboxsorted, _outboxsortedandfiltered, false, true);
             OutboxForStatisticsRefresh(); // new June 2015
-            await ReSortAndFilterImplAsync(_allstations, _allstationssorted, _allstationssortedandfiltered, false, false);
         }
 
         /// <summary>
@@ -789,7 +800,7 @@ namespace TP8.Data
                     case App.SortByItem.TriageZone:
                         sort = orig.OrderBy(o => o.Zone).ToList(); break;
                     case App.SortByItem.ArrivalTime:
-                        sort = orig.OrderBy(o => o.WhenLocalTime).ToList(); break; // Or maybe sent.  probably needs more work, use of timezone or UTC?
+                        sort = orig.OrderBy(o => o.WhenLocalTimeMsg1).ToList(); break; // Or maybe sent.  probably needs more work, use of timezone or UTC? Before Release 6, was (WhenLocalTime)
                     case App.SortByItem.DisasterEvent:
                         sort = orig.OrderBy(o => o.EventName).ToList(); break; // or maybe Event ID
                     default:
@@ -823,7 +834,7 @@ namespace TP8.Data
                     case App.SortByItem.TriageZone:
                         sort = orig.OrderByDescending(o => o.Zone).ToList(); break;
                     case App.SortByItem.ArrivalTime:
-                        sort = orig.OrderByDescending(o => o.WhenLocalTime).ToList(); break; // Or maybe sent.  probably needs more work, use of timezone or UTC?
+                        sort = orig.OrderByDescending(o => o.WhenLocalTimeMsg1).ToList(); break; // Or maybe sent.  probably needs more work, use of timezone or UTC? Before Release 6, was o.WhenLocalTime
                     case App.SortByItem.DisasterEvent:
                         sort = orig.OrderByDescending(o => o.EventName).ToList(); break; // or maybe Event ID
                     default:
@@ -939,7 +950,7 @@ namespace TP8.Data
             // If I could figure out how to define TP_PatientReports.OrderBy, wouldn't need these conversions here and at end:
             List<TP_PatientReport> orig = _outbox.GetAsList();
             List<TP_PatientReport> clone = new List<TP_PatientReport>(); // NOT NEEDED: = sortL.GetAsList();
-
+/* WAS prior to Release 6:
             foreach (TP_PatientReport i in orig)
             {
                 if(String.IsNullOrEmpty(i.WhenLocalTime))
@@ -949,7 +960,21 @@ namespace TP8.Data
                 clone.Add(r);
             }
             // sort by local time, oldest first, as required by algorithms in Statistics:
-            clone = clone.OrderBy(o => o.WhenLocalTime).ToList();
+            clone = clone.OrderBy(o => o.WhenLocalTime).ToList(); */
+            foreach (TP_PatientReport i in orig)
+            {
+                if (String.IsNullOrEmpty(i.WhenLocalTime))
+                    continue; // skip messed-up records
+                TP_PatientReport r = new TP_PatientReport(i); // make deep copy
+                r.WhenLocalTime = ParseDate(r.WhenLocalTime); // perform surgery on clone, leave orig unaffected.
+                if (!String.IsNullOrEmpty(i.WhenLocalTimeMsg1))
+                    r.WhenLocalTimeMsg1 = ParseDate(r.WhenLocalTimeMsg1); // ditto
+                else
+                    r.WhenLocalTimeMsg1 = r.WhenLocalTime; // fixup, shouldn't ordinarily be needed
+                clone.Add(r);
+            }
+            // sort by local time of arrival, oldest first, as required by algorithms in Statistics:
+            clone = clone.OrderBy(o => o.WhenLocalTimeMsg1).ToList();
 
             _outboxforstatistics.ReplaceWithList(clone);
         }
@@ -959,9 +984,9 @@ namespace TP8.Data
         /// </summary>
         /// <param name="WhenLocalTime"></param>
         /// <returns></returns>
-        private string ParseDate(string WhenLocalTime)
+        private string ParseDate(string WhenLocalTime_)
         {
-            return WhenLocalTime.Substring(0, 10);// Assume YYYY-MM-DD format.
+            return WhenLocalTime_.Substring(0, 10);// Assume YYYY-MM-DD format.
         }
 
         public class PatientIdComparer : IComparer<string>

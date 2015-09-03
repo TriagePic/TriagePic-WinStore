@@ -213,7 +213,7 @@ namespace TP8.Data // nah: .DataModel
 #endif
             // equivalent jsonHospitalList is global in Win 7
             string jsonOrgList = await App.service.GetHospitalList();
-            if ((jsonOrgList.StartsWith("ERROR:")) || (jsonOrgList.StartsWith("COMMUNICATION ERROR:")) || jsonOrgList.Length == 0)
+            if ((jsonOrgList.StartsWith("ERROR:")) || (jsonOrgList.StartsWith("COMMUNICATIONS ERROR:")) || jsonOrgList.Length == 0)
             {
                 await App.OrgDataList.ReadXML(); // Win 7: hospitals = service.ReadHopsitalListFromFile();
                 if (/*newHospitalListFileCreated || */ inner.Count() == 0)

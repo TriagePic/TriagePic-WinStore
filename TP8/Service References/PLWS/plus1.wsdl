@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://tempuri.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://tempuri.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="https://triagetrak.nlm.nih.gov/plusWebServices" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="https://triagetrak.nlm.nih.gov/plusWebServices" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org">
+    <xsd:schema elementFormDefault="qualified" targetNamespace="https://triagetrak.nlm.nih.gov/plusWebServices">
       <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
       <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
       <xsd:complexType name="requestUserTokenRequestType">
@@ -88,7 +88,7 @@
       </xsd:complexType>
       <xsd:complexType name="registerUserCaptchaResponseType">
         <xsd:all>
-          <xsd:element form="unqualified" name="sessionCookieUrl" type="xsd:string" />
+          <xsd:element form="unqualified" name="newToken" type="xsd:string" />
           <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
         </xsd:all>
@@ -241,6 +241,31 @@
       </xsd:complexType>
       <xsd:complexType name="addCommentResponseType">
         <xsd:all>
+          <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
+          <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="followRecordRequestType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="token" type="xsd:string" />
+          <xsd:element form="unqualified" name="uuid" type="xsd:string" />
+          <xsd:element form="unqualified" name="sub" type="xsd:int" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="followRecordResponseType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
+          <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="followListRequestType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="token" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="followListResponseType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="subs" type="xsd:string" />
           <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
         </xsd:all>
@@ -491,6 +516,10 @@
       <xsd:element name="reportAbuseResponse" type="tns:reportAbuseResponseType" />
       <xsd:element name="addComment" type="tns:addCommentRequestType" />
       <xsd:element name="addCommentResponse" type="tns:addCommentResponseType" />
+      <xsd:element name="followRecord" type="tns:followRecordRequestType" />
+      <xsd:element name="followRecordResponse" type="tns:followRecordResponseType" />
+      <xsd:element name="followList" type="tns:followListRequestType" />
+      <xsd:element name="followListResponse" type="tns:followListResponseType" />
       <xsd:element name="getImageCountsAndTokens" type="tns:getImageCountsAndTokensRequestType" />
       <xsd:element name="getImageCountsAndTokensResponse" type="tns:getImageCountsAndTokensResponseType" />
       <xsd:element name="getImageList" type="tns:getImageListRequestType" />
@@ -622,6 +651,18 @@
   </wsdl:message>
   <wsdl:message name="addCommentResponse">
     <wsdl:part name="parameters" element="tns:addCommentResponse" />
+  </wsdl:message>
+  <wsdl:message name="followRecordRequest">
+    <wsdl:part name="parameters" element="tns:followRecord" />
+  </wsdl:message>
+  <wsdl:message name="followRecordResponse">
+    <wsdl:part name="parameters" element="tns:followRecordResponse" />
+  </wsdl:message>
+  <wsdl:message name="followListRequest">
+    <wsdl:part name="parameters" element="tns:followList" />
+  </wsdl:message>
+  <wsdl:message name="followListResponse">
+    <wsdl:part name="parameters" element="tns:followListResponse" />
   </wsdl:message>
   <wsdl:message name="getImageCountsAndTokensRequest">
     <wsdl:part name="parameters" element="tns:getImageCountsAndTokens" />
@@ -776,6 +817,14 @@
       <wsdl:input message="tns:addCommentRequest" />
       <wsdl:output message="tns:addCommentResponse" />
     </wsdl:operation>
+    <wsdl:operation name="followRecord">
+      <wsdl:input message="tns:followRecordRequest" />
+      <wsdl:output message="tns:followRecordResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="followList">
+      <wsdl:input message="tns:followListRequest" />
+      <wsdl:output message="tns:followListResponse" />
+    </wsdl:operation>
     <wsdl:operation name="getImageCountsAndTokens">
       <wsdl:input message="tns:getImageCountsAndTokensRequest" />
       <wsdl:output message="tns:getImageCountsAndTokensResponse" />
@@ -836,288 +885,306 @@
   <wsdl:binding name="plusWebServicesBinding" type="tns:plusWebServicesPortType">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="requestUserToken">
-      <soap:operation soapAction="?wsdl&amp;api=34#requestUserToken" style="document" />
+      <soap:operation soapAction="plus1#requestUserToken" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="requestAnonToken">
-      <soap:operation soapAction="?wsdl&amp;api=34#requestAnonToken" style="document" />
+      <soap:operation soapAction="plus1#requestAnonToken" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="purgeUserTokens">
-      <soap:operation soapAction="?wsdl&amp;api=34#purgeUserTokens" style="document" />
+      <soap:operation soapAction="plus1#purgeUserTokens" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="pingEcho">
-      <soap:operation soapAction="?wsdl&amp;api=34#pingEcho" style="document" />
+      <soap:operation soapAction="plus1#pingEcho" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getEventList">
-      <soap:operation soapAction="?wsdl&amp;api=34#getEventList" style="document" />
+      <soap:operation soapAction="plus1#getEventList" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getGroupList">
-      <soap:operation soapAction="?wsdl&amp;api=34#getGroupList" style="document" />
+      <soap:operation soapAction="plus1#getGroupList" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="registerUserCaptcha">
-      <soap:operation soapAction="?wsdl&amp;api=34#registerUserCaptcha" style="document" />
+      <soap:operation soapAction="plus1#registerUserCaptcha" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="registerUser">
-      <soap:operation soapAction="?wsdl&amp;api=34#registerUser" style="document" />
+      <soap:operation soapAction="plus1#registerUser" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="changeUserPassword">
-      <soap:operation soapAction="?wsdl&amp;api=34#changeUserPassword" style="document" />
+      <soap:operation soapAction="plus1#changeUserPassword" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="resetUserPassword">
-      <soap:operation soapAction="?wsdl&amp;api=34#resetUserPassword" style="document" />
+      <soap:operation soapAction="plus1#resetUserPassword" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="forgotUsername">
-      <soap:operation soapAction="?wsdl&amp;api=34#forgotUsername" style="document" />
+      <soap:operation soapAction="plus1#forgotUsername" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getSessionCookie">
-      <soap:operation soapAction="?wsdl&amp;api=34#getSessionCookie" style="document" />
+      <soap:operation soapAction="plus1#getSessionCookie" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="search">
-      <soap:operation soapAction="?wsdl&amp;api=34#search" style="document" />
+      <soap:operation soapAction="plus1#search" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="report">
-      <soap:operation soapAction="?wsdl&amp;api=34#report" style="document" />
+      <soap:operation soapAction="plus1#report" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="updateRecord">
-      <soap:operation soapAction="?wsdl&amp;api=34#updateRecord" style="document" />
+      <soap:operation soapAction="plus1#updateRecord" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="reportAbuse">
-      <soap:operation soapAction="?wsdl&amp;api=34#reportAbuse" style="document" />
+      <soap:operation soapAction="plus1#reportAbuse" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addComment">
-      <soap:operation soapAction="?wsdl&amp;api=34#addComment" style="document" />
+      <soap:operation soapAction="plus1#addComment" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="followRecord">
+      <soap:operation soapAction="plus1#followRecord" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="followList">
+      <soap:operation soapAction="plus1#followList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getImageCountsAndTokens">
-      <soap:operation soapAction="?wsdl&amp;api=34#getImageCountsAndTokens" style="document" />
+      <soap:operation soapAction="plus1#getImageCountsAndTokens" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getImageList">
-      <soap:operation soapAction="?wsdl&amp;api=34#getImageList" style="document" />
+      <soap:operation soapAction="plus1#getImageList" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getImageListBlock">
-      <soap:operation soapAction="?wsdl&amp;api=34#getImageListBlock" style="document" />
+      <soap:operation soapAction="plus1#getImageListBlock" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getNullTokenList">
-      <soap:operation soapAction="?wsdl&amp;api=34#getNullTokenList" style="document" />
+      <soap:operation soapAction="plus1#getNullTokenList" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="appCheck">
-      <soap:operation soapAction="?wsdl&amp;api=34#appCheck" style="document" />
+      <soap:operation soapAction="plus1#appCheck" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="registerApplePushToken">
-      <soap:operation soapAction="?wsdl&amp;api=34#registerApplePushToken" style="document" />
+      <soap:operation soapAction="plus1#registerApplePushToken" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalList">
-      <soap:operation soapAction="?wsdl&amp;api=34#getHospitalList" style="document" />
+      <soap:operation soapAction="plus1#getHospitalList" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalData">
-      <soap:operation soapAction="?wsdl&amp;api=34#getHospitalData" style="document" />
+      <soap:operation soapAction="plus1#getHospitalData" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalPolicy">
-      <soap:operation soapAction="?wsdl&amp;api=34#getHospitalPolicy" style="document" />
+      <soap:operation soapAction="plus1#getHospitalPolicy" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalLegalese">
-      <soap:operation soapAction="?wsdl&amp;api=34#getHospitalLegalese" style="document" />
+      <soap:operation soapAction="plus1#getHospitalLegalese" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalLegaleseAnon">
-      <soap:operation soapAction="?wsdl&amp;api=34#getHospitalLegaleseAnon" style="document" />
+      <soap:operation soapAction="plus1#getHospitalLegaleseAnon" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getHospitalLegaleseTimestamps">
-      <soap:operation soapAction="?wsdl&amp;api=34#getHospitalLegaleseTimestamps" style="document" />
+      <soap:operation soapAction="plus1#getHospitalLegaleseTimestamps" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getUuidByMassCasualtyId">
-      <soap:operation soapAction="?wsdl&amp;api=34#getUuidByMassCasualtyId" style="document" />
+      <soap:operation soapAction="plus1#getUuidByMassCasualtyId" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="reservePatientIds">
-      <soap:operation soapAction="?wsdl&amp;api=34#reservePatientIds" style="document" />
+      <soap:operation soapAction="plus1#reservePatientIds" style="document" />
       <wsdl:input>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://tempuri.org" />
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="plusWebServices">
     <wsdl:port name="plusWebServicesPort" binding="tns:plusWebServicesBinding">
-      <soap:address location="https://triagetrak.nlm.nih.gov/?wsdl&amp;api=34" />
+      <soap:address location="https://triagetrak.nlm.nih.gov/plus1" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
