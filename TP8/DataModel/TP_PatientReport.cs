@@ -545,10 +545,21 @@ namespace TP8.Data
                 //for (int retries = 1; retries >= 0; retries-- ) // loop to allow retry for credentials
                 //{
                 if (firstSend)
+                {
                     results = await App.service.ReportPerson(contentEDXL_and_LP2, null);
+                    if (results == "") // therefore successful; ReportPerson has filled in App.CacheUuidOfMostRecentReportSent;
+                        App.CacheIdOfMostRecentReportSent = PatientID;  // VERSION 3.7 ROLLBACK ROLLFORWARD
+                }
                 else
                 {
                     string uuid = await App.service.GetUuidFromPatientID(PatientID, EventShortName);
+                    if (String.IsNullOrEmpty(uuid))
+                    {
+                        // VERSION 3.7 ROLLBACK ROLLFORWARD
+                        // Quick hack to handle case where user sends report, then immediately revises and resends it, before it is indexed at TriageTrak
+                        if (PatientID == App.CacheIdOfMostRecentReportSent)
+                            uuid = App.CacheUuidOfMostRecentReportSent;
+                    }
                     if (String.IsNullOrEmpty(uuid))
                     {
                         string errMsg = "TriageTrak can't find a record with Patient ID " + PatientID + " associated with event " + EventName;

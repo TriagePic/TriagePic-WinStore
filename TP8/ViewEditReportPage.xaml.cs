@@ -219,8 +219,10 @@ namespace TP8
             // Momentarily shift focus to notes and caption to force text font to the correct color (either black or gray) for contents
             Notes_GotFocusImpl(); // These don't affect the focus, only the content and font color.
             Notes_LostFocusImpl();
+#if SUPERCEDED_RELEASE_7
             Caption_GotFocusImpl(); // These don't affect the focus, only the content and font color.
             Caption_LostFocusImpl();
+#endif
 #if WIN80_CODE_NO_LONGER_WORKS
             // Didn't work in 8.1, returns false.  Maybe because called from LoadState:
             // bool debug = Notes.Focus(FocusState.Programmatic);
@@ -603,6 +605,7 @@ namespace TP8
             return LastNameTextBox.Text;
         }
 
+#if SUPERCEDED_RELEASE_7
         private void SetCaptionTextBox(string s)
         {
             Caption.Text =
@@ -650,7 +653,7 @@ namespace TP8
                 default: Caption.Focus(FocusState.Programmatic); break;
             }
         }
-
+#endif
         /* TO DO:
         private void SetCheckBoxPracticeMode(bool o)
         {
@@ -727,9 +730,10 @@ namespace TP8
 
             if (Notes.Text == NOTES_TEXT_HINT) // Must match string in XAML too
                 Notes.Text = "";
+#if SUPERCEDED_RELEASE_7
             if (SyncAndGetCaptionTextBox() == CAPTION_TEXT_HINT) // Must match string in XAML too
                 SetCaptionTextBox("");
-
+#endif
             App.MyAssert(updatedReport.ObjSentCode.IsValid());
             if (updatedReport.ObjSentCode.GetCodeWithoutVersion() == "Y")
             {
@@ -886,7 +890,10 @@ namespace TP8
             pr_.ImageName = pr_.FormatImageName();
             pr_.ImageWriteableBitmap = App.CurrentPatient.ImageWriteableBitmap;
             pr_.ImageEncoded = await pr_.FormatImageEncoded(); // derive base64 from updatedReport.ImageWriteableBitmap
+#if SUPERCEDED_RELEASE_7
             pr_.ImageCaption = SyncAndGetCaptionTextBox();
+#endif
+            pr_.ImageCaption = App.CurrentPatient.ImageCaption;
         }
 
 
@@ -968,11 +975,14 @@ namespace TP8
                 Notes.Text = pr_.Comments;
                 Notes.Focus(FocusState.Programmatic); // Will repaint font as black
             }
+#if SUPERCEDED_RELEASE_7_BUT_COULD_REVIVE_AS_HIDDEN_FIELD
             if (pr_.ImageCaption != "")
             {
                 SetCaptionTextBox(pr_.ImageCaption);
                 GiveCaptionFocus();
             }
+#endif
+            App.CurrentPatient.ImageCaption = pr_.ImageCaption; // whether empty or not
             /* TO DO.  Note - consider moving practice mode checkbox to settings:
             if (pr_.PatientID.StartsWith("Prac"))
                 SetCheckBoxPracticeMode(true); */
@@ -1229,8 +1239,10 @@ namespace TP8
             // Toggle focus states so that notes, caption lose focus, which reinserts gray hint text
             Notes.Text = "";
             Notes.Focus(FocusState.Programmatic);
+#if SUPERCEDED_RELEASE_7
             SetCaptionTextBox("");
             GiveCaptionFocus();
+#endif
             PatientIdTextBox.Focus(FocusState.Programmatic);
             updatedReport.Clear();
             App.ReportAltered = false;
@@ -1255,7 +1267,9 @@ namespace TP8
             CheckBoxMale.IsEnabled = b;
             CheckBoxFemale.IsEnabled = b;
             Notes.IsEnabled = b;
+#if SUPERCEDED_RELEASE_7
             SetCaptionTextBoxIsEnabled(b);
+#endif
             SetPatientImageIsTapEnabled(b);
         }
 
@@ -1503,6 +1517,7 @@ namespace TP8
             }
         }
 
+#if SUPERCEDED_RELEASE_7
         private void Caption_SetTextColor(SolidColorBrush b)
         {
             Caption.Foreground =
@@ -1538,7 +1553,7 @@ namespace TP8
                 Caption_SetTextColor(Brush2);
             }
         }
-
+#endif
         private void Caption_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (((TextBox)sender).FocusState == FocusState.Unfocused) // prevent spurius post-LoadState calls

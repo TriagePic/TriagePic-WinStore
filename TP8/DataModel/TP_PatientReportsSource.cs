@@ -1372,6 +1372,7 @@ namespace TP8.Data
             string patientName = (i.FirstName + " " + i.LastName).ToLower();
             if (patientName == " ")
                 patientName = "";
+            query = query.ToLower(); // Added Release 7. Why wasn't this picked up earlier? Neglect, or did something change in how query come here, or how  .Contains is processed below?
             string patientID = i.PatientID.ToLower();
             if (String.IsNullOrEmpty(patientName) && !App.CurrentFilterProfile.IncludeHasNoPatientName)
                 return false;

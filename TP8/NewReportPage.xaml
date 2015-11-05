@@ -123,7 +123,8 @@
                     <TextBlock x:Name="patientID_ConflictStatus" Margin="15,0,0,0" Foreground="Orange" Text="[conflict status]"  FontFamily="Global User Interface" FontSize="20"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                    <TextBox x:Name="PatientIdTextBox" HorizontalAlignment="Left" Text="911-" Width="236" VerticalAlignment="Top" TextChanged="PatientID_TextChanged" FontSize="20" AllowDrop="True" MinHeight="40" LostFocus="PatientIdTextBox_LostFocus" Tapped="PatientIdTextBox_Tapped"/>
+                    <!-- FieldModifier is public on next item to allow quick change if Settings My Org forces value change -->
+                    <TextBox x:Name="PatientIdTextBox" x:FieldModifier="public" HorizontalAlignment="Left" Text="911-" Width="236" VerticalAlignment="Top" TextChanged="PatientID_TextChanged" FontSize="20" MinHeight="40" LostFocus="PatientIdTextBox_LostFocus" Tapped="PatientIdTextBox_Tapped"/>
                     <!-- Plus, MinusButton Styles introduced July 2015 version 3.5-->
                     <!--
                     <Button x:Name="incrementPatientID" Content="+" HorizontalAlignment="Left" Margin="20,0,0,0" Height="40" VerticalAlignment="Top" Width="40" Background="{x:Null}" RenderTransformOrigin="7.239,0.417" Padding="2,1,2,2" FontSize="20" FontWeight="Normal" Tapped="incrementPatientID_Tapped" PointerPressed="incrementPatientID_PointerPressed" PointerReleased="incrementPatientID_PointerReleased"/>
@@ -162,7 +163,7 @@
                     </Canvas>
                 </Viewbox>
                 <!-- In landscape & filled view, caption is in column 3.  In snapped view, its hidden (for now) -->
-                <TextBox x:Name="CaptionPortrait" Visibility="Collapsed" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/>
+                <!-- Superceded Release 7: <TextBox x:Name="CaptionPortrait" Visibility="Collapsed" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/> -->
 
                 <Grid x:Name="SexAndAge" Margin="0,30,0,0">
                     <!-- spacing & size tweaked for snap view:-->
@@ -253,7 +254,7 @@
                         <Image x:Name="patientImageHalf" Height="280" Width="280" Source="Assets/PhotoBackgroundCameraLogo(300x300).png" Tapped="patientImage_Tapped" ImageFailed="patientImage_ImageFailed" ImageOpened="patientImage_ImageOpened"/>
                     </Canvas>
                 </Viewbox>
-                <TextBox x:Name="Caption" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/>
+                <!-- Superceded Release 7:<TextBox x:Name="Caption" Margin="0,20,0,0" Text="Optional Caption" Height="32" VerticalAlignment="Top" TextChanged="Caption_TextChanged" AllowDrop="True" Foreground="Gray" GotFocus="Caption_GotFocus" LostFocus="Caption_LostFocus"/> -->
 
                 <Grid x:Name="BottomControlsColumn3">
                     <!-- toggle visibility to show either LastSentMsg or ProgressBar but not both-->
@@ -416,9 +417,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PatientImageViewboxPortrait" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Superceded Release 7:
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CaptionPortrait" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
+                        </ObjectAnimationUsingKeyFrames> -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SexAndAge" Storyboard.TargetProperty="Margin">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="0,15,0,0"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -554,9 +556,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ZoneButtons" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Superceded Release 7:
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Caption" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/> 
+                        </ObjectAnimationUsingKeyFrames> -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Notes" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
@@ -673,9 +676,10 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ZoneButtons" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <!-- Superceded Release 7:
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Caption" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
+                        </ObjectAnimationUsingKeyFrames> -->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Notes" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>

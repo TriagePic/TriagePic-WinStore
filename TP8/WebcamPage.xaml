@@ -70,17 +70,23 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Image x:Name="ImageTarget" Grid.Row="0" HorizontalAlignment="Center"
-            VerticalAlignment="Center" Stretch="Uniform"/>
+        <Grid x:Name="elementToRender" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image x:Name="ImageTarget" Stretch="Uniform"/>
+            <TextBlock x:Name="Caption" Text="" FontSize="40" TextWrapping="Wrap" Margin="50,5" VerticalAlignment="Bottom"/>
+        </Grid>
+        <!--<Image x:Name="ImageTarget" Grid.Row="0" HorizontalAlignment="Center"
+            VerticalAlignment="Center" Stretch="Uniform"/>  -->
         <TextBlock TextWrapping="Wrap" x:Name="Events" Margin="10"/>
         <!-- Add Background="Gray" below to make the StackPanel touchable -->
-        <StackPanel Grid.Row="1" Margin="10"                        
+        <!-- Leave BottomControls collapsed (except if redesigning), to prevent their flash appearance. Made visible programmatically-->
+        <StackPanel x:Name ="BottomControls" Grid.Row="1" Margin="10"                        
                     HorizontalAlignment="Center" Orientation="Horizontal">
             <!-- E0BA is go back button, E0AC is go forward -->
             <Button x:Name="CancelButton" Content="&#xE0BA;   Cancel" FontFamily="Segoe UI Symbol"
               Click="CancelButton_Click"/>
             <Button x:Name="SaveButton" Content="&#xE0BA;   Save Image"  FontFamily="Segoe UI Symbol"
               Click="SaveButton_Click" Margin="20 0 0 0"/>
+            <TextBox x:Name="CaptionTextBox" Margin="20,0,0,0" PlaceholderText="Optional bottom caption. Burned in when Saved" FontSize="12" FontWeight="Bold" Width="300" Height="32" TextChanged="CaptionTextBox_TextChanged" />
             <!-- was: Capture New Image.  Note retake icon not available with circle around it, so use go forward instead-->
             <Button x:Name="CaptureButton" Content="Retake   &#xE0AC;"  FontFamily="Segoe UI Symbol"
               Click="CaptureButton_Click"  Margin="20 0 0 0"/>

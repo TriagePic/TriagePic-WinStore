@@ -120,17 +120,41 @@ namespace TP8
             App.OrgContactInfoList.Clear();
             App.OrgContactInfoList.Add(App.CurrentOrgContactInfo);
             await App.OrgContactInfoList.WriteXML();
-            // See if patient ID format changes
+            // See if patient ID format changes (buggy before Release 7)
+            string OldID = App.CurrentPatient.PatientID;
             int format = App.OrgPolicy.OrgPatientIdFixedDigits;
             string prefix = App.OrgPolicy.OrgPatientIdPrefixText;
+            App.OrgPolicyList.Clear(); // added Release 7, to coerce proper action on next line
             await App.OrgPolicyList.Init();
             if (App.OrgPolicyList.Count() > 0)
                 App.OrgPolicy = App.OrgPolicyList.First(); // FirstOrDefault(); // will return null if nothing in list
             if (prefix != App.OrgPolicy.OrgPatientIdPrefixText)
-                App.CurrentPatient.PatientID.Replace(prefix, App.OrgPolicy.OrgPatientIdPrefixText);
+                App.CurrentPatient.PatientID = App.CurrentPatient.PatientID.Replace(prefix, App.OrgPolicy.OrgPatientIdPrefixText);
             if (format != App.OrgPolicy.OrgPatientIdFixedDigits)
                 App.CurrentPatient.PatientID = App.OrgPolicy.ForceValidFormatID(App.CurrentPatient.PatientID); // maybe this will work
 
+            // If New Report page is visible, change ID field & set of zones too... new in Release 7
+            if (Window.Current.Content == null)
+                return;
+
+            // This process could throw Invalid conversion exception, but otherwise seems OK:
+            var _Frame = Window.Current.Content as Frame;
+            Type type = _Frame.CurrentSourcePageType;
+            if(type == null)
+                return;
+
+            if (type.Name != "BasicPageNew")
+                return;
+
+            var p = (BasicPageNew)_Frame.Content;
+            if (OldID != App.CurrentPatient.PatientID)
+            {
+                // Fortunately, the same textbox is used for all layout modes:
+                p.PatientIdTextBox.Text = App.CurrentPatient.PatientID;
+            }
+
+            p.ClearZoneButtons(); // Too hard to know if zone collection changed... just assume it did
+            p.InitiateZones(); // TO DO: test this further when TT offers orgs with different zones
         }
 
     }

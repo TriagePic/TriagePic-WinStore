@@ -13,9 +13,13 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Popups;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -31,6 +35,7 @@ namespace TP8 //was: ImageHelper2
         public WebcamPage()
         {
             InitializeComponent();
+            // Didn't work to avoid flash, do in XAML instead: BottomControls.Visibility = Visibility.Collapsed; // hide these to prevent their momentary appearance. Release 7
         }
 
         private ShareOperation _shareOperation;
@@ -43,14 +48,19 @@ namespace TP8 //was: ImageHelper2
         /// property is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            BottomControls.Visibility = Visibility.Collapsed; // To avoid control flashes as we transit this page quickly
             base.OnNavigatedTo(e); // Glenn adds. This will set the _pagekey variable, which otherwise would be null and later throw an exception in OnNavigatedFrom.
             var args = e.Parameter as ShareTargetActivatedEventArgs;
             
             if (args == null)
             {
-                CaptureButton_Click(this, null); // Glenn adds
+                await CaptureButton_ClickImpl();// was before Release 7, but need await to not show bottom controls flashing: CaptureButton_Click(this, null); // Glenn adds
+                BottomControls.Visibility = Visibility.Visible;
                 return;
             }
+            BottomControls.Visibility = Visibility.Visible;
+            Caption.Text = App.CurrentPatient.ImageCaption; // TO DO: Make this actually useful for "Original filename: <whatever>" when image picked from file.
+            // TO DO... distinguish NewReport & ViewEdit handling of this
 
             _shareOperation = args.ShareOperation;
 
@@ -160,8 +170,13 @@ namespace TP8 //was: ImageHelper2
         }
         #endregion
 
-        public async void CaptureButton_Click(object sender,
-            RoutedEventArgs e)
+        public async void CaptureButton_Click(object sender, RoutedEventArgs e)
+        {
+            await CaptureButton_ClickImpl();
+            return;
+        }
+        
+        private async Task CaptureButton_ClickImpl()// Release 7, changed to return Task so it can be awaited
         {
             // WAS Win 8.0: Windows.UI.ViewManagement.ApplicationView.TryUnsnap();// Glenn's quick hack, since this doesn't work well while snapped
             if (App.CurrentVisualState == "vs320Wide" || App.CurrentVisualState == "vs321To500Wide")
@@ -190,7 +205,7 @@ namespace TP8 //was: ImageHelper2
             }
         }
 
-        public /*async*/ void SaveButton_Click(object sender, RoutedEventArgs e)
+        public async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             /* TO DO (and uncomment async above):
             if (_writeableBitmap != null)
@@ -265,6 +280,36 @@ namespace TP8 //was: ImageHelper2
 #endif
             if (_writeableBitmap != null)
             {
+                if(!String.IsNullOrEmpty(CaptionTextBox.Text))
+                {   // Added Release 7.
+                    // Adapted from https://social.msdn.microsoft.com/Forums/windowsapps/en-US/3af5874c-3d40-486e-a592-2b2044fb377b/problem-with-rendertargetbitmap-?forum=winappswithcsharp
+                    var captionedBitmap = new  RenderTargetBitmap();
+                    await captionedBitmap.RenderAsync(elementToRender);
+                    //image.Source = bitmap;
+                    ///IBuffer pixelBuffer = await bitmap.GetPixelsAsync();
+                    ///byte[] pixels = pixelBuffer.ToArray();
+                    var pixelBuffer = await captionedBitmap.GetPixelsAsync();
+                    byte[] pixels = pixelBuffer.ToArray();
+                    // Evidently we have to do the next 2 lines, even tho captioned bitmap is same size as uncaptioned:
+                    _writeableBitmap = null;
+                    _writeableBitmap = new WriteableBitmap((int)captionedBitmap.PixelWidth, (int)captionedBitmap.PixelHeight);
+                    using (Stream stream = _writeableBitmap.PixelBuffer.AsStream())
+                    {
+                        await stream.WriteAsync(pixels, 0, pixels.Length);
+                    }
+#if FOR_REFERENCE
+                    // If this was Win Phone, traditional way to do the same thing is something like...
+                    // Adapted from http://bsubramanyamraju.blogspot.in/2014/03/windows-phone-imagemergings-merging.html 
+                    TextBlock tb = new TextBlock();
+                    tb.Text = CaptionTextBox.Text;
+                    tb.TextWrapping = TextWrapping.Wrap;
+                    tb.Foreground = new SolidColorBrush(Colors.Black);
+                    tb.FontSize = 70;
+                    tb.FontWeight = FontWeights.Bold;
+                     _writeableBitmap.Render(tb, new TranslateTransform() { X = 25, Y = 191 });
+                    _writeableBitmap.Invalidate();
+#endif
+                }
                 //App.CurrentPatient.ImageBitmap.SetSource(_bitmap);
                 App.CurrentPatient.ImageWriteableBitmap = _writeableBitmap;
                 App.CurrentPatient.ImageName = App.CurrentPatient.FormatImageName();
@@ -310,6 +355,19 @@ namespace TP8 //was: ImageHelper2
             else
                 this.Frame.Navigate(typeof(BasicPageViewEdit), "pageViewEditReport");  // leave App.ReportAltered as is
 #endif
+        }
+
+        private void CaptionTextBox_TextChanged(object sender, TextChangedEventArgs e) // Burn-in caption added Release 7
+        {
+            // Needed for caption text wrapping to work:
+            if (ImageTarget.ActualWidth > 0)
+                Caption.Width = ImageTarget.ActualWidth-100; // Allow for horiz margins of 50
+/*
+            if (ImageTarget.Width > 0)
+                elementToRender.Width = ImageTarget.Width; 
+            else if (_writeableBitmap.PixelWidth > 0)
+                elementToRender.Width = _writeableBitmap.PixelWidth; */
+            Caption.Text = CaptionTextBox.Text;
         }
 
 /* Likness debug...

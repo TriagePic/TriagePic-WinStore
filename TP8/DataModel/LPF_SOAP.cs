@@ -824,6 +824,8 @@ INSTEAD: */
             if (rpout.errorCode != 0) // was v33: "0"
                 return PackageErrorString(rpout.errorCode.ToString(), rpout.errorMessage);
 
+            App.CacheUuidOfMostRecentReportSent = rpout.uuid; // VERSION 3.7 ROLLBACK ROLLFORWARD
+            // Corresponding App.CacheIdOfMostRecentReportSent is set by caller
             return ""; //Win 7: CAUSES PROBLEMS FOR CALLER: return url;
         }
 

@@ -143,6 +143,8 @@ namespace TP8
         public static PLWS.plusWebServicesPortTypeClient pl = new PLWS.plusWebServicesPortTypeClient();
         public static LPF_JSON service = new LPF_JSON();
         public static bool BlockWebServices = false;
+        public static string CacheIdOfMostRecentReportSent = ""; // Quick hack // VERSION 3.7 ROLLBACK ROLLFORWARD
+        public static string CacheUuidOfMostRecentReportSent = ""; // ditto
 
         public static TP_ErrorLog ErrorLog = new TP_ErrorLog();
         public static ProtectData pd = new ProtectData(); // credentials of current user here.  // HARD-CODED.  TO DO!!!!

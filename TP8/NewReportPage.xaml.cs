@@ -130,7 +130,12 @@ namespace TP8
             patientID_ConflictStatus.Text = ""; // July 2015, v 5.  Clear design-time string "[conflict status]"
         }
 
-        private void InitiateZones()
+        public void ClearZoneButtons() // For benefit of Settings/My Organization
+        {
+            ZoneButtons.Items.Clear();
+        }
+
+        public void InitiateZones() // may also be called from Settings/My Organization if org changes
         {
             ZoneChoiceComboSnapped.ItemsSource = App.ZoneChoices.GetZoneChoices();
             // Instantiate zone buttons:
@@ -431,6 +436,7 @@ namespace TP8
             return LastNameTextBox.Text;
         }
 
+#if SUPERCEDED_RELEASE_7
         private void SetCaptionTextBox(string s)
         {
             Caption.Text = CaptionPortrait.Text = s;
@@ -470,7 +476,8 @@ namespace TP8
                 default: Caption.Focus(FocusState.Programmatic); break;
             }
         }
-/* TO DO:
+#endif
+        /* TO DO:
         private void SetCheckBoxPracticeMode(bool o)
         {
             CheckBoxPracticeModeLandscape.IsChecked =
@@ -585,9 +592,10 @@ namespace TP8
                 Notes.Text = "";
             if (App.RosterNames != "")
                 Notes.Text += "\nRoster at Station:\n" + App.RosterNames; // DON'T DO THIS FOR RE-SEND... wait til we handle rostering smarter. 
+#if SUPERCEDED_RELEASE_7
             if (SyncAndGetCaptionTextBox() == CAPTION_TEXT_HINT) // CAPTION_TEXT_HINT must match string in XAML too
                 SetCaptionTextBox("");
-
+#endif
             await SaveReportFieldsToObject(pr, "Q"); // IntendToSend
             TP_PatientReport pr2 = new TP_PatientReport(pr); // create a new object for each report, that will be passed through the queue
             // and be reference from the _outbox and _allstations lists.
@@ -705,7 +713,10 @@ namespace TP8
             pr_.ImageName = pr_.FormatImageName();
             pr_.ImageWriteableBitmap = App.CurrentPatient.ImageWriteableBitmap;
             pr_.ImageEncoded = await pr_.FormatImageEncoded(); // derive base64 from pdi.ImageWriteableBitmap
+#if SUPERCEDED_RELEASE_7
             pr_.ImageCaption = SyncAndGetCaptionTextBox();
+#endif
+            pr_.ImageCaption = App.CurrentPatient.ImageCaption;
         }
 
         /// <summary>
@@ -789,11 +800,14 @@ namespace TP8
                 Notes.Text = pr_.Comments;
                 Notes.Focus(FocusState.Programmatic); // Will repaint font as black
             }
+#if SUPERCEDED_RELEASE_7
             if (pr_.ImageCaption != "")
             {
                 SetCaptionTextBox(pr_.ImageCaption);
                 GiveCaptionFocus();
             }
+#endif
+            App.CurrentPatient.ImageCaption = pr_.ImageCaption; // whether empty or not
             /* TO DO.  Note - consider moving practice mode checkbox to settings:
             if (pr_.PatientID.StartsWith("Prac"))
                 SetCheckBoxPracticeMode(true); */
@@ -956,7 +970,9 @@ namespace TP8
                 }
             }
             App.CurrentPatient.ImageCaption = "Original filename: " + file.DisplayName;
+#if SUPERCEDED_RELEASE_7
             this.Caption_SetTextProgrammatically(App.CurrentPatient.ImageCaption);
+#endif
             App.CurrentPatient.ImageName = App.CurrentPatient.FormatImageName();
             //done later: App.CurrentPatient.ImageEncoded = await App.CurrentPatient.FormatImageEncoded();
             App.CurrentPatient.ImageEncoded = ""; // clear out any color swatch beginning with Assets, we have a real image
@@ -999,8 +1015,10 @@ namespace TP8
             // Toggle focus states so that notes, caption lose focus, which reinserts gray hint text
             Notes.Text = "";
             Notes.Focus(FocusState.Programmatic);
+#if SUPERCEDED_RELEASE_7
             SetCaptionTextBox("");
             GiveCaptionFocus();
+#endif
             PatientIdTextBox.Focus(FocusState.Programmatic);
             PatientIdTextBox.IsEnabled = false; // toggle to suppress virtual keyboard popup
             PatientIdTextBox.IsEnabled = true;
@@ -1079,7 +1097,7 @@ namespace TP8
             }
         }
 
-
+#if SUPERCEDED_RELEASE_7
         private void Caption_SetTextColor(Windows.UI.Color c)
         {
             SolidColorBrush Brush1 = new SolidColorBrush();
@@ -1127,7 +1145,7 @@ namespace TP8
         {
             // TO DO?  Differs on purpose from ViewEdit
         }
-
+#endif
         private void Notes_TextChanged(object sender, TextChangedEventArgs e)
         {
             // TO DO?  Differs on purpose from ViewEdit
@@ -1292,7 +1310,9 @@ namespace TP8
             CheckBoxFemale.Background = c;
             CheckBoxAdult.Background = c;
             CheckBoxPeds.Background = c;
+#if SUPERCEDED_RELEASE_7
             Caption.Background = c;
+#endif
             Notes.Background = c;
             // When we support multiple photos, will have to do photoRole too
         }
@@ -1304,7 +1324,9 @@ namespace TP8
             PatientIdTextBox.Background = c;
             FirstNameTextBox.Background = c;
             LastNameTextBox.Background = c;
+#if SUPERCEDED_RELEASE_7
             Caption.Background = c;
+#endif
             Notes.Background = c;
             // When we support multiple photos, will have to do photoRole too
             c = new SolidColorBrush(Colors.Transparent); // In TP7 version, checkbox bkgds were set to white,
