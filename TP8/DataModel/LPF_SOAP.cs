@@ -896,8 +896,11 @@ INSTEAD: */
         public async Task<string> GetUuidFromPatientID(string mcid, string shortEventName)
         {
             App.MyAssert(App.pd.plToken != null && App.pd.plToken.Length == 128); // token is 128 char long SHA-512
-            getUuidByMassCasualtyIdRequest guin = new getUuidByMassCasualtyIdRequest();
-            getUuidByMassCasualtyIdResponse guout = new getUuidByMassCasualtyIdResponse();
+            // WAS BEFORE RELEASE 8:
+            // getUuidByMassCasualtyIdRequest guin = new getUuidByMassCasualtyIdRequest();
+            // getUuidByMassCasualtyIdResponse guout = new getUuidByMassCasualtyIdResponse();
+            getUuidByPatientIdRequest guin = new getUuidByPatientIdRequest();
+            getUuidByPatientIdResponse guout = new getUuidByPatientIdResponse();
 
             try
             {
@@ -905,13 +908,13 @@ INSTEAD: */
 
                 if(App.BlockWebServices)
                     throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
-                guin.mcid = mcid;
+                guin.patientId = mcid; // was: guin.mcid = mcid;
                 guin.shortname = shortEventName;
                 //guin.username = await App.pd.DecryptPL_Username();
                 //guin.password = await App.pd.DecryptPL_Password();
                 guin.token = App.pd.plToken;
 
-                guout = await App.pl.getUuidByMassCasualtyIdAsync(guin);
+               guout = await App.pl.getUuidByPatientIdAsync(guin); // was: guout = await App.pl.getUuidByMassCasualtyIdAsync(guin);
                  
             }
             catch (Exception e)
@@ -1503,7 +1506,6 @@ INSTEAD: */
             return ChangeToErrorIfNull(srout.resultSet); // WAS before v33: sarout
         }
 
-
         // NEW July, 2015:
         /// <summary>
         /// Does a quick checks if candidate Patient ID is already in use for current event, independent of submitter or submitting organization.
@@ -1551,6 +1553,50 @@ INSTEAD: */
             return 1; // 1 or more records found. In theory multiple means some problem, but let's ignore that for now
         }
 
+        // NEW Dec 2015 for Release 8:
+        /// <summary>
+        /// Does a quick checks if candidate Patient ID is already in use for ANY event, independent of submitter or submitting organization.
+        /// This is to supplement check of local data (which is limited to this submitter in the case of Outbox, or may be stale in the case of All Stations.
+        /// </summary>
+        /// <param name="patientID"></param>
+        /// <param name="hospital_uuid"></param>
+        /// <returns>-1 = don't know; 0 = no; 1 = yes</returns>
+        public async Task<int> IsPatientIdAlreadyInUseForAnyEvent(string patientID, int hospital_uuid)
+        {
+            // This is a variant of GetReportsFromAllStationsCurrentEvent()
+            App.MyAssert(App.pd.plToken != null && App.pd.plToken.Length == 128); // token is 128 char long SHA-512
+            isPatientIdReservedRequest srin = new isPatientIdReservedRequest();
+            isPatientIdReservedResponse srout = new isPatientIdReservedResponse();
+            srin.token = App.pd.plToken;
+            srin.patientId = patientID;
+            srin.hospital_uuid = hospital_uuid;
+            try
+            {
+                SetPLEndpointAddress(App.pl); //read the configured endpoint address
+
+                if (App.BlockWebServices)
+                    throw new Exception(PHONY_COMMUNICATIONS_EXCEPTION);
+
+                srout = await App.pl.isPatientIdReservedAsync(srin);
+            }
+            // Also available with v34, but not used here: srout.recordsFound; srout.timeElapsed
+            catch (Exception)
+            {
+                return -1; // Error. Don't know
+            }
+            if (srout.state == null || srout.errorCode != 0)
+                return -1; // Error. Don't know
+            // errors include 500 invalid patient id, 501 invalid patient ID
+
+            switch (srout.state)
+            {
+                case "0": return 0; // 0 = no form in use or reserved for any event
+                case "1": return 1; // 1 = manual (non-AUTO) form in use for some event
+                case "2": return 2; // 2 = AUTO form in use for some event
+                case "3": return 3; // 3 = AUTO form reserved for some event, but not yet reported
+                default: return -1;
+            }
+        }
 
         private string PackageFiltersIntoSearchParameter(string orgUuid)
         {

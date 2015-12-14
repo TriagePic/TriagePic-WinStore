@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="43399NLMLHNCBCCEB.TriagePic" Publisher="CN=39A47D4F-3C3F-4466-B992-4884C00F3449" Version="3.8.0.0" />
+  <Identity Name="43399NLMLHNCBCCEB.TriagePic" Publisher="CN=39A47D4F-3C3F-4466-B992-4884C00F3449" Version="3.8.0.1" />
   <Properties>
     <DisplayName>TriagePic</DisplayName>
     <PublisherDisplayName>NLM LHNCBC CEB</PublisherDisplayName>

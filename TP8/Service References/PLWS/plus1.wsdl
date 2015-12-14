@@ -327,30 +327,26 @@
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="appCheckRequestType">
+      <xsd:complexType name="registerGCMRequestType">
         <xsd:all>
           <xsd:element form="unqualified" name="token" type="xsd:string" />
-          <xsd:element form="unqualified" name="query_string" type="xsd:string" />
+          <xsd:element form="unqualified" name="registrationID" type="xsd:string" />
+          <xsd:element form="unqualified" name="versionString" type="xsd:string" />
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="appCheckResponseType">
+      <xsd:complexType name="registerGCMResponseType">
         <xsd:all>
-          <xsd:element form="unqualified" name="url" type="xsd:string" />
-          <xsd:element form="unqualified" name="text" type="xsd:string" />
           <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="registerApplePushTokenRequestType">
+      <xsd:complexType name="unregisterGCMRequestType">
         <xsd:all>
           <xsd:element form="unqualified" name="token" type="xsd:string" />
-          <xsd:element form="unqualified" name="deviceID" type="xsd:string" />
-          <xsd:element form="unqualified" name="pushToken" type="xsd:string" />
-          <xsd:element form="unqualified" name="username" type="xsd:string" />
-          <xsd:element form="unqualified" name="deviceName" type="xsd:string" />
+          <xsd:element form="unqualified" name="registrationID" type="xsd:string" />
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="registerApplePushTokenResponseType">
+      <xsd:complexType name="unregisterGCMResponseType">
         <xsd:all>
           <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
@@ -455,14 +451,14 @@
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="getUuidByMassCasualtyIdRequestType">
+      <xsd:complexType name="getUuidByPatientIdRequestType">
         <xsd:all>
           <xsd:element form="unqualified" name="token" type="xsd:string" />
-          <xsd:element form="unqualified" name="mcid" type="xsd:string" />
+          <xsd:element form="unqualified" name="patientId" type="xsd:string" />
           <xsd:element form="unqualified" name="shortname" type="xsd:string" />
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="getUuidByMassCasualtyIdResponseType">
+      <xsd:complexType name="getUuidByPatientIdResponseType">
         <xsd:all>
           <xsd:element form="unqualified" name="uuid" type="xsd:string" />
           <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
@@ -478,6 +474,33 @@
       <xsd:complexType name="reservePatientIdsResponseType">
         <xsd:all>
           <xsd:element form="unqualified" name="idList" type="xsd:string" />
+          <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
+          <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="reserveSinglePatientIdRequestType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="token" type="xsd:string" />
+          <xsd:element form="unqualified" name="patientId" type="xsd:string" />
+          <xsd:element form="unqualified" name="hospital_uuid" type="xsd:int" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="reserveSinglePatientIdResponseType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
+          <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="isPatientIdReservedRequestType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="token" type="xsd:string" />
+          <xsd:element form="unqualified" name="patientId" type="xsd:string" />
+          <xsd:element form="unqualified" name="hospital_uuid" type="xsd:int" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="isPatientIdReservedResponseType">
+        <xsd:all>
+          <xsd:element form="unqualified" name="state" type="xsd:string" />
           <xsd:element form="unqualified" name="errorCode" type="xsd:int" />
           <xsd:element form="unqualified" name="errorMessage" type="xsd:string" />
         </xsd:all>
@@ -528,10 +551,10 @@
       <xsd:element name="getImageListBlockResponse" type="tns:getImageListBlockResponseType" />
       <xsd:element name="getNullTokenList" type="tns:getNullTokenListRequestType" />
       <xsd:element name="getNullTokenListResponse" type="tns:getNullTokenListResponseType" />
-      <xsd:element name="appCheck" type="tns:appCheckRequestType" />
-      <xsd:element name="appCheckResponse" type="tns:appCheckResponseType" />
-      <xsd:element name="registerApplePushToken" type="tns:registerApplePushTokenRequestType" />
-      <xsd:element name="registerApplePushTokenResponse" type="tns:registerApplePushTokenResponseType" />
+      <xsd:element name="registerGCM" type="tns:registerGCMRequestType" />
+      <xsd:element name="registerGCMResponse" type="tns:registerGCMResponseType" />
+      <xsd:element name="unregisterGCM" type="tns:unregisterGCMRequestType" />
+      <xsd:element name="unregisterGCMResponse" type="tns:unregisterGCMResponseType" />
       <xsd:element name="getHospitalList" type="tns:getHospitalListRequestType" />
       <xsd:element name="getHospitalListResponse" type="tns:getHospitalListResponseType" />
       <xsd:element name="getHospitalData" type="tns:getHospitalDataRequestType" />
@@ -544,10 +567,14 @@
       <xsd:element name="getHospitalLegaleseAnonResponse" type="tns:getHospitalLegaleseAnonResponseType" />
       <xsd:element name="getHospitalLegaleseTimestamps" type="tns:getHospitalLegaleseTimestampsRequestType" />
       <xsd:element name="getHospitalLegaleseTimestampsResponse" type="tns:getHospitalLegaleseTimestampsResponseType" />
-      <xsd:element name="getUuidByMassCasualtyId" type="tns:getUuidByMassCasualtyIdRequestType" />
-      <xsd:element name="getUuidByMassCasualtyIdResponse" type="tns:getUuidByMassCasualtyIdResponseType" />
+      <xsd:element name="getUuidByPatientId" type="tns:getUuidByPatientIdRequestType" />
+      <xsd:element name="getUuidByPatientIdResponse" type="tns:getUuidByPatientIdResponseType" />
       <xsd:element name="reservePatientIds" type="tns:reservePatientIdsRequestType" />
       <xsd:element name="reservePatientIdsResponse" type="tns:reservePatientIdsResponseType" />
+      <xsd:element name="reserveSinglePatientId" type="tns:reserveSinglePatientIdRequestType" />
+      <xsd:element name="reserveSinglePatientIdResponse" type="tns:reserveSinglePatientIdResponseType" />
+      <xsd:element name="isPatientIdReserved" type="tns:isPatientIdReservedRequestType" />
+      <xsd:element name="isPatientIdReservedResponse" type="tns:isPatientIdReservedResponseType" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="requestUserTokenRequest">
@@ -688,17 +715,17 @@
   <wsdl:message name="getNullTokenListResponse">
     <wsdl:part name="parameters" element="tns:getNullTokenListResponse" />
   </wsdl:message>
-  <wsdl:message name="appCheckRequest">
-    <wsdl:part name="parameters" element="tns:appCheck" />
+  <wsdl:message name="registerGCMRequest">
+    <wsdl:part name="parameters" element="tns:registerGCM" />
   </wsdl:message>
-  <wsdl:message name="appCheckResponse">
-    <wsdl:part name="parameters" element="tns:appCheckResponse" />
+  <wsdl:message name="registerGCMResponse">
+    <wsdl:part name="parameters" element="tns:registerGCMResponse" />
   </wsdl:message>
-  <wsdl:message name="registerApplePushTokenRequest">
-    <wsdl:part name="parameters" element="tns:registerApplePushToken" />
+  <wsdl:message name="unregisterGCMRequest">
+    <wsdl:part name="parameters" element="tns:unregisterGCM" />
   </wsdl:message>
-  <wsdl:message name="registerApplePushTokenResponse">
-    <wsdl:part name="parameters" element="tns:registerApplePushTokenResponse" />
+  <wsdl:message name="unregisterGCMResponse">
+    <wsdl:part name="parameters" element="tns:unregisterGCMResponse" />
   </wsdl:message>
   <wsdl:message name="getHospitalListRequest">
     <wsdl:part name="parameters" element="tns:getHospitalList" />
@@ -736,17 +763,29 @@
   <wsdl:message name="getHospitalLegaleseTimestampsResponse">
     <wsdl:part name="parameters" element="tns:getHospitalLegaleseTimestampsResponse" />
   </wsdl:message>
-  <wsdl:message name="getUuidByMassCasualtyIdRequest">
-    <wsdl:part name="parameters" element="tns:getUuidByMassCasualtyId" />
+  <wsdl:message name="getUuidByPatientIdRequest">
+    <wsdl:part name="parameters" element="tns:getUuidByPatientId" />
   </wsdl:message>
-  <wsdl:message name="getUuidByMassCasualtyIdResponse">
-    <wsdl:part name="parameters" element="tns:getUuidByMassCasualtyIdResponse" />
+  <wsdl:message name="getUuidByPatientIdResponse">
+    <wsdl:part name="parameters" element="tns:getUuidByPatientIdResponse" />
   </wsdl:message>
   <wsdl:message name="reservePatientIdsRequest">
     <wsdl:part name="parameters" element="tns:reservePatientIds" />
   </wsdl:message>
   <wsdl:message name="reservePatientIdsResponse">
     <wsdl:part name="parameters" element="tns:reservePatientIdsResponse" />
+  </wsdl:message>
+  <wsdl:message name="reserveSinglePatientIdRequest">
+    <wsdl:part name="parameters" element="tns:reserveSinglePatientId" />
+  </wsdl:message>
+  <wsdl:message name="reserveSinglePatientIdResponse">
+    <wsdl:part name="parameters" element="tns:reserveSinglePatientIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="isPatientIdReservedRequest">
+    <wsdl:part name="parameters" element="tns:isPatientIdReserved" />
+  </wsdl:message>
+  <wsdl:message name="isPatientIdReservedResponse">
+    <wsdl:part name="parameters" element="tns:isPatientIdReservedResponse" />
   </wsdl:message>
   <wsdl:portType name="plusWebServicesPortType">
     <wsdl:operation name="requestUserToken">
@@ -841,13 +880,13 @@
       <wsdl:input message="tns:getNullTokenListRequest" />
       <wsdl:output message="tns:getNullTokenListResponse" />
     </wsdl:operation>
-    <wsdl:operation name="appCheck">
-      <wsdl:input message="tns:appCheckRequest" />
-      <wsdl:output message="tns:appCheckResponse" />
+    <wsdl:operation name="registerGCM">
+      <wsdl:input message="tns:registerGCMRequest" />
+      <wsdl:output message="tns:registerGCMResponse" />
     </wsdl:operation>
-    <wsdl:operation name="registerApplePushToken">
-      <wsdl:input message="tns:registerApplePushTokenRequest" />
-      <wsdl:output message="tns:registerApplePushTokenResponse" />
+    <wsdl:operation name="unregisterGCM">
+      <wsdl:input message="tns:unregisterGCMRequest" />
+      <wsdl:output message="tns:unregisterGCMResponse" />
     </wsdl:operation>
     <wsdl:operation name="getHospitalList">
       <wsdl:input message="tns:getHospitalListRequest" />
@@ -873,13 +912,21 @@
       <wsdl:input message="tns:getHospitalLegaleseTimestampsRequest" />
       <wsdl:output message="tns:getHospitalLegaleseTimestampsResponse" />
     </wsdl:operation>
-    <wsdl:operation name="getUuidByMassCasualtyId">
-      <wsdl:input message="tns:getUuidByMassCasualtyIdRequest" />
-      <wsdl:output message="tns:getUuidByMassCasualtyIdResponse" />
+    <wsdl:operation name="getUuidByPatientId">
+      <wsdl:input message="tns:getUuidByPatientIdRequest" />
+      <wsdl:output message="tns:getUuidByPatientIdResponse" />
     </wsdl:operation>
     <wsdl:operation name="reservePatientIds">
       <wsdl:input message="tns:reservePatientIdsRequest" />
       <wsdl:output message="tns:reservePatientIdsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="reserveSinglePatientId">
+      <wsdl:input message="tns:reserveSinglePatientIdRequest" />
+      <wsdl:output message="tns:reserveSinglePatientIdResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="isPatientIdReserved">
+      <wsdl:input message="tns:isPatientIdReservedRequest" />
+      <wsdl:output message="tns:isPatientIdReservedResponse" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="plusWebServicesBinding" type="tns:plusWebServicesPortType">
@@ -1091,8 +1138,8 @@
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="appCheck">
-      <soap:operation soapAction="plus1#appCheck" style="document" />
+    <wsdl:operation name="registerGCM">
+      <soap:operation soapAction="plus1#registerGCM" style="document" />
       <wsdl:input>
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
@@ -1100,8 +1147,8 @@
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="registerApplePushToken">
-      <soap:operation soapAction="plus1#registerApplePushToken" style="document" />
+    <wsdl:operation name="unregisterGCM">
+      <soap:operation soapAction="plus1#unregisterGCM" style="document" />
       <wsdl:input>
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
@@ -1163,8 +1210,8 @@
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getUuidByMassCasualtyId">
-      <soap:operation soapAction="plus1#getUuidByMassCasualtyId" style="document" />
+    <wsdl:operation name="getUuidByPatientId">
+      <soap:operation soapAction="plus1#getUuidByPatientId" style="document" />
       <wsdl:input>
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>
@@ -1174,6 +1221,24 @@
     </wsdl:operation>
     <wsdl:operation name="reservePatientIds">
       <soap:operation soapAction="plus1#reservePatientIds" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="reserveSinglePatientId">
+      <soap:operation soapAction="plus1#reserveSinglePatientId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="isPatientIdReserved">
+      <soap:operation soapAction="plus1#isPatientIdReserved" style="document" />
       <wsdl:input>
         <soap:body use="literal" namespace="https://triagetrak.nlm.nih.gov/plusWebServices" />
       </wsdl:input>

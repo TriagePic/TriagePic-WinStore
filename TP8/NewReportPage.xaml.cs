@@ -1208,6 +1208,14 @@ namespace TP8
         public async Task<int> ColorizeBasedOnPatientID() // new, July 2015, version 3.5.  Similar to TP7's FormTriagePic function of the same name
         {
             int nUsed = await WasPatientIdentifierAlreadyUsed(PatientIdTextBox.Text);
+            // nUsed:
+            // -1 = don't know
+            // 0 = no, free to use
+            // 1 = yes, in outbox for this event
+            // 2 = yes, known to TT (but not outbox) for this event
+            // New categories in Release 8:
+            // 3 = yes, known to TT for some other event
+            // 4 = AUTO form reserved but not yet used for current or other event
             if (nUsed > 0)
                 FlagProblematicPatientID(nUsed); // Colorize Patient ID, do status message [different place than TP7]
             else
@@ -1216,13 +1224,14 @@ namespace TP8
         }
 
         /// <summary>
-        /// Checks local and remote resources, for match with ID with or without "AUTO" prepended.
+        /// Checks local and remote resources, for match with ID with or without "AUTO" prepended, for all events.
         /// </summary>
         /// <param name="s">Mass Casualty ID</param>
-        /// <returns>-1 = don't know; 0 = no; 1 = yes, in outbox for this event; 2 = yes, known to TT (but not outbox) for this event</returns>
-        public async Task<int> WasPatientIdentifierAlreadyUsed(string s)
+        /// <returns>-1 = don't know; 0 = no; 1 = yes, in outbox for this event; 2 = yes, known to TT (but not outbox) for this event; 3 = yes, known to TT for some other event; 4 = AUTO form reserved but not yet used for current or other event</returns>
+        public async Task<int> WasPatientIdentifierAlreadyUsed(string s) // Redefined Dec 2015, Release 8
         {
-            App.MyAssert(!s.StartsWith("AUTO")); // This is true in Release 5, but may change in future, in which case more changes needed here.
+            // was before Release 8: <returns>-1 = don't know; 0 = no; 1 = yes, in outbox for this event; 2 = yes, known to TT (but not outbox) for this event</returns>
+            App.MyAssert(!s.StartsWith("AUTO")); // This is true in Releases up to 8, but may change in future, in which case more changes needed here.
 
             // TP7 has 2 additional states, which we'll hold off on:
             // 3 = yes, in outbox for DIFFERENT event (allowed by delete of previous use in Outbox recommended)
@@ -1234,23 +1243,65 @@ namespace TP8
                 if (s == pr_.PatientID) // Will need to change this further if TP8 can reserve IDs with AUTO prefix
                     return 1; // may or may not be from same org as current org
             }
-            int i = await App.service.IsPatientIdAlreadyInUseForCurrentEvent(s); // returns -1 = don't know; 0 = no; 1 = yes
-            if (i == 1)
-                return 2;
-            // For now:
-            string s1 = "AUTO" + s;
-            if (i == 0)
+
+// Remainder of function added or revised for Release 8:
+            string Uuid  = App.OrgDataList.GetOrgUuidFromOrgName(App.CurrentOrgContactInfo.OrgName);
+            if (Uuid == "") // couldn't find match, assume OrgContactInfo.xml is stale (or dummy generated) and to be replaced.
             {
-                i = await App.service.IsPatientIdAlreadyInUseForCurrentEvent(s1); // returns -1 = don't know; 0 = no; 1 = yes
-                if (i == 1)
-                    return 2;
-                if (i == 0)
-                    return 0;
+                // TO DO: Report error to log here
+                 Uuid = App.OrgDataList.First().OrgUuid;
             }
-            // Need another web service, to know if AUTO ID was reserved by someone else, but not yet used.
-            App.MyAssert(i == -1);
+
+            int u = -1; // introduced v34
+            try
+            {
+                u = Convert.ToInt32(Uuid);
+            }
+            catch (Exception)
+            {
+                App.MyAssert(false);
+                u = -1;
+            }
+            int anyEvent = -1;
+            if (u != -1)
+            {
+                anyEvent = await App.service.IsPatientIdAlreadyInUseForAnyEvent(s,u);
+                // 0 = no form in use or reserved for ANY event
+                // 1 = manual form in use for ANY event
+                // 2 = AUTO form in use for ANY event
+                // 3 = AUTO form reserved for ANY event, but not yet reported
+                // -1 = Some error. Maybe bad patient ID or hospital ID
+                if (anyEvent == 0)
+                    return 0; // no = free for us to use
+                if (anyEvent == 3)
+                    return 4; //  AUTO form reserved but not yet used for current or other event
+                App.MyAssert(anyEvent == 1 || anyEvent == 2 || anyEvent == -1);
+                // In what follows the anyEvent 1 and 2 cases are collapsed together.
+            }
+
+            int thisEvent = -1; // for now
+            string s1 = "AUTO" + s;
+            if(anyEvent != -1)
+            {
+                // OK, so let's see if it in use for THIS event:
+                // Test non-AUTO form first:
+                thisEvent = await App.service.IsPatientIdAlreadyInUseForCurrentEvent(s); // returns -1 = don't know; 0 = no; 1 = yes
+                if (thisEvent == 1)
+                    return 2; // known to TT for *current* event
+                // Then test AUTO form:
+                if (thisEvent == 0)
+                {
+                    thisEvent = await App.service.IsPatientIdAlreadyInUseForCurrentEvent(s1); // returns -1 = don't know; 0 = no; 1 = yes
+                    if (thisEvent == 1)
+                        return 2; // known to TT for *current* event
+                    if (thisEvent == 0)
+                        return 3;  // can infer, known to TT for *other* event
+                }
+            }
+
+            App.MyAssert(anyEvent == -1 && thisEvent == -1);
             // New in TP8 (not in TP7 I believe)
-            // If call to web service failed, check local All Stations cache. Data may be stale and (because of 250 size limit) incomplete, but still mostly valid.
+            // If call(s) to web service failed, check local All Stations cache. Data may be stale and (because of 250 size limit) incomplete, but still mostly valid.
             // CAUTION: if you delete a record from outbox & TriageTrak, stale All Stations might still have it.
             // This might be a rare case (fixable by deleting it from All Stations too)
             foreach (var pr_ in App.PatientDataGroups.GetAllStations())
@@ -1268,14 +1319,23 @@ namespace TP8
 
         public void FlagProblematicPatientID(int nUsed)
         {
+            // 1 = yes, in outbox for this event
+            // 2 = yes, known to TT (but not outbox) for this event
+            // New categories in Release 8:
+            // 3 = yes, known to TT for some other event
+            // 4 = AUTO form reserved but not yet used for current or other event
             App.MyAssert(nUsed > 0 && nUsed < 5);
             SetSpecialBackColors(nUsed);
             switch(nUsed)
             {
                 // If below text msgs are changed, see also EnableSendButtonIfPossible(), which looks at this field's value
                 case 1: patientID_ConflictStatus.Text = "Used - in Outbox"; break;
-                case 2: patientID_ConflictStatus.Text = "Used - TriageTrak"; break;
-                default: App.MyAssert(false); break; // no case 3 or 4 yet
+                //was: case 2: patientID_ConflictStatus.Text = "Used - TriageTrak"; break;
+                case 2: patientID_ConflictStatus.Text = "Used - This Event"; break;
+                // Added Release 8:
+                case 3: patientID_ConflictStatus.Text = "Used - Other Event"; break;
+                case 4: patientID_ConflictStatus.Text = "Reserved"; break;
+                default: App.MyAssert(false); break;
             }
         }
 
@@ -1287,6 +1347,7 @@ namespace TP8
             // if (newReport.practiceModeChecked)
             //      ClearSpecialBackColors(); // Special case, then restore Patient ID color below.
 
+/* WAS BEFORE RELEASE 8, but nUsed == 3 case really couldn't happen... and it was a TP7 case 3 meaning, which is different from Release 8 case 3
             SolidColorBrush c;
             if (nUsed == 3) // DO WE NEED THIS IN TP8?
             {
@@ -1299,7 +1360,10 @@ namespace TP8
                 // Forbidden by policy
                 PatientIdTextBox.Background = new SolidColorBrush(Colors.Orange); // make this field more saturated than others colored by c
                 c = new SolidColorBrush(Colors.NavajoWhite);
-            }
+            } */
+            PatientIdTextBox.Background = new SolidColorBrush(Colors.Orange); // make this field more saturated than others colored by c
+            SolidColorBrush c = new SolidColorBrush(Colors.NavajoWhite);
+
             // SOME DAY:
             // if (newReport.practiceModeChecked)
             //      return;

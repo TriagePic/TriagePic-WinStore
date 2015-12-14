@@ -134,14 +134,14 @@ namespace TP8.PLWS {
         System.Threading.Tasks.Task<TP8.PLWS.getNullTokenListResponse> getNullTokenListAsync(TP8.PLWS.getNullTokenListRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="plus1#appCheck", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#registerGCM", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request);
+        System.Threading.Tasks.Task<TP8.PLWS.registerGCMResponse> registerGCMAsync(TP8.PLWS.registerGCMRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="plus1#registerApplePushToken", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#unregisterGCM", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.registerApplePushTokenResponse> registerApplePushTokenAsync(TP8.PLWS.registerApplePushTokenRequest request);
+        System.Threading.Tasks.Task<TP8.PLWS.unregisterGCMResponse> unregisterGCMAsync(TP8.PLWS.unregisterGCMRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
         [System.ServiceModel.OperationContractAttribute(Action="plus1#getHospitalList", ReplyAction="*")]
@@ -174,14 +174,24 @@ namespace TP8.PLWS {
         System.Threading.Tasks.Task<TP8.PLWS.getHospitalLegaleseTimestampsResponse> getHospitalLegaleseTimestampsAsync(TP8.PLWS.getHospitalLegaleseTimestampsRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="plus1#getUuidByMassCasualtyId", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#getUuidByPatientId", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request);
+        System.Threading.Tasks.Task<TP8.PLWS.getUuidByPatientIdResponse> getUuidByPatientIdAsync(TP8.PLWS.getUuidByPatientIdRequest request);
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
         [System.ServiceModel.OperationContractAttribute(Action="plus1#reservePatientIds", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TP8.PLWS.reservePatientIdsResponse> reservePatientIdsAsync(TP8.PLWS.reservePatientIdsRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#reserveSinglePatientId", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.reserveSinglePatientIdResponse> reserveSinglePatientIdAsync(TP8.PLWS.reserveSinglePatientIdRequest request);
+        
+        // CODEGEN: Generating message contract since the operation has multiple return values.
+        [System.ServiceModel.OperationContractAttribute(Action="plus1#isPatientIdReserved", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<TP8.PLWS.isPatientIdReservedResponse> isPatientIdReservedAsync(TP8.PLWS.isPatientIdReservedRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -1445,8 +1455,8 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheck", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
-    public partial class appCheckRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerGCM", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class registerGCMRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1454,44 +1464,39 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string query_string;
+        public string registrationID;
         
-        public appCheckRequest() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string versionString;
+        
+        public registerGCMRequest() {
         }
         
-        public appCheckRequest(string token, string query_string) {
+        public registerGCMRequest(string token, string registrationID, string versionString) {
             this.token = token;
-            this.query_string = query_string;
+            this.registrationID = registrationID;
+            this.versionString = versionString;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="appCheckResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
-    public partial class appCheckResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="registerGCMResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class registerGCMResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string url;
+        public int errorCode;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string text;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public int errorCode;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
-        public appCheckResponse() {
+        public registerGCMResponse() {
         }
         
-        public appCheckResponse(string url, string text, int errorCode, string errorMessage) {
-            this.url = url;
-            this.text = text;
+        public registerGCMResponse(int errorCode, string errorMessage) {
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
         }
@@ -1499,8 +1504,8 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushToken", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
-    public partial class registerApplePushTokenRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="unregisterGCM", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class unregisterGCMRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1508,36 +1513,21 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string deviceID;
+        public string registrationID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string pushToken;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=3)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string username;
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=4)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string deviceName;
-        
-        public registerApplePushTokenRequest() {
+        public unregisterGCMRequest() {
         }
         
-        public registerApplePushTokenRequest(string token, string deviceID, string pushToken, string username, string deviceName) {
+        public unregisterGCMRequest(string token, string registrationID) {
             this.token = token;
-            this.deviceID = deviceID;
-            this.pushToken = pushToken;
-            this.username = username;
-            this.deviceName = deviceName;
+            this.registrationID = registrationID;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="registerApplePushTokenResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
-    public partial class registerApplePushTokenResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="unregisterGCMResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class unregisterGCMResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1547,10 +1537,10 @@ namespace TP8.PLWS {
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
-        public registerApplePushTokenResponse() {
+        public unregisterGCMResponse() {
         }
         
-        public registerApplePushTokenResponse(int errorCode, string errorMessage) {
+        public unregisterGCMResponse(int errorCode, string errorMessage) {
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
         }
@@ -1975,8 +1965,8 @@ namespace TP8.PLWS {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyId", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
-    public partial class getUuidByMassCasualtyIdRequest {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByPatientId", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class getUuidByPatientIdRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -1984,26 +1974,26 @@ namespace TP8.PLWS {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string mcid;
+        public string patientId;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string shortname;
         
-        public getUuidByMassCasualtyIdRequest() {
+        public getUuidByPatientIdRequest() {
         }
         
-        public getUuidByMassCasualtyIdRequest(string token, string mcid, string shortname) {
+        public getUuidByPatientIdRequest(string token, string patientId, string shortname) {
             this.token = token;
-            this.mcid = mcid;
+            this.patientId = patientId;
             this.shortname = shortname;
         }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByMassCasualtyIdResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
-    public partial class getUuidByMassCasualtyIdResponse {
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getUuidByPatientIdResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class getUuidByPatientIdResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -2017,10 +2007,10 @@ namespace TP8.PLWS {
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string errorMessage;
         
-        public getUuidByMassCasualtyIdResponse() {
+        public getUuidByPatientIdResponse() {
         }
         
-        public getUuidByMassCasualtyIdResponse(string uuid, int errorCode, string errorMessage) {
+        public getUuidByPatientIdResponse(string uuid, int errorCode, string errorMessage) {
             this.uuid = uuid;
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
@@ -2071,6 +2061,109 @@ namespace TP8.PLWS {
         
         public reservePatientIdsResponse(string idList, int errorCode, string errorMessage) {
             this.idList = idList;
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reserveSinglePatientId", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class reserveSinglePatientIdRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string patientId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int hospital_uuid;
+        
+        public reserveSinglePatientIdRequest() {
+        }
+        
+        public reserveSinglePatientIdRequest(string token, string patientId, int hospital_uuid) {
+            this.token = token;
+            this.patientId = patientId;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="reserveSinglePatientIdResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class reserveSinglePatientIdResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public reserveSinglePatientIdResponse() {
+        }
+        
+        public reserveSinglePatientIdResponse(int errorCode, string errorMessage) {
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="isPatientIdReserved", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class isPatientIdReservedRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string token;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string patientId;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int hospital_uuid;
+        
+        public isPatientIdReservedRequest() {
+        }
+        
+        public isPatientIdReservedRequest(string token, string patientId, int hospital_uuid) {
+            this.token = token;
+            this.patientId = patientId;
+            this.hospital_uuid = hospital_uuid;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="isPatientIdReservedResponse", WrapperNamespace="https://triagetrak.nlm.nih.gov/plusWebServices", IsWrapped=true)]
+    public partial class isPatientIdReservedResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string state;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public int errorCode;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="https://triagetrak.nlm.nih.gov/plusWebServices", Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string errorMessage;
+        
+        public isPatientIdReservedResponse() {
+        }
+        
+        public isPatientIdReservedResponse(string state, int errorCode, string errorMessage) {
+            this.state = state;
             this.errorCode = errorCode;
             this.errorMessage = errorMessage;
         }
@@ -2211,12 +2304,12 @@ namespace TP8.PLWS {
             return base.Channel.getNullTokenListAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.appCheckResponse> appCheckAsync(TP8.PLWS.appCheckRequest request) {
-            return base.Channel.appCheckAsync(request);
+        public System.Threading.Tasks.Task<TP8.PLWS.registerGCMResponse> registerGCMAsync(TP8.PLWS.registerGCMRequest request) {
+            return base.Channel.registerGCMAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.registerApplePushTokenResponse> registerApplePushTokenAsync(TP8.PLWS.registerApplePushTokenRequest request) {
-            return base.Channel.registerApplePushTokenAsync(request);
+        public System.Threading.Tasks.Task<TP8.PLWS.unregisterGCMResponse> unregisterGCMAsync(TP8.PLWS.unregisterGCMRequest request) {
+            return base.Channel.unregisterGCMAsync(request);
         }
         
         public System.Threading.Tasks.Task<TP8.PLWS.getHospitalListResponse> getHospitalListAsync(TP8.PLWS.getHospitalListRequest request) {
@@ -2243,12 +2336,20 @@ namespace TP8.PLWS {
             return base.Channel.getHospitalLegaleseTimestampsAsync(request);
         }
         
-        public System.Threading.Tasks.Task<TP8.PLWS.getUuidByMassCasualtyIdResponse> getUuidByMassCasualtyIdAsync(TP8.PLWS.getUuidByMassCasualtyIdRequest request) {
-            return base.Channel.getUuidByMassCasualtyIdAsync(request);
+        public System.Threading.Tasks.Task<TP8.PLWS.getUuidByPatientIdResponse> getUuidByPatientIdAsync(TP8.PLWS.getUuidByPatientIdRequest request) {
+            return base.Channel.getUuidByPatientIdAsync(request);
         }
         
         public System.Threading.Tasks.Task<TP8.PLWS.reservePatientIdsResponse> reservePatientIdsAsync(TP8.PLWS.reservePatientIdsRequest request) {
             return base.Channel.reservePatientIdsAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.reserveSinglePatientIdResponse> reserveSinglePatientIdAsync(TP8.PLWS.reserveSinglePatientIdRequest request) {
+            return base.Channel.reserveSinglePatientIdAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<TP8.PLWS.isPatientIdReservedResponse> isPatientIdReservedAsync(TP8.PLWS.isPatientIdReservedRequest request) {
+            return base.Channel.isPatientIdReservedAsync(request);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {
